@@ -92,7 +92,7 @@ export default async function DashboardPage() {
       <section className="grid w-full min-w-0 grid-cols-1 gap-6 xl:grid-cols-2">
         <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="font-semibold text-slate-900">Doanh số 7 ngày</h2>
-          <div className="mt-5 overflow-hidden"><svg role="img" aria-label="Biểu đồ doanh số 7 ngày" viewBox={"0 0 " + width + " " + height} className="h-56 w-full">
+          <div className="mt-5 overflow-hidden"><svg role="img" aria-label="Biểu đồ doanh số 7 ngày" viewBox={"0 0 " + width + " " + height} className="dashboard-sales-chart h-56 w-full">
             <line x1="0" y1={height - 28} x2={width} y2={height - 28} stroke="#e2e8f0" />
             {days.map((day, index) => { const value = byDay.get(day) ?? 0; const barHeight = value ? Math.max(8, (height - 62) * value / max) : 3; const x = gap + index * (bar + gap); const y = height - 29 - barHeight; return <g key={day}><title>{shortDate(day) + ": " + money(value)}</title><rect x={x} y={y} width={bar} height={barHeight} rx="6" fill={day === today ? "#2563eb" : "#93c5fd"} /><text x={x + bar / 2} y={height - 8} textAnchor="middle" fill="#64748b" fontSize="12">{shortDate(day)}</text></g>; })}
           </svg></div>
