@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,12 +13,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: "Đồng phục Thanh Hằng",
   title: {
     default: "Đồng phục Thanh Hằng | Quản lý bán hàng",
     template: "%s | Đồng phục Thanh Hằng",
   },
   description:
     "Phần mềm quản lý bán hàng, khách hàng, đơn hàng và công nợ của Đồng phục Thanh Hằng.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Thanh Hằng",
+  },
+  icons: {
+    apple: [{ url: "/icon.png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
