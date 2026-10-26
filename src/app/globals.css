@@ -1,26 +1,456 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: 4px;
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: oklch(0.985 0.005 95);
+  --foreground: oklch(0.22 0.02 260);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 260);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 260);
+
+  /* Thanh Hằng - màu chủ đạo */
+  --primary: oklch(0.52 0.16 25);
+  --primary-foreground: oklch(0.99 0.005 95);
+
+  --secondary: oklch(0.96 0.015 25);
+  --secondary-foreground: oklch(0.32 0.04 25);
+
+  --muted: oklch(0.96 0.008 260);
+  --muted-foreground: oklch(0.52 0.025 260);
+
+  --accent: oklch(0.95 0.025 25);
+  --accent-foreground: oklch(0.32 0.04 25);
+
+  --destructive: oklch(0.58 0.22 25);
+
+  --border: oklch(0.91 0.012 260);
+  --input: oklch(0.91 0.012 260);
+  --ring: oklch(0.52 0.16 25);
+
+  /* Charts */
+  --chart-1: oklch(0.52 0.16 25);
+  --chart-2: oklch(0.62 0.12 150);
+  --chart-3: oklch(0.62 0.14 70);
+  --chart-4: oklch(0.58 0.12 250);
+  --chart-5: oklch(0.65 0.12 320);
+
+  --radius: 0.1875rem;
+
+  /* Sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.22 0.02 260);
+  --sidebar-primary: oklch(0.52 0.16 25);
+  --sidebar-primary-foreground: oklch(0.99 0.005 95);
+  --sidebar-accent: oklch(0.95 0.025 25);
+  --sidebar-accent-foreground: oklch(0.32 0.04 25);
+  --sidebar-border: oklch(0.91 0.012 260);
+  --sidebar-ring: oklch(0.52 0.16 25);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.order-print-root {
+  display: none;
 }
+
+.receipt-print-root {
+  display: none;
+}
+
+.debt-statement-print-root {
+  display: none;
+}
+
+@page order-k80 {
+  size: 80mm auto;
+  margin: 0;
+}
+
+@page order-a4 {
+  size: A4;
+  margin: 15mm;
+}
+
+@page order-a5 {
+  size: A5;
+  margin: 12mm;
+}
+
+@page receipt-k80 {
+  size: 80mm auto;
+  margin: 0;
+}
+
+@page receipt-a4 {
+  size: A4;
+  margin: 15mm;
+}
+
+@page debt-a4 {
+  size: A4;
+  margin: 15mm;
+}
+
+@media print {
+  html,
+  body {
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .order-print-root,
+  .order-print-root *,
+  .receipt-print-root,
+  .receipt-print-root *,
+  .debt-statement-print-root,
+  .debt-statement-print-root * {
+    visibility: visible !important;
+  }
+
+  .order-print-root {
+    position: fixed !important;
+    inset: 0 auto auto 0 !important;
+    z-index: 99999 !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .receipt-print-root {
+    position: fixed !important;
+    inset: 0 auto auto 0 !important;
+    z-index: 100000 !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .debt-statement-print-root {
+    position: fixed !important;
+    inset: 0 auto auto 0 !important;
+    z-index: 100001 !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+  }
+
+  .debt-statement-print-root[data-format="a4"] {
+    page: debt-a4;
+  }
+
+  .debt-statement-print-root h1 {
+    margin: 0 0 14pt;
+    text-align: center;
+    font-size: 16pt;
+  }
+
+  .debt-statement-print-root p {
+    margin: 4pt 0;
+  }
+
+  .debt-statement-print-root table {
+    width: 100%;
+    margin-top: 12pt;
+    border-collapse: collapse;
+    font-size: 8pt;
+  }
+
+  .debt-statement-print-root th,
+  .debt-statement-print-root td {
+    border: 1px solid #777;
+    padding: 4pt;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .debt-statement-print-root th {
+    background: #eee !important;
+  }
+
+  .debt-print-closing {
+    margin-top: 12pt !important;
+    text-align: right;
+    font-size: 12pt;
+  }
+
+  .receipt-print-root[data-format="k80"] {
+    page: receipt-k80;
+    width: 80mm !important;
+  }
+
+  .receipt-print-root[data-format="a4"] {
+    page: receipt-a4;
+  }
+
+  .order-print-root[data-format="k80"] {
+    page: order-k80;
+    width: 80mm !important;
+  }
+
+  .order-print-root[data-format="a4"] {
+    page: order-a4;
+  }
+
+  .order-print-root[data-format="a5"] {
+    page: order-a5;
+  }
+
+  .print-paper {
+    box-sizing: border-box;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .print-k80 {
+    width: 74mm;
+    padding: 4mm;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .print-invoice {
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .print-center {
+    text-align: center;
+  }
+
+  .print-center h1 {
+    margin: 0 0 3px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .print-invoice > .print-center h1 {
+    margin: 0 0 18px;
+    font-size: 18px;
+  }
+
+  .print-center p,
+  .print-k80 p,
+  .print-columns p {
+    margin: 2px 0;
+  }
+
+  .print-separator {
+    margin: 7px 0;
+    border-top: 1px dashed #555;
+  }
+
+  .print-receipt-line {
+    margin: 6px 0;
+    page-break-inside: avoid;
+  }
+
+  .print-receipt-line p {
+    margin-left: 4px;
+  }
+
+  .print-right {
+    text-align: right;
+  }
+
+  .print-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 4px 0;
+  }
+
+  .print-total {
+    font-weight: 700;
+    font-size: 1.08em;
+  }
+
+  .print-paid {
+    margin: 12px 0;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .print-qr {
+    display: block;
+    width: 42mm;
+    height: 42mm;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+
+  .print-qr-small {
+    width: 42mm;
+    height: 42mm;
+  }
+
+  .print-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 16px;
+  }
+
+  .print-columns h2 {
+    margin: 0 0 5px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #777;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .print-table th {
+    background: #f1f1f1 !important;
+    font-weight: 700;
+  }
+
+  .print-payment-summary {
+    display: grid;
+    grid-template-columns: 1fr 44mm;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .print-note {
+    margin-top: 20px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .print-signatures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+    text-align: center;
+    font-weight: 700;
+  }
+}
+
