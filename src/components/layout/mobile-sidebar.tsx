@@ -102,14 +102,14 @@ export function MobileSidebar({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="w-72 bg-primary p-0 text-primary-foreground [&_[data-slot=sheet-close]]:text-primary-foreground [&_[data-slot=sheet-close]]:hover:bg-white/10">
-        <SheetHeader className="border-b border-white/20 bg-black/15 px-6 py-4 text-left text-primary-foreground">
-          <SheetTitle className="text-left text-primary-foreground">
-            <div className="text-lg font-bold text-primary-foreground">
+      <SheetContent side="left" className="w-72 bg-white p-0 text-slate-700 [&_[data-slot=sheet-close]]:text-slate-500 [&_[data-slot=sheet-close]]:hover:bg-slate-100">
+        <SheetHeader className="border-b border-slate-200 bg-slate-50 px-6 py-4 text-left text-slate-900">
+          <SheetTitle className="text-left text-slate-900">
+            <div className="text-lg font-bold text-primary">
               Thanh Hằng
             </div>
 
-            <div className="text-xs font-normal text-primary-foreground/70">
+            <div className="text-xs font-normal text-slate-500">
               Quản lý bán hàng
             </div>
           </SheetTitle>
@@ -128,18 +128,18 @@ export function MobileSidebar({
                     type="button"
                     aria-expanded={openMenu === item.title}
                     onClick={() => setOpenMenu((open) => open === item.title ? null : item.title)}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${isActive ? "bg-white/15 text-white" : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"}`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${isActive ? "bg-primary/10 text-primary" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"}`}
                   >
                     <Icon className="h-5 w-5" />
                     <span className="flex-1">{item.title}</span>
                     <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === item.title ? "rotate-180" : ""}`} />
                   </button>
                   {openMenu === item.title && (
-                    <div className="ml-8 mt-1 space-y-1 border-l border-white/30 pl-3">
+                    <div className="ml-8 mt-1 space-y-1 border-l border-slate-200 pl-3">
                       {item.children.map((child) => {
                         const childActive = pathname === child.href || pathname.startsWith(`${child.href}/`);
                         return (
-                        <Link key={child.href} href={child.href} target={child.href === "/ban-nhanh" ? "_blank" : undefined} rel={child.href === "/ban-nhanh" ? "noopener noreferrer" : undefined} onClick={handleNavigate} className={`block rounded-md px-3 py-2 text-sm transition ${childActive ? "bg-white/15 font-medium text-white" : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"}`}>
+                        <Link key={child.href} href={child.href} target={child.href === "/ban-nhanh" ? "_blank" : undefined} rel={child.href === "/ban-nhanh" ? "noopener noreferrer" : undefined} onClick={handleNavigate} className={`block rounded-md px-3 py-2 text-sm transition ${childActive ? "bg-primary/10 font-medium text-primary" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"}`}>
                             {child.title}
                           </Link>
                         );
@@ -161,8 +161,8 @@ export function MobileSidebar({
                 onClick={handleNavigate}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? "bg-white/15 text-white"
-                    : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"
+                    ? "bg-primary/10 text-primary"
+                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -173,7 +173,7 @@ export function MobileSidebar({
           })}
         </nav>
 
-        <div className="border-t border-white/20 p-4">
+        <div className="border-t border-slate-200 p-4">
           {bottomMenuItems.map((item) => {
             const Icon = item.icon;
 
@@ -188,8 +188,8 @@ export function MobileSidebar({
                 onClick={handleNavigate}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? "bg-white/15 text-white"
-                    : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"
+                    ? "bg-primary/10 text-primary"
+                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -200,22 +200,24 @@ export function MobileSidebar({
           })}
         </div>
 
-        <div className="border-t border-white/20 px-4 py-4">
-          <div className="flex items-center gap-3 px-3 pb-3 text-primary-foreground">
+        <div className="border-t border-slate-200 px-4 py-4">
+          <div className="flex items-center gap-3 px-3 pb-3 text-slate-700">
             <UserRound className="h-5 w-5 shrink-0" aria-hidden="true" />
             <div>
               <p className="text-sm font-medium">Admin</p>
-              <p className="text-xs text-primary-foreground/70">Quản trị viên</p>
+              <p className="text-xs text-slate-500">Quản trị viên</p>
             </div>
           </div>
           <div className="[&>button]:w-full [&>button]:justify-start">
-            <LogoutButton light />
+            <LogoutButton />
           </div>
         </div>
       </SheetContent>
     </Sheet>
   );
 }
+
+
 
 
 

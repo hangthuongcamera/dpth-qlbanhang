@@ -107,23 +107,24 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
       <form method="get" className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <label className="grid gap-1 text-sm text-slate-600">Từ ngày<input type="date" name="fromDate" value={fromDate} max={toDate} className="rounded-lg border border-slate-300 px-3 py-2 text-slate-900" /></label>
         <label className="grid gap-1 text-sm text-slate-600">Đến ngày<input type="date" name="toDate" value={toDate} min={fromDate} max={today} className="rounded-lg border border-slate-300 px-3 py-2 text-slate-900" /></label>
-        <button className="rounded-lg bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800">Xem báo cáo</button>
+        <button className="h-10 rounded-lg bg-primary px-4 font-medium text-primary-foreground hover:bg-primary/90">Xem báo cáo</button>
       </form>
 
       <section className="grid gap-6 xl:grid-cols-2">
         <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-2"><div><h2 className="font-semibold text-slate-900">Doanh thu theo thời gian</h2><p className="mt-1 text-sm text-slate-500">{displayDate(fromDate)} – {displayDate(toDate)}</p></div><div className="text-right"><div className="text-xs text-slate-500">Tổng doanh thu</div><div className="text-lg font-semibold text-slate-900">{money(totalRevenue)}</div></div></div>
-          {periods.length === 0 ? <p className="py-12 text-center text-sm text-slate-500">Không có đơn hàng trong khoảng thời gian này.</p> : <div className="mt-5 space-y-3">{periods.map(([key, value]) => <div key={key} className="grid grid-cols-[5rem_minmax(0,1fr)_auto] items-center gap-3 text-sm"><span className="text-slate-500">{periodLabel(key)}</span><div className="h-3 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-blue-600" style={{ width: Math.max(2, value / maxRevenue * 100) + "%" }} /></div><span className="min-w-24 text-right font-medium text-slate-800">{money(value)}</span></div>)}</div>}
+          {periods.length === 0 ? <p className="py-12 text-center text-sm text-slate-500">Không có đơn hàng trong khoảng thời gian này.</p> : <div className="mt-5 space-y-3">{periods.map(([key, value]) => <div key={key} className="grid grid-cols-[5rem_minmax(0,1fr)_auto] items-center gap-3 text-sm"><span className="text-slate-500">{periodLabel(key)}</span><div className="h-3 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-primary" style={{ width: Math.max(2, value / maxRevenue * 100) + "%" }} /></div><span className="min-w-24 text-right font-medium text-slate-800">{money(value)}</span></div>)}</div>}
           <p className="mt-4 text-xs text-slate-400">Gộp theo {grouping === "day" ? "ngày" : grouping === "week" ? "tuần (bắt đầu từ thứ Hai)" : "tháng"} · {orders.length} đơn hợp lệ.</p>
         </article>
 
         <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="font-semibold text-slate-900">10 mặt hàng bán chạy</h2><p className="mt-1 text-sm text-slate-500">Xếp hạng theo tổng số lượng bán trong kỳ.</p>
-          {bestSellers.length === 0 ? <p className="py-12 text-center text-sm text-slate-500">Chưa có mặt hàng được bán trong khoảng thời gian này.</p> : <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[420px] text-left text-sm"><thead className="border-b border-slate-200 text-xs text-slate-500"><tr><th className="py-2 pr-3">#</th><th className="py-2 pr-3">Mặt hàng</th><th className="py-2 text-right">Đã bán</th></tr></thead><tbody className="divide-y divide-slate-100">{bestSellers.map((item, index) => <tr key={item.key}><td className="py-3 pr-3 text-slate-400">{index + 1}</td><td className="py-3 pr-3"><div className="font-medium text-slate-800">{item.product?.ten_san_pham ?? "Sản phẩm đã xóa"}</div><div className="text-xs text-slate-500">{item.variant ? [item.variant.ma_sku, attributes(item.variant.thuoc_tinh)].filter(Boolean).join(" · ") : item.product?.ma_san_pham}</div></td><td className="py-3 text-right font-semibold text-slate-900">{item.quantity.toLocaleString("vi-VN")}</td></tr>)}</tbody></table></div>}
+          {bestSellers.length === 0 ? <p className="py-12 text-center text-sm text-slate-500">Chưa có mặt hàng được bán trong khoảng thời gian này.</p> : <div className="mt-4 overflow-x-auto"><table className="app-data-table app-data-table--compact w-full min-w-[420px] text-left text-sm"><thead className="border-b border-slate-200 text-xs text-slate-500"><tr><th className="py-2 pr-3">#</th><th className="py-2 pr-3">Mặt hàng</th><th className="py-2 text-right">Đã bán</th></tr></thead><tbody className="divide-y divide-slate-100">{bestSellers.map((item, index) => <tr key={item.key}><td className="py-3 pr-3 text-slate-400">{index + 1}</td><td className="py-3 pr-3"><div className="font-medium text-slate-800">{item.product?.ten_san_pham ?? "Sản phẩm đã xóa"}</div><div className="text-xs text-slate-500">{item.variant ? [item.variant.ma_sku, attributes(item.variant.thuoc_tinh)].filter(Boolean).join(" · ") : item.product?.ma_san_pham}</div></td><td className="py-3 text-right font-semibold text-slate-900">{item.quantity.toLocaleString("vi-VN")}</td></tr>)}</tbody></table></div>}
         </article>
       </section>
     </main>
   );
 }
+
 
 

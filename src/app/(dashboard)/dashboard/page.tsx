@@ -77,10 +77,10 @@ export default async function DashboardPage() {
   }
 
   const cards = [
-    { label: "Doanh số hôm nay", value: money(salesToday), Icon: TrendingUp, style: "bg-emerald-50 text-emerald-700" },
-    { label: "Đơn hàng hôm nay", value: String(todayOrders.length), Icon: ShoppingCart, style: "bg-blue-50 text-blue-700" },
-    { label: "Dư nợ toàn hệ thống", value: money(debt), Icon: CreditCard, style: "bg-amber-50 text-amber-700" },
-    { label: "Thực thu trong ngày", value: money(collected), Icon: Wallet, style: "bg-violet-50 text-violet-700" },
+    { label: "Doanh số hôm nay", value: money(salesToday), Icon: TrendingUp, style: "bg-slate-100 text-slate-700" },
+    { label: "Đơn hàng hôm nay", value: String(todayOrders.length), Icon: ShoppingCart, style: "bg-slate-100 text-slate-700" },
+    { label: "Dư nợ toàn hệ thống", value: money(debt), Icon: CreditCard, style: "bg-slate-100 text-slate-700" },
+    { label: "Thực thu trong ngày", value: money(collected), Icon: Wallet, style: "bg-slate-100 text-slate-700" },
   ];
   const width = 700, height = 220, bar = 48, gap = (width - days.length * bar) / (days.length + 1);
 
@@ -94,12 +94,12 @@ export default async function DashboardPage() {
           <h2 className="font-semibold text-slate-900">Doanh số 7 ngày</h2>
           <div className="mt-5 overflow-hidden"><svg role="img" aria-label="Biểu đồ doanh số 7 ngày" viewBox={"0 0 " + width + " " + height} className="dashboard-sales-chart h-56 w-full">
             <line x1="0" y1={height - 28} x2={width} y2={height - 28} stroke="#e2e8f0" />
-            {days.map((day, index) => { const value = byDay.get(day) ?? 0; const barHeight = value ? Math.max(8, (height - 62) * value / max) : 3; const x = gap + index * (bar + gap); const y = height - 29 - barHeight; return <g key={day}><title>{shortDate(day) + ": " + money(value)}</title><rect x={x} y={y} width={bar} height={barHeight} rx="6" fill={day === today ? "#2563eb" : "#93c5fd"} /><text x={x + bar / 2} y={height - 8} textAnchor="middle" fill="#64748b" fontSize="12">{shortDate(day)}</text></g>; })}
+            {days.map((day, index) => { const value = byDay.get(day) ?? 0; const barHeight = value ? Math.max(8, (height - 62) * value / max) : 3; const x = gap + index * (bar + gap); const y = height - 29 - barHeight; return <g key={day}><title>{shortDate(day) + ": " + money(value)}</title><rect x={x} y={y} width={bar} height={barHeight} rx="6" fill={day === today ? "var(--brand-orange)" : "#e2e8f0"} /><text x={x + bar / 2} y={height - 8} textAnchor="middle" fill="#64748b" fontSize="12">{shortDate(day)}</text></g>; })}
           </svg></div>
         </article>
         <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2"><Package aria-hidden="true" className="h-5 w-5 text-blue-700" /><h2 className="font-semibold text-slate-900">10 đơn hàng mới nhất</h2></div>
-          {recentOrders.length === 0 ? <p className="py-10 text-center text-sm text-slate-500">Chưa có đơn hàng.</p> : <ul className="mt-4 divide-y divide-slate-100">{recentOrders.map((order) => <li key={order.id} className="flex min-w-0 items-center gap-1 py-3 text-xs"><Link title={order.ma_don_hang} href={"/danh-sach-don-hang/" + order.id} className="w-[8.5rem] shrink-0 truncate text-xs font-medium text-blue-700 hover:underline">{order.ma_don_hang}</Link><span title={customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"} className="min-w-0 flex-1 truncate text-slate-700">{customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"}</span><span className="w-10 shrink-0 text-slate-500">{shortDate(order.ngay_dat)}</span><span className="w-[4.5rem] shrink-0 text-right font-semibold text-slate-900">{money(Number(order.tong_tien))}</span></li>)}</ul>}
+          <div className="flex items-center gap-2"><Package aria-hidden="true" className="h-5 w-5 text-slate-500" /><h2 className="font-semibold text-slate-900">10 đơn hàng mới nhất</h2></div>
+          {recentOrders.length === 0 ? <p className="py-10 text-center text-sm text-slate-500">Chưa có đơn hàng.</p> : <ul className="mt-4 divide-y divide-slate-100">{recentOrders.map((order) => <li key={order.id} className="flex min-w-0 items-center gap-1 py-3 text-xs"><Link title={order.ma_don_hang} href={"/danh-sach-don-hang/" + order.id} className="w-[8.5rem] shrink-0 truncate text-xs font-medium text-primary hover:underline">{order.ma_don_hang}</Link><span title={customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"} className="min-w-0 flex-1 truncate text-slate-700">{customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"}</span><span className="w-10 shrink-0 text-slate-500">{shortDate(order.ngay_dat)}</span><span className="w-[4.5rem] shrink-0 text-right font-semibold text-slate-900">{money(Number(order.tong_tien))}</span></li>)}</ul>}
         </article>
       </section>
     </main>

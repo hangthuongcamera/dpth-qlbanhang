@@ -444,7 +444,7 @@ export function CustomerForm({
                   }
                 );
               }}
-              className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
             >
               <option value="true">Đang hoạt động</option>
               <option value="false">Ngừng hoạt động</option>

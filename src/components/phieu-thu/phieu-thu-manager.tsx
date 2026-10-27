@@ -136,7 +136,7 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
         <div className="relative grid gap-1.5 text-sm font-medium text-slate-700">
         <label htmlFor="receipt-search">Tìm phiếu thu</label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="app-search-icon" />
           <Input
             id="receipt-search"
             value={search}
@@ -147,7 +147,7 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
             onCompositionEnd={(event) => { setIsComposingSearch(false); setSearch(event.currentTarget.value); }}
             onChange={(event) => { setSearch(event.target.value); setPage(1); setSearchOpen(true); }}
             placeholder="Mã phiếu, khách hàng, mã tham chiếu"
-            className="h-10 pl-9 pr-9"
+            className="app-search-input app-search-input--clearable"
             role="combobox"
             aria-autocomplete="list"
             aria-expanded={searchOpen}
@@ -185,8 +185,8 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
         <label className="grid gap-1.5 text-sm font-medium text-slate-700">Phương thức<select value={methodFilter} onChange={(event) => { setMethodFilter(event.target.value); setPage(1); navigateList(1, { method: event.target.value }, true); }} className="h-10 w-full rounded-md border border-slate-200 bg-white px-2 text-sm font-normal"><option value="all">Tất cả</option>{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
     </section>
 
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="overflow-x-auto"><table className="w-full min-w-[850px] text-left text-sm">
+    <section className="app-data-table-shell overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto"><table className="app-data-table w-full min-w-[850px] text-left text-sm">
         <thead className="bg-slate-50 text-xs font-semibold text-slate-600"><tr><th className="px-4 py-3">Mã phiếu thu</th><th className="px-4 py-3">Ngày thu</th><th className="px-4 py-3">Khách hàng</th><th className="px-4 py-3">Phương thức</th><th className="px-4 py-3 text-right">Số tiền</th><th className="px-4 py-3 text-right">Chưa phân bổ</th><th className="px-4 py-3">Trạng thái</th><th className="px-4 py-3 text-right">Thao tác</th></tr></thead>
         <tbody className="divide-y divide-slate-100">{receipts.map((receipt) => {
           const allocated = receipt.allocations.reduce((sum, item) => sum + Number(item.so_tien), 0);
@@ -290,14 +290,14 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
   }
 
   return <>
-    <section className="space-y-4 rounded-xl border border-blue-200 bg-white p-4 shadow-sm sm:p-5">
+    <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex items-center justify-between gap-3"><div><h2 className="text-lg font-semibold text-slate-900">{initial ? "Sửa phiếu nháp " + initial.ma_phieu_thu : "Lập phiếu thu"}</h2><p className="text-sm text-slate-500">Phiếu nháp chưa ảnh hưởng công nợ.</p></div><Button variant="ghost" size="icon" onClick={onClose} aria-label="Đóng form"><X className="h-4 w-4" /></Button></div>
       {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="relative grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           <label htmlFor="receipt-customer-search">Khách hàng <span className="text-red-600">*</span></label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="app-search-icon" />
             <Input
               id="receipt-customer-search"
               value={customerSearch}
@@ -306,7 +306,7 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
               onKeyDown={(event) => { if (event.key === "Escape") setCustomerSearchOpen(false); }}
               onChange={(event) => { setCustomerSearch(event.target.value); setCustomerId(""); setAllocations({}); setCustomerSearchOpen(true); }}
               placeholder="Mã, tên hoặc số điện thoại"
-              className="h-10 pl-9 pr-9"
+              className="app-search-input app-search-input--clearable"
               role="combobox"
               aria-autocomplete="list"
               aria-expanded={customerSearchOpen}
@@ -422,3 +422,7 @@ function ReceiptPrintButton({ receipt }: { receipt: Receipt }) {
     </div></article>
   </>;
 }
+
+
+
+

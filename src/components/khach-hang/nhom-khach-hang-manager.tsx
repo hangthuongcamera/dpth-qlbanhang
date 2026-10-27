@@ -21,7 +21,7 @@ function Switch({ label, checked, disabled, onChange }: { label: string; checked
       aria-label={label}
       disabled={disabled}
       onClick={onChange}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 ${checked ? "bg-blue-600" : "bg-slate-300"}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 ${checked ? "bg-primary" : "bg-slate-300"}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${checked ? "translate-x-6" : "translate-x-1"}`} />
     </button>
@@ -92,17 +92,17 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
         </div>
       )}
       <div className="flex justify-end">
-        <Link href="/nhom-khach-hang/them" className="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/80"><Plus className="mr-2 h-4 w-4" />Thêm nhóm</Link>
+        <Link href="/nhom-khach-hang/them" className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/80"><Plus className="mr-2 h-4 w-4" />Thêm nhóm</Link>
       </div>
       <div className="overflow-x-auto rounded-xl border bg-white">
         <table className="w-full min-w-[700px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold text-slate-600"><tr><th className="px-4 py-3">Tên nhóm</th><th className="px-4 py-3 text-center">Đang hoạt động</th><th className="px-4 py-3 text-center">Dùng giá nhóm</th><th className="px-4 py-3 text-right">Thao tác</th></tr></thead>
           <tbody className="divide-y divide-slate-100">
             {groups.map((group) => <tr key={group.id} className="hover:bg-slate-50/70">
-              <td className="px-4 py-3"><Link href={`/nhom-khach-hang/${group.id}`} className="font-medium text-slate-900 hover:text-blue-700 hover:underline">{group.ten_nhom}</Link></td>
+              <td className="px-4 py-3"><Link href={`/nhom-khach-hang/${group.id}`} className="font-medium text-slate-900 hover:text-primary hover:underline">{group.ten_nhom}</Link></td>
               <td className="px-4 py-3"><div className="flex justify-center"><Switch label={`Đang hoạt động: ${group.ten_nhom}`} checked={group.trang_thai} disabled={busyId === group.id} onChange={() => void toggle(group, "trang_thai")} /></div></td>
               <td className="px-4 py-3"><div className="flex justify-center"><Switch label={`Dùng giá nhóm: ${group.ten_nhom}`} checked={group.ap_dung_bang_gia} disabled={busyId === group.id} onChange={() => void toggle(group, "ap_dung_bang_gia")} /></div></td>
-              <td className="px-4 py-3"><div className="flex justify-end gap-2"><Link href={`/nhom-khach-hang/${group.id}/chinh-sua`} className="inline-flex h-7 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-2.5 text-[0.8rem] font-medium transition hover:bg-muted"><Pencil className="h-3.5 w-3.5" />Sửa</Link><Button type="button" size="sm" variant="outline" className="border-red-200 text-red-700 hover:bg-red-50" disabled={busyId === group.id} onClick={() => setGroupToDelete(group)}><Trash2 className="mr-1.5 h-4 w-4" />Xóa</Button></div></td>
+              <td className="px-4 py-3"><div className="flex justify-end gap-2"><Link href={`/nhom-khach-hang/${group.id}/chinh-sua`} className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-2.5 text-sm font-medium transition hover:bg-muted"><Pencil className="h-3.5 w-3.5" />Sửa</Link><Button type="button" size="sm" variant="outline" className="border-red-200 text-red-700 hover:bg-red-50" disabled={busyId === group.id} onClick={() => setGroupToDelete(group)}><Trash2 className="mr-1.5 h-4 w-4" />Xóa</Button></div></td>
             </tr>)}
             {groups.length === 0 && <tr><td colSpan={4} className="px-4 py-12 text-center text-slate-500">Chưa có nhóm khách hàng.</td></tr>}
           </tbody>
@@ -128,3 +128,4 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
     </div>
   );
 }
+

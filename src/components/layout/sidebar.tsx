@@ -85,15 +85,15 @@ export function Sidebar() {
   );
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/20 bg-primary text-primary-foreground md:flex md:flex-col">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 bg-white text-slate-700 md:flex md:flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center border-b border-white/20 bg-black/15 px-6">
+      <div className="flex h-16 items-center border-b border-slate-200 bg-slate-50 px-6">
         <div>
-          <div className="text-lg font-bold text-primary-foreground">
+          <div className="text-lg font-bold text-primary">
             Thanh Hằng
           </div>
 
-          <div className="text-xs text-primary-foreground/70">
+          <div className="text-xs text-slate-500">
             Quản lý bán hàng
           </div>
         </div>
@@ -113,18 +113,18 @@ export function Sidebar() {
                   type="button"
                   aria-expanded={openMenu === item.title}
                   onClick={() => setOpenMenu((open) => open === item.title ? null : item.title)}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${isActive ? "bg-white/15 text-white" : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"}`}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${isActive ? "bg-primary/10 text-primary" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"}`}
                 >
                   <Icon className="h-5 w-5" />
                   <span className="flex-1">{item.title}</span>
                   <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === item.title ? "rotate-180" : ""}`} />
                 </button>
                 {openMenu === item.title && (
-                  <div className="ml-8 mt-1 space-y-1 border-l border-white/30 pl-3">
+                  <div className="ml-8 mt-1 space-y-1 border-l border-slate-200 pl-3">
                     {item.children.map((child) => {
                       const childActive = pathname === child.href || pathname.startsWith(`${child.href}/`);
                       return (
-                        <Link key={child.href} href={child.href} target={child.href === "/ban-nhanh" ? "_blank" : undefined} rel={child.href === "/ban-nhanh" ? "noopener noreferrer" : undefined} className={`block rounded-md px-3 py-2 text-sm transition ${childActive ? "bg-white/15 font-medium text-white" : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"}`}>
+                        <Link key={child.href} href={child.href} target={child.href === "/ban-nhanh" ? "_blank" : undefined} rel={child.href === "/ban-nhanh" ? "noopener noreferrer" : undefined} className={`block rounded-md px-3 py-2 text-sm transition ${childActive ? "bg-primary/10 font-medium text-primary" : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"}`}>
                           {child.title}
                         </Link>
                       );
@@ -145,8 +145,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                 isActive
-                  ? "bg-white/15 text-white"
-                  : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"
+                  ? "bg-primary/10 text-primary"
+                  : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
               <Icon className="h-5 w-5" />
@@ -158,7 +158,7 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom menu */}
-      <div className="border-t border-white/20 p-4">
+      <div className="border-t border-slate-200 p-4">
         {bottomMenuItems.map((item) => {
           const Icon = item.icon;
 
@@ -172,8 +172,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                 isActive
-                  ? "bg-white/15 text-white"
-                  : "text-primary-foreground/85 hover:bg-white/10 hover:text-white"
+                  ? "bg-primary/10 text-primary"
+                  : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
               <Icon className="h-5 w-5" />
@@ -186,6 +186,7 @@ export function Sidebar() {
     </aside>
   );
 }
+
 
 
 

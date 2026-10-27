@@ -18,7 +18,7 @@ function Field({ label, name, value, required = false, hint, maxLength }: {
 }) {
   return <label className="grid gap-1.5 text-sm font-medium text-slate-700">
     <span>{label}{required && <span className="text-red-600"> *</span>}</span>
-    <input name={name} defaultValue={value} required={required} maxLength={maxLength} className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
+    <input name={name} defaultValue={value} required={required} maxLength={maxLength} className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
     {hint && <span className="text-xs font-normal text-slate-500">{hint}</span>}
   </label>;
 }

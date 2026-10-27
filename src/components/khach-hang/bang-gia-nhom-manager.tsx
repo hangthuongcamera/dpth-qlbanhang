@@ -140,7 +140,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     {group && <>
       {!group.ap_dung_bang_gia && <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">Bảng giá nhóm đang tắt. Đơn hàng sẽ lấy giá mặc định; các giá đã khai báo vẫn được giữ để dùng lại khi bật bảng giá.</p>}
       <div className="relative max-w-lg">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search aria-hidden="true" className="app-search-icon" />
         <Input
           type="search"
           value={searchInput}
@@ -149,11 +149,11 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
           onCompositionEnd={(event) => { setSearchInput(event.currentTarget.value); setIsComposing(false); }}
           placeholder="Tìm theo mã sản phẩm, SKU hoặc tên sản phẩm"
           aria-label="Tìm theo mã sản phẩm, SKU hoặc tên sản phẩm"
-          className="h-10 bg-white pl-9"
+          className="app-search-input"
         />
       </div>
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-        <table className="w-full min-w-[900px] table-fixed text-left text-sm">
+      <div className="app-data-table-shell overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table className="app-data-table w-full min-w-[900px] table-fixed text-left text-sm">
           <colgroup><col className="w-[38%]" /><col className="w-[17%]" /><col className="w-[22%]" /><col className="w-[23%]" /></colgroup>
           <thead className="bg-slate-50 text-xs font-semibold text-slate-600"><tr><th className="px-4 py-3">Sản phẩm / biến thể</th><th className="px-4 py-3">Mã</th><th className="px-4 py-3">Giá mặc định</th><th className="px-4 py-3">Giá nhóm</th></tr></thead>
           <tbody className="divide-y divide-slate-100">
@@ -185,3 +185,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     </>}
   </div>;
 }
+
+
+
+

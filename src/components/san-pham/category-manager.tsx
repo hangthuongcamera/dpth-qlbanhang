@@ -194,7 +194,7 @@ export function CategoryManager({
       </div>
 
       <div className="relative max-w-lg">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search aria-hidden="true" className="app-search-icon" />
         <Input
           type="search"
           value={searchInput}
@@ -206,12 +206,12 @@ export function CategoryManager({
           }}
           placeholder="Tìm theo mã hoặc tên danh mục"
           aria-label="Tìm theo mã hoặc tên danh mục"
-          className="h-10 bg-white pl-9"
+          className="app-search-input"
         />
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-        <table className="w-full min-w-[620px] text-left text-sm">
+      <div className="app-data-table-shell overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table className="app-data-table w-full min-w-[620px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold text-slate-600">
             <tr>
               <th className="px-4 py-3">Mã danh mục</th>
@@ -335,3 +335,7 @@ export function CategoryManager({
     </div>
   );
 }
+
+
+
+

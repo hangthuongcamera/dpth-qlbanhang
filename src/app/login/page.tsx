@@ -52,7 +52,7 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-blue-600">Thanh Hằng</h1>
+          <h1 className="text-2xl font-bold text-primary">Thanh Hằng</h1>
           <p className="mt-2 text-sm text-slate-500">Đăng nhập hệ thống quản lý bán hàng</p>
         </div>
 

@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Search,
   Plus,
   ChevronLeft,
   ChevronRight,
@@ -353,8 +354,9 @@ export function CustomerTable({
         key={`customer-search-${search}`}
         className="grid gap-3 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-[minmax(0,1fr)_220px_auto] sm:items-end"
       >
-        <label className="relative grid gap-1.5 text-sm font-medium text-slate-700">
-          Tìm khách hàng
+        <label className="relative block">
+          <span className="sr-only">Tìm khách hàng</span>
+          <Search aria-hidden="true" className="app-search-icon" />
           <input
             type="search"
             value={searchInput}
@@ -367,7 +369,7 @@ export function CustomerTable({
               setSearchInput(event.currentTarget.value);
             }}
             placeholder="Mã, tên hoặc số điện thoại"
-            className="h-10 rounded-md border border-slate-200 px-3 font-normal outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            className="app-search-input font-normal"
             role="combobox"
             aria-autocomplete="list"
             aria-expanded={searchOpen && searchInput.trim().length >= 2}
@@ -394,9 +396,8 @@ export function CustomerTable({
         </label>
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:contents">
           <Button onClick={() => router.push("/danh-sach-khach-hang/them")} className="order-2 h-10 shrink-0 px-3 sm:px-4"><Plus className="mr-1.5 h-4 w-4" /><span className="text-sm">Thêm khách hàng</span></Button>
-          <label className="order-1 grid gap-1.5 text-sm font-medium text-slate-700">
-          <span className="hidden md:inline">Trạng thái</span>
-          <span className="sr-only md:hidden">Trạng thái</span>
+          <label className="order-1 grid">
+          <span className="sr-only">Trạng thái</span>
           <select
             value={status}
             onChange={(event) =>
@@ -492,7 +493,7 @@ export function CustomerTable({
       </div>
 
       {/* Bảng khách hàng trên máy tính */}
-      <div className="!mt-3 hidden overflow-x-auto rounded-lg border border-slate-200 bg-white md:block">
+      <div className="app-data-table-shell !mt-3 hidden overflow-x-auto rounded-xl border border-slate-200 bg-white md:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -738,7 +739,7 @@ export function CustomerTable({
             aria-modal="true"
             aria-labelledby="delete-dialog-title"
             aria-describedby="delete-dialog-description"
-            className="relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-300 sm:p-6"
+            className="relative z-10 w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-300 sm:p-6"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-50">
@@ -835,5 +836,8 @@ export function CustomerTable({
     </div>
   );
 }
+
+
+
 
 

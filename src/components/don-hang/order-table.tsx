@@ -195,16 +195,7 @@ export function OrderTable({
 
       {/* Top Header & Actions */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Danh sách đơn hàng
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Quản lý đơn đặt hàng, bán nhanh, công nợ và tiến độ thực hiện
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
           <Link href="/don-dat-hang" className={buttonVariants({ variant: "outline" })}>
             + Đơn đặt hàng
           </Link>
@@ -219,7 +210,7 @@ export function OrderTable({
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {/* Search box */}
           <div className="relative sm:col-span-2 lg:col-span-2">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="app-search-icon" />
             <Input
               type="text"
               placeholder="Tìm theo mã đơn, tên khách, số điện thoại..."
@@ -227,7 +218,7 @@ export function OrderTable({
               onChange={(e) => setSearchInput(e.target.value)}
               onCompositionStart={() => setIsComposing(true)}
               onCompositionEnd={() => setIsComposing(false)}
-              className="pl-9 pr-8"
+              className="app-search-input app-search-input--clearable"
             />
             {searchInput && (
               <button
@@ -252,7 +243,7 @@ export function OrderTable({
                 const params = buildParams({ page: 1, orderType: e.target.value });
                 navigateWithParams(params);
               }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
             >
               <option value="all">Tất cả loại đơn</option>
               <option value="dat_hang">Đơn đặt hàng</option>
@@ -268,7 +259,7 @@ export function OrderTable({
                 const params = buildParams({ page: 1, status: e.target.value });
                 navigateWithParams(params);
               }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
             >
               <option value="all">Tất cả trạng thái</option>
               <option value="xac_nhan">Đã xác nhận</option>
@@ -286,7 +277,7 @@ export function OrderTable({
                 const params = buildParams({ page: 1, paymentStatus: e.target.value });
                 navigateWithParams(params);
               }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
             >
               <option value="all">Tất cả thanh toán</option>
               <option value="con_no">Còn nợ / Chưa thanh toán</option>
@@ -341,7 +332,7 @@ export function OrderTable({
       </div>
 
       {/* Main Table Container */}
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="app-data-table-shell overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         {/* Desktop Table View */}
         <div className="hidden md:block overflow-x-auto">
           <Table>
@@ -371,7 +362,7 @@ export function OrderTable({
                     <TableCell className="font-medium">
                       <Link
                         href={`/danh-sach-don-hang/${order.id}`}
-                        className="text-blue-600 hover:underline"
+                        className="text-primary hover:underline"
                       >
                         {order.ma_don_hang}
                       </Link>
@@ -440,7 +431,7 @@ export function OrderTable({
                       <div className="flex items-center justify-center gap-1">
                         <Link
                           href={`/danh-sach-don-hang/${order.id}`}
-                          className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-blue-600"
+                          className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-primary"
                           title="Xem chi tiết"
                         >
                           <Eye className="h-4 w-4" />
@@ -484,7 +475,7 @@ export function OrderTable({
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     href={`/danh-sach-don-hang/${order.id}`}
-                    className="font-bold text-base text-blue-600 hover:underline"
+                    className="font-bold text-base text-primary hover:underline"
                   >
                     {order.ma_don_hang}
                   </Link>
@@ -585,7 +576,7 @@ export function OrderTable({
                   const params = buildParams({ page: 1, pageSize: nextPageSize });
                   navigateWithParams(params);
                 }}
-                className="h-8 rounded border border-slate-200 bg-white px-2 text-xs font-medium focus:border-blue-500 focus:outline-none"
+                className="h-8 rounded border border-slate-200 bg-white px-2 text-xs font-medium focus:border-primary focus:outline-none"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -666,7 +657,7 @@ export function OrderTable({
       {/* Delete Confirmation Modal */}
       {orderToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl animate-in zoom-in-95 duration-200">
             <div className="flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
                 <AlertTriangle className="h-6 w-6" />
@@ -726,3 +717,7 @@ export function OrderTable({
     </div>
   );
 }
+
+
+
+

@@ -40,10 +40,12 @@ export default async function ChiTietSanPhamPage({ params }: PageProps) {
         </dl>
       </section>
 
-      {hasActiveVariants && <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      {hasActiveVariants && <section className="app-data-table-shell overflow-hidden rounded-xl border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-4 sm:px-5"><h2 className="font-semibold text-slate-900">Biến thể ({variants.length})</h2><p className="mt-1 text-sm text-slate-500">Chọn biến thể để xem thông tin chi tiết.</p></div>
-        <div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="px-4 py-3">SKU</th><th className="px-4 py-3">Thuộc tính</th><th className="px-4 py-3">Giá nhập</th><th className="px-4 py-3">Giá bán</th><th className="px-4 py-3">Trạng thái</th></tr></thead><tbody className="divide-y divide-slate-100">{variants.map((variant) => <tr key={variant.id} className="hover:bg-blue-50"><td className="px-4 py-3 font-medium"><Link className="text-blue-700 hover:underline" href={`/danh-sach-san-pham/${product.id}/bien-the/${variant.id}`}>{variant.ma_sku}</Link></td><td className="px-4 py-3">{Object.entries(variant.thuoc_tinh ?? {}).map(([name, value]) => `${name}: ${value}`).join(" · ") || "—"}</td><td className="px-4 py-3">{formatCurrency(Number(variant.gia_nhap))}</td><td className="px-4 py-3">{formatCurrency(Number(variant.gia_ban))}</td><td className="px-4 py-3">{variant.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}</td></tr>)}</tbody></table></div>
+        <div className="overflow-x-auto"><table className="app-data-table w-full min-w-[720px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="px-4 py-3">SKU</th><th className="px-4 py-3">Thuộc tính</th><th className="px-4 py-3">Giá nhập</th><th className="px-4 py-3">Giá bán</th><th className="px-4 py-3">Trạng thái</th></tr></thead><tbody className="divide-y divide-slate-100">{variants.map((variant) => <tr key={variant.id} className="hover:bg-slate-50"><td className="px-4 py-3 font-medium"><Link className="text-primary hover:underline" href={`/danh-sach-san-pham/${product.id}/bien-the/${variant.id}`}>{variant.ma_sku}</Link></td><td className="px-4 py-3">{Object.entries(variant.thuoc_tinh ?? {}).map(([name, value]) => `${name}: ${value}`).join(" · ") || "—"}</td><td className="px-4 py-3">{formatCurrency(Number(variant.gia_nhap))}</td><td className="px-4 py-3">{formatCurrency(Number(variant.gia_ban))}</td><td className="px-4 py-3">{variant.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}</td></tr>)}</tbody></table></div>
       </section>}
     </div>
   </div>;
 }
+
+

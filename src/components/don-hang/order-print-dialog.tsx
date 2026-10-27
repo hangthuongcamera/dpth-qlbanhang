@@ -71,7 +71,7 @@ export function OrderPrintDialog({ order, customer, lines, paidAmount, remaining
         <p className="print-row"><span>Đã thanh toán</span><span>{formatCurrency(paidAmount)}</span></p>
         <p className="print-row"><span>Còn phải thu</span><span>{formatCurrency(remainingAmount)}</span></p>
         <div className="print-separator" />
-        {remainingAmount > 0 ? <div className="print-center"><img className="print-qr print-qr-small" src={qrUrl} alt="Mã VietQR thanh toán số tiền còn nợ" /><p>Quét mã để thanh toán phần còn lại</p><p>{settings.ten_ngan_hang} · {settings.so_tai_khoan}</p><p>{settings.ten_chu_tai_khoan}</p></div> : <p className="print-center print-paid">ĐÃ THANH TOÁN ĐỦ</p>}
+        {remainingAmount > 0 ? <div className="print-center"><img className="print-qr" src={qrUrl} alt="Mã VietQR thanh toán số tiền còn nợ" /><p>Quét mã để thanh toán phần còn lại</p><p>{settings.ten_ngan_hang} · {settings.so_tai_khoan}</p><p>{settings.ten_chu_tai_khoan}</p></div> : <p className="print-center print-paid">ĐÃ THANH TOÁN ĐỦ</p>}
         <p className="print-center">Cảm ơn Quý khách và hẹn gặp lại!</p>
       </article> : <article className="print-paper print-invoice">
         <header className="print-center"><h1>PHIẾU ĐẶT HÀNG &amp; GIAO NHẬN ĐỒNG PHỤC</h1></header>

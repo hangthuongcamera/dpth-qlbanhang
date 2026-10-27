@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Save, Trash2 } from "lucide-react";
+import { Save, Search, Trash2 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -170,7 +170,8 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
       <div className="border-b p-4"><h2 className="font-semibold">Sản phẩm trong đơn</h2></div>
       <div className="p-4"><div className="relative grid gap-1.5 text-sm font-medium">
         <label htmlFor="edit-product-search">Thêm sản phẩm hoặc biến thể</label>
-        <Input id="edit-product-search" value={productSearch} onFocus={() => setSearchOpen(true)} onClick={() => setSearchOpen(true)} onBlur={() => window.setTimeout(() => setSearchOpen(false), 180)} onChange={(event) => { setProductSearch(event.target.value); setSearchOpen(true); }} placeholder="Tìm theo mã, SKU hoặc tên sản phẩm" autoComplete="off" />
+        <Search aria-hidden="true" className="app-search-icon" />
+        <Input id="edit-product-search" value={productSearch} onFocus={() => setSearchOpen(true)} onClick={() => setSearchOpen(true)} onBlur={() => window.setTimeout(() => setSearchOpen(false), 180)} onChange={(event) => { setProductSearch(event.target.value); setSearchOpen(true); }} placeholder="Tìm theo mã, SKU hoặc tên sản phẩm" autoComplete="off" className="app-search-input" />
         {searchOpen && <div className="absolute inset-x-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-lg border bg-white py-1 shadow-lg">{results.map(({ product, variant, label }) => <button type="button" key={variant?.id ?? product.id} onMouseDown={(event) => event.preventDefault()} onClick={() => addProduct(product, variant)} className="block w-full px-3 py-2 text-left text-sm hover:bg-slate-50"><span className="block font-medium">{label}</span><span className="text-xs text-slate-500">{formatCurrency(Number(variant?.gia_ban ?? product.gia_ban))} · {product.don_vi_tinh}</span></button>)}{results.length === 0 && <p className="px-3 py-3 text-sm text-slate-500">Không tìm thấy sản phẩm phù hợp.</p>}</div>}
       </div></div>
 
@@ -187,3 +188,6 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
     <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href={`/danh-sach-don-hang/${order.id}`} className={buttonVariants({ variant: "outline" })}>Hủy</Link><Button type="submit" disabled={saving || !lines.length}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Lưu thay đổi"}</Button></div>
   </form>;
 }
+
+
+
