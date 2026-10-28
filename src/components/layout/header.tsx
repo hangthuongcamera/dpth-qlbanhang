@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { MobileSidebar } from "./mobile-sidebar";
 import { useState } from "react";
 import { LogoutButton } from "./logout-button";
+import type { VaiTro } from "@/lib/supabase/user-profile";
 
 const pageConfig = {
   "/dashboard": {
@@ -62,9 +63,19 @@ const pageConfig = {
     title: "Cài đặt",
     description: "Cấu hình hệ thống.",
   },
+  "/nhan-vien": {
+    title: "Nhân viên",
+    description: "Quản lý tài khoản nhân viên.",
+  },
 } as const;
 
-export function Header({ showMobileMenu = true }: { showMobileMenu?: boolean }) {
+interface HeaderProps {
+  showMobileMenu?: boolean;
+  vaiTro?: VaiTro;
+  hoTen?: string;
+}
+
+export function Header({ showMobileMenu = true, vaiTro = "staff", hoTen = "" }: HeaderProps) {
   const pathname = usePathname();
   const isFastSale = pathname.startsWith("/ban-nhanh");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -76,6 +87,9 @@ export function Header({ showMobileMenu = true }: { showMobileMenu?: boolean }) 
 
       return pathname === path || pathname.startsWith(`${path}/`);
     })?.[1] ?? pageConfig["/dashboard"];
+
+  const displayName = hoTen || "Admin";
+  const roleLabel = vaiTro === "owner" ? "Chủ cửa hàng" : "Nhân viên";
 
   return (
     <header className={`sticky top-0 z-30 flex items-center justify-between px-4 md:px-6 ${isFastSale ? "relative h-[54px] min-h-[54px] bg-primary text-primary-foreground" : "relative min-h-16 border-b border-slate-200 bg-white"}`}>
@@ -93,6 +107,8 @@ export function Header({ showMobileMenu = true }: { showMobileMenu?: boolean }) 
           <MobileSidebar
             open={mobileSidebarOpen}
             onOpenChange={setMobileSidebarOpen}
+            vaiTro={vaiTro}
+            hoTen={hoTen}
           />
         </div>}
 
@@ -115,13 +131,11 @@ export function Header({ showMobileMenu = true }: { showMobileMenu?: boolean }) 
         </Avatar>
 
         <div className="hidden sm:block">
-          <p className={`text-sm font-medium ${isFastSale ? "text-white" : "text-slate-900"}`}>Admin</p>
-          <p className={`text-xs ${isFastSale ? "text-white/80" : "text-slate-500"}`}>Quản trị viên</p>
+          <p className={`text-sm font-medium ${isFastSale ? "text-white" : "text-slate-900"}`}>{displayName}</p>
+          <p className={`text-xs ${isFastSale ? "text-white/80" : "text-slate-500"}`}>{roleLabel}</p>
         </div>
         <LogoutButton light={isFastSale} />
       </div>
     </header>
   );
 }
-
-

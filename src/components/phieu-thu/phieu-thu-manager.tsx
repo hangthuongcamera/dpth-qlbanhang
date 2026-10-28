@@ -68,15 +68,49 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
   const pageSize = 10;
   const pageCount = Math.max(1, Math.ceil(totalCount / pageSize));
 
-  useEffect(() => { setSearch(initialSearch); setFromDate(initialFromDate); setToDate(initialToDate); setStatusFilter(initialStatus); setMethodFilter(initialMethod); setPage(initialPage); }, [initialSearch, initialFromDate, initialToDate, initialStatus, initialMethod, initialPage]);
+  const [prevProps, setPrevProps] = useState({
+    search: initialSearch,
+    fromDate: initialFromDate,
+    toDate: initialToDate,
+    status: initialStatus,
+    method: initialMethod,
+    page: initialPage,
+  });
+
+  if (
+    prevProps.search !== initialSearch ||
+    prevProps.fromDate !== initialFromDate ||
+    prevProps.toDate !== initialToDate ||
+    prevProps.status !== initialStatus ||
+    prevProps.method !== initialMethod ||
+    prevProps.page !== initialPage
+  ) {
+    setPrevProps({
+      search: initialSearch,
+      fromDate: initialFromDate,
+      toDate: initialToDate,
+      status: initialStatus,
+      method: initialMethod,
+      page: initialPage,
+    });
+    setSearch(initialSearch);
+    setFromDate(initialFromDate);
+    setToDate(initialToDate);
+    setStatusFilter(initialStatus);
+    setMethodFilter(initialMethod);
+    setPage(initialPage);
+  }
 
   useEffect(() => {
-    const query = search.trim();
-    if (!searchOpen || query.length < 2) { setSuggestions([]); return; }
     let active = true;
+    const query = search.trim();
     const timeoutId = setTimeout(() => {
+      if (!searchOpen || query.length < 2) {
+        if (active) setSuggestions([]);
+        return;
+      }
       void goiYPhieuThu(query).then((items) => { if (active) setSuggestions(items); });
-    }, 250);
+    }, searchOpen && query.length >= 2 ? 250 : 0);
     return () => { active = false; clearTimeout(timeoutId); };
   }, [search, searchOpen]);
 
@@ -231,9 +265,9 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
   const [date, setDate] = useState(initial?.ngay_thu.slice(0, 10) ?? today());
   const [amount, setAmount] = useState(initial ? formatNumber(Number(initial.tong_tien)) : "");
   const [method, setMethod] = useState(initial?.phuong_thuc_thanh_toan ?? "tien_mat");
-  const [account, setAccount] = useState(initial?.tai_khoan_nhan ?? "");
-  const [reference, setReference] = useState(initial?.ma_tham_chieu ?? "");
-  const [payer, setPayer] = useState(initial?.nguoi_nop ?? "");
+  const [account] = useState(initial?.tai_khoan_nhan ?? "");
+  const [reference] = useState(initial?.ma_tham_chieu ?? "");
+  const [payer] = useState(initial?.nguoi_nop ?? "");
   const [note, setNote] = useState(initial?.ghi_chu ?? "");
   const [allocations, setAllocations] = useState<Record<string, string>>(Object.fromEntries((initial?.allocations ?? []).map((item) => [item.don_hang_id, formatNumber(Number(item.so_tien))])));
   const [previewOpen, setPreviewOpen] = useState(false);

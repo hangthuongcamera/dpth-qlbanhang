@@ -9,6 +9,7 @@ import { OrderPrintDialog } from "@/components/don-hang/order-print-dialog";
 import { getTrangThaiBadge, getLoaiDonHangBadge, formatCurrency } from "@/types/don-hang";
 
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
 import { DEFAULT_CUA_HANG_SETTINGS, type CuaHangSettings } from "@/lib/cua-hang-settings";
 
 type Props = {
@@ -25,10 +26,17 @@ const paymentMethodLabels: Record<string, string> = {
 
 export default async function DonHangChiTietPage({ params }: Props) {
   const { id } = await params;
+  const userProfile = await getCurrentUserProfile();
   const supabase = await createClient();
   const { data: order, error: orderError } = await supabase.from("don_hang").select("*").eq("id", id).maybeSingle();
   if (orderError) throw new Error("Không thể tải đơn hàng.");
   if (!order) notFound();
+
+  // Nhân viên (staff) chỉ được xem đơn hàng do chính mình tạo
+  if (userProfile?.vai_tro === "staff" && order.created_by && order.created_by !== userProfile.user_id) {
+    notFound();
+  }
+
   const { data: detailRows, error: detailError } = await supabase.from("don_hang_chi_tiet").select("*").eq("don_hang_id", id).order("created_at");
   if (detailError) throw new Error("Không thể tải chi tiết đơn hàng.");
   const details = detailRows ?? [];
@@ -58,6 +66,8 @@ export default async function DonHangChiTietPage({ params }: Props) {
   const variantMap = new Map((variants ?? []).map((item) => [item.id, item] as const));
   const statusBadge = getTrangThaiBadge(order.trang_thai);
   const typeBadge = getLoaiDonHangBadge(order.loai_don_hang);
+  const isStaff = userProfile?.vai_tro === "staff";
+  const isOwnerOfOrder = !order.created_by || order.created_by === userProfile?.user_id;
   const printLines = details.map((item) => {
     const product = productMap.get(item.san_pham_id);
     const variant = variantMap.get(item.bien_the_san_pham_id);
@@ -86,7 +96,9 @@ export default async function DonHangChiTietPage({ params }: Props) {
         <p className="mt-1 text-sm text-slate-500">{customer?.ten_khach_hang ?? "Khách hàng"} · {customer?.ma_khach_hang ?? ""}</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        {(order.trang_thai === "xac_nhan" || order.trang_thai === "dang_thuc_hien") && <Link href={`/danh-sach-don-hang/${id}/chinh-sua`} className={buttonVariants({ variant: "outline" })}>Chỉnh sửa</Link>}
+        {(order.trang_thai === "xac_nhan" || order.trang_thai === "dang_thuc_hien") && (!isStaff || isOwnerOfOrder) && (
+          <Link href={`/danh-sach-don-hang/${id}/chinh-sua`} className={buttonVariants({ variant: "outline" })}>Chỉnh sửa</Link>
+        )}
         <OrderPrintDialog
           settings={storeSettings}
           order={{ ma_don_hang: order.ma_don_hang, ngay_dat: order.ngay_dat, han_giao: order.han_giao, giao_hang: Boolean(order.giao_hang), so_dien_thoai_giao_hang: order.so_dien_thoai_giao_hang ?? null, dia_chi_giao_hang: order.dia_chi_giao_hang ?? null, tam_tinh: Number(order.tam_tinh), giam_gia: Number(order.giam_gia), phi_van_chuyen: Number(order.phi_van_chuyen), tong_tien: Number(order.tong_tien), loai_don_hang: order.loai_don_hang }}
@@ -96,7 +108,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
           remainingAmount={remainingAmount}
         />
         <OrderStatusActions orderId={id} currentStatus={order.trang_thai} orderType={order.loai_don_hang} />
-        <OrderDeleteButton orderId={id} orderCode={order.ma_don_hang} paidAmount={paidAmount} />
+        {!isStaff && <OrderDeleteButton orderId={id} orderCode={order.ma_don_hang} paidAmount={paidAmount} />}
         <Link href="/danh-sach-don-hang" className={buttonVariants({ variant: "outline" })}>Quay lại danh sách</Link>
       </div>
     </div>

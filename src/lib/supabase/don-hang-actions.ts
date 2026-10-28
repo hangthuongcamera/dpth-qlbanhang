@@ -9,6 +9,7 @@ export type ChiTietDonHangInput = {
   don_gia: number;
   gia_goc: number;
   gia_da_chinh_sua_thu_cong: boolean;
+  gia_von?: number;
 };
 
 export async function taoDonHang(input: {
@@ -36,12 +37,14 @@ export async function taoDonHang(input: {
   if (customerError || !customer) throw new Error("Không tìm thấy khách hàng để tạo đơn.");
   const productIds = [...new Set(input.chi_tiet.map((item) => item.san_pham_id))];
   const [{ data: productRows, error: productError }, { data: variantRows, error: variantError }] = await Promise.all([
-    supabase.from("san_pham").select("id, gia_ban").in("id", productIds).eq("trang_thai", true),
-    supabase.from("bien_the_san_pham").select("id, san_pham_id, gia_ban").in("san_pham_id", productIds).eq("trang_thai", true),
+    supabase.from("san_pham").select("id, gia_ban, gia_nhap").in("id", productIds).eq("trang_thai", true),
+    supabase.from("bien_the_san_pham").select("id, san_pham_id, gia_ban, gia_nhap").in("san_pham_id", productIds).eq("trang_thai", true),
   ]);
   if (productError || variantError) throw new Error("Không thể kiểm tra giá mặc định của sản phẩm.");
   const productMap = new Map((productRows ?? []).map((item) => [item.id, Number(item.gia_ban)] as const));
+  const productCostMap = new Map((productRows ?? []).map((item) => [item.id, Number(item.gia_nhap || 0)] as const));
   const variantMap = new Map((variantRows ?? []).map((item) => [item.id, { sanPhamId: item.san_pham_id, gia: Number(item.gia_ban) }] as const));
+  const variantCostMap = new Map((variantRows ?? []).map((item) => [item.id, Number(item.gia_nhap || 0)] as const));
   const activeVariantCounts = new Map<string, number>();
   for (const variant of variantRows ?? []) activeVariantCounts.set(variant.san_pham_id, (activeVariantCounts.get(variant.san_pham_id) ?? 0) + 1);
 
@@ -74,7 +77,15 @@ export async function taoDonHang(input: {
     }
     const groupPriceKey = item.bien_the_san_pham_id ?? item.san_pham_id;
     const basePrice = groupPricingEnabled ? groupPrices.get(groupPriceKey) ?? fallbackPrice : fallbackPrice;
-    return { ...item, gia_goc: basePrice, don_gia: item.gia_da_chinh_sua_thu_cong ? item.don_gia : basePrice };
+    const cost = item.bien_the_san_pham_id
+      ? variantCostMap.get(item.bien_the_san_pham_id) ?? 0
+      : productCostMap.get(item.san_pham_id) ?? 0;
+    return {
+      ...item,
+      gia_goc: basePrice,
+      don_gia: item.gia_da_chinh_sua_thu_cong ? item.don_gia : basePrice,
+      gia_von: cost,
+    };
   });
   const subtotal = details.reduce((sum, item) => sum + item.so_luong * item.don_gia, 0);
   if (!Number.isFinite(input.giam_gia) || input.giam_gia < 0 || input.giam_gia > subtotal) throw new Error("Giảm giá phải nằm trong khoảng từ 0 đến tạm tính.");

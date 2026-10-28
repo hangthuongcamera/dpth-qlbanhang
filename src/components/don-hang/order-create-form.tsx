@@ -56,7 +56,6 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
   const [receiptPreviewOpen, setReceiptPreviewOpen] = useState(false);
   const [receiptPreviewAccepted, setReceiptPreviewAccepted] = useState(false);
   const customer = customers.find((item) => item.id === customerId);
-  const customerGroup = groups.find((item) => item.id === customer?.nhom_khach_hang_id);
   const customerMatches = useMemo(() => {
     const query = normalize(customerSearch);
     const availableCustomers = customers.filter((item) => orderType === "ban_nhanh" || !item.la_khach_le);
@@ -296,10 +295,13 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
 
   useEffect(() => {
     if (!pos || !hasPosHeader) {
-      setPosHeaderTarget(null);
-      return;
+      const timer = setTimeout(() => setPosHeaderTarget(null), 0);
+      return () => clearTimeout(timer);
     }
-    setPosHeaderTarget(document.getElementById("fast-sale-header-slot"));
+    const timer = setTimeout(() => {
+      setPosHeaderTarget(document.getElementById("fast-sale-header-slot"));
+    }, 0);
+    return () => clearTimeout(timer);
   }, [pos, hasPosHeader]);
 
   return <><form ref={formRef} onSubmit={submit} className="space-y-4">

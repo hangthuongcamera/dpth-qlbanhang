@@ -174,17 +174,17 @@ export function CustomerTable({
   }, [searchInput, search, pageSize, status, router, isComposing]);
 
   useEffect(() => {
-    const query = searchInput.trim();
-    if (!searchOpen || query.length < 2) {
-      setSearchSuggestions([]);
-      return;
-    }
     let active = true;
+    const query = searchInput.trim();
     const timeoutId = setTimeout(() => {
+      if (!searchOpen || query.length < 2) {
+        if (active) setSearchSuggestions([]);
+        return;
+      }
       void goiYKhachHang(query).then((items) => {
         if (active) setSearchSuggestions(items);
       });
-    }, 300);
+    }, searchOpen && query.length >= 2 ? 300 : 0);
     return () => {
       active = false;
       clearTimeout(timeoutId);

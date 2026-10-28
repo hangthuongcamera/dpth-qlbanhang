@@ -40,7 +40,7 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.assign("/dashboard");
+      window.location.href = "/dashboard";
     } catch {
       setError("Không thể đăng nhập. Vui lòng kiểm tra kết nối và thử lại.");
     } finally {

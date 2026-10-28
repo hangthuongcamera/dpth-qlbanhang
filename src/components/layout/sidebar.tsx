@@ -13,7 +13,9 @@ import {
   BarChart3,
   Settings,
   ChevronDown,
+  UserCog,
 } from "lucide-react";
+import type { VaiTro } from "@/lib/supabase/user-profile";
 
 const menuItems = [
   {
@@ -61,11 +63,17 @@ const menuItems = [
   },
 ];
 
-const bottomMenuItems = [
+// Menu chỉ dành cho owner
+const ownerMenuItems = [
   {
     title: "Báo cáo",
     href: "/bao-cao",
     icon: BarChart3,
+  },
+  {
+    title: "Nhân viên",
+    href: "/nhan-vien",
+    icon: UserCog,
   },
   {
     title: "Cài đặt",
@@ -74,7 +82,20 @@ const bottomMenuItems = [
   },
 ];
 
-export function Sidebar() {
+// Menu cho tất cả (staff cũng thấy Cài đặt nhưng ẩn Báo cáo và Nhân viên)
+const staffBottomItems = [
+  {
+    title: "Cài đặt",
+    href: "/cai-dat",
+    icon: Settings,
+  },
+];
+
+interface SidebarProps {
+  vaiTro?: VaiTro;
+}
+
+export function Sidebar({ vaiTro = "staff" }: SidebarProps) {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<string | null>(() =>
     pathname.startsWith("/danh-muc-san-pham") || pathname.startsWith("/danh-sach-san-pham")
@@ -83,6 +104,8 @@ export function Sidebar() {
         ? "Khách hàng"
         : pathname.startsWith("/danh-sach-don-hang") || pathname.startsWith("/don-dat-hang") || pathname.startsWith("/ban-nhanh") ? "Đơn hàng" : null,
   );
+
+  const bottomItems = vaiTro === "owner" ? ownerMenuItems : staffBottomItems;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 bg-white text-slate-700 md:flex md:flex-col">
@@ -100,7 +123,7 @@ export function Sidebar() {
       </div>
 
       {/* Menu */}
-      <nav className="flex-1 space-y-1 p-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {menuItems.map((item) => {
           const Icon = item.icon;
 
@@ -142,7 +165,7 @@ export function Sidebar() {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={item.href!}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                 isActive
                   ? "bg-primary/10 text-primary"
@@ -157,9 +180,9 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom menu */}
+      {/* Bottom menu — phân theo vai trò */}
       <div className="border-t border-slate-200 p-4">
-        {bottomMenuItems.map((item) => {
+        {bottomItems.map((item) => {
           const Icon = item.icon;
 
           const isActive =
@@ -186,7 +209,3 @@ export function Sidebar() {
     </aside>
   );
 }
-
-
-
-

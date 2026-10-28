@@ -1,5 +1,6 @@
 import { OrderTable, OrderListItem } from "@/components/don-hang/order-table";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
 
 const DEFAULT_PAGE_SIZE = 10;
 const ALLOWED_PAGE_SIZES = [10, 20, 50, 100];
@@ -33,6 +34,7 @@ export default async function DanhSachDonHangPage({ searchParams }: PageProps) {
   const fromDate = params.fromDate?.trim() ?? "";
   const toDate = params.toDate?.trim() ?? "";
 
+  const userProfile = await getCurrentUserProfile();
   const supabase = await createClient();
 
   // Tìm kiếm khách hàng theo từ khóa nếu có
@@ -78,6 +80,11 @@ export default async function DanhSachDonHangPage({ searchParams }: PageProps) {
 
   if (toDate) {
     query = query.lte("ngay_dat", toDate);
+  }
+
+  // Nếu là nhân viên (staff), chỉ xem đơn hàng do mình tạo
+  if (userProfile?.vai_tro === "staff" && userProfile.user_id) {
+    query = query.eq("created_by", userProfile.user_id);
   }
 
   const from = (currentPage - 1) * pageSize;

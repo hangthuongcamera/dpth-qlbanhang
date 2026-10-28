@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { buttonVariants } from "@/components/ui/button";
 import { getSanPhamById } from "@/lib/supabase/san-pham-server";
+import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
 
 type PageProps = { params: Promise<{ id: string; variantId: string }> };
 
@@ -10,6 +11,8 @@ const formatCurrency = (value: number) => `${new Intl.NumberFormat("vi-VN", { ma
 
 export default async function ChiTietBienThePage({ params }: PageProps) {
   const { id, variantId } = await params;
+  const userProfile = await getCurrentUserProfile();
+  const isStaff = userProfile?.vai_tro === "staff";
   let product;
   try {
     product = await getSanPhamById(id);
@@ -30,7 +33,7 @@ export default async function ChiTietBienThePage({ params }: PageProps) {
         <dl className="mt-4 grid gap-4 sm:grid-cols-2">
           <div><dt className="text-sm text-slate-500">Mã SKU</dt><dd className="mt-1 font-medium">{variant.ma_sku || "—"}</dd></div>
           <div><dt className="text-sm text-slate-500">Sản phẩm cha</dt><dd className="mt-1"><Link href={`/danh-sach-san-pham/${product.id}`} className="text-primary hover:underline">{product.ten_san_pham} · {product.ma_san_pham}</Link></dd></div>
-          <div><dt className="text-sm text-slate-500">Giá nhập</dt><dd className="mt-1">{formatCurrency(Number(variant.gia_nhap))}</dd></div>
+          {!isStaff && <div><dt className="text-sm text-slate-500">Giá nhập</dt><dd className="mt-1">{formatCurrency(Number(variant.gia_nhap))}</dd></div>}
           <div><dt className="text-sm text-slate-500">Giá bán</dt><dd className="mt-1">{formatCurrency(Number(variant.gia_ban))}</dd></div>
           <div><dt className="text-sm text-slate-500">Trạng thái biến thể</dt><dd className="mt-1">{variant.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}</dd></div>
           <div><dt className="text-sm text-slate-500">Trạng thái sản phẩm</dt><dd className="mt-1">{product.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}</dd></div>

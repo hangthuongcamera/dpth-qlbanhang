@@ -1,6 +1,7 @@
 import { ShoppingCart, CreditCard, Wallet, TrendingUp, Package } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
 
 type Order = { id: string; ma_don_hang: string; khach_hang_id: string | null; ngay_dat: string; tong_tien: number | string };
 
@@ -23,6 +24,8 @@ function shortDate(day: string) {
 
 
 export default async function DashboardPage() {
+  const userProfile = await getCurrentUserProfile();
+  const isStaff = userProfile?.vai_tro === "staff";
   const supabase = await createClient();
   const today = dateBangkok(new Date());
   const tomorrow = shiftDate(today, 1);
@@ -34,8 +37,21 @@ export default async function DashboardPage() {
     supabase.from("don_hang").select("id, ma_don_hang, khach_hang_id, ngay_dat, tong_tien").order("created_at", { ascending: false }).limit(10),
   ]);
   if (ordersResult.error || receiptsResult.error || debtResult.error || recentResult.error) {
-    console.error("Lỗi tải Dashboard", ordersResult.error, receiptsResult.error, debtResult.error, recentResult.error);
-    throw new Error("Không thể tải dữ liệu tổng quan.");
+    console.error("Lỗi tải Dashboard:", {
+      ordersError: ordersResult.error,
+      receiptsError: receiptsResult.error,
+      debtError: debtResult.error,
+      recentError: recentResult.error,
+    });
+    throw new Error(
+      `Không thể tải dữ liệu tổng quan: ${
+        ordersResult.error?.message ||
+        receiptsResult.error?.message ||
+        debtResult.error?.message ||
+        recentResult.error?.message ||
+        ""
+      }`
+    );
   }
 
   const orders = [...(ordersResult.data ?? [])] as Order[];
@@ -76,12 +92,16 @@ export default async function DashboardPage() {
     for (const row of result.data ?? []) customers.set(row.id, row.ten_khach_hang);
   }
 
-  const cards = [
-    { label: "Doanh số hôm nay", value: money(salesToday), Icon: TrendingUp, style: "bg-slate-100 text-slate-700" },
-    { label: "Đơn hàng hôm nay", value: String(todayOrders.length), Icon: ShoppingCart, style: "bg-slate-100 text-slate-700" },
-    { label: "Dư nợ toàn hệ thống", value: money(debt), Icon: CreditCard, style: "bg-slate-100 text-slate-700" },
-    { label: "Thực thu trong ngày", value: money(collected), Icon: Wallet, style: "bg-slate-100 text-slate-700" },
-  ];
+  const cards = isStaff
+    ? [
+        { label: "Đơn hàng hôm nay", value: String(todayOrders.length), Icon: ShoppingCart, style: "bg-slate-100 text-slate-700" },
+      ]
+    : [
+        { label: "Doanh số hôm nay", value: money(salesToday), Icon: TrendingUp, style: "bg-slate-100 text-slate-700" },
+        { label: "Đơn hàng hôm nay", value: String(todayOrders.length), Icon: ShoppingCart, style: "bg-slate-100 text-slate-700" },
+        { label: "Dư nợ toàn hệ thống", value: money(debt), Icon: CreditCard, style: "bg-slate-100 text-slate-700" },
+        { label: "Thực thu trong ngày", value: money(collected), Icon: Wallet, style: "bg-slate-100 text-slate-700" },
+      ];
   const width = 700, height = 220, bar = 48, gap = (width - days.length * bar) / (days.length + 1);
 
   return (
@@ -89,14 +109,16 @@ export default async function DashboardPage() {
       <section aria-label="Chỉ số kinh doanh" className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map(({ label, value, Icon, style }) => <article key={label} className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex justify-between gap-3"><div className="text-sm font-medium text-slate-500">{label}</div><span className={"rounded-lg p-2 " + style}><Icon aria-hidden="true" className="h-5 w-5" /></span></div><div className="mt-4 text-2xl font-semibold text-slate-900">{value}</div></article>)}
       </section>
-      <section className="grid w-full min-w-0 grid-cols-1 gap-6 xl:grid-cols-2">
-        <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="font-semibold text-slate-900">Doanh số 7 ngày</h2>
-          <div className="mt-5 overflow-hidden"><svg role="img" aria-label="Biểu đồ doanh số 7 ngày" viewBox={"0 0 " + width + " " + height} className="dashboard-sales-chart h-56 w-full">
-            <line x1="0" y1={height - 28} x2={width} y2={height - 28} stroke="#e2e8f0" />
-            {days.map((day, index) => { const value = byDay.get(day) ?? 0; const barHeight = value ? Math.max(8, (height - 62) * value / max) : 3; const x = gap + index * (bar + gap); const y = height - 29 - barHeight; return <g key={day}><title>{shortDate(day) + ": " + money(value)}</title><rect x={x} y={y} width={bar} height={barHeight} rx="6" fill={day === today ? "var(--brand-orange)" : "#e2e8f0"} /><text x={x + bar / 2} y={height - 8} textAnchor="middle" fill="#64748b" fontSize="12">{shortDate(day)}</text></g>; })}
-          </svg></div>
-        </article>
+      <section className={`grid w-full min-w-0 grid-cols-1 gap-6 ${isStaff ? "" : "xl:grid-cols-2"}`}>
+        {!isStaff && (
+          <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="font-semibold text-slate-900">Doanh số 7 ngày</h2>
+            <div className="mt-5 overflow-hidden"><svg role="img" aria-label="Biểu đồ doanh số 7 ngày" viewBox={"0 0 " + width + " " + height} className="dashboard-sales-chart h-56 w-full">
+              <line x1="0" y1={height - 28} x2={width} y2={height - 28} stroke="#e2e8f0" />
+              {days.map((day, index) => { const value = byDay.get(day) ?? 0; const barHeight = value ? Math.max(8, (height - 62) * value / max) : 3; const x = gap + index * (bar + gap); const y = height - 29 - barHeight; return <g key={day}><title>{shortDate(day) + ": " + money(value)}</title><rect x={x} y={y} width={bar} height={barHeight} rx="6" fill={day === today ? "var(--brand-orange)" : "#e2e8f0"} /><text x={x + bar / 2} y={height - 8} textAnchor="middle" fill="#64748b" fontSize="12">{shortDate(day)}</text></g>; })}
+            </svg></div>
+          </article>
+        )}
         <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-2"><Package aria-hidden="true" className="h-5 w-5 text-slate-500" /><h2 className="font-semibold text-slate-900">10 đơn hàng mới nhất</h2></div>
           {recentOrders.length === 0 ? <p className="py-10 text-center text-sm text-slate-500">Chưa có đơn hàng.</p> : <ul className="mt-4 divide-y divide-slate-100">{recentOrders.map((order) => <li key={order.id} className="flex min-w-0 items-center gap-1 py-3 text-xs"><Link title={order.ma_don_hang} href={"/danh-sach-don-hang/" + order.id} className="w-[8.5rem] shrink-0 truncate text-xs font-medium text-primary hover:underline">{order.ma_don_hang}</Link><span title={customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"} className="min-w-0 flex-1 truncate text-slate-700">{customers.get(order.khach_hang_id ?? "") ?? "Khách lẻ"}</span><span className="w-10 shrink-0 text-slate-500">{shortDate(order.ngay_dat)}</span><span className="w-[4.5rem] shrink-0 text-right font-semibold text-slate-900">{money(Number(order.tong_tien))}</span></li>)}</ul>}

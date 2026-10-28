@@ -1,5 +1,4 @@
 import { createClient } from "./client";
-import type { KhachHang } from "@/types/khach-hang";
 
 type CreateKhachHangData = {
   ten_khach_hang: string;

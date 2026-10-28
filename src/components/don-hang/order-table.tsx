@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -81,18 +81,19 @@ export function OrderTable({
   const router = useRouter();
 
   const [searchInput, setSearchInput] = useState(search);
+  const [prevSearch, setPrevSearch] = useState(search);
+  if (prevSearch !== search) {
+    setPrevSearch(search);
+    setSearchInput(search);
+  }
+
   const [isComposing, setIsComposing] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<OrderListItem | null>(null);
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Sync search input if prop changes externally
-  useEffect(() => {
-    setSearchInput(search);
-  }, [search]);
-
   // Build query string helper
-  const buildParams = (overrides: {
+  const buildParams = useCallback((overrides: {
     page?: number;
     pageSize?: number;
     search?: string;
@@ -122,12 +123,12 @@ export function OrderTable({
     if (nextToDate) params.set("toDate", nextToDate);
 
     return params;
-  };
+  }, [currentPage, pageSize, search, orderType, status, paymentStatus, fromDate, toDate]);
 
-  const navigateWithParams = (params: URLSearchParams) => {
+  const navigateWithParams = useCallback((params: URLSearchParams) => {
     const query = params.toString();
     router.push(query ? `/danh-sach-don-hang?${query}` : "/danh-sach-don-hang");
-  };
+  }, [router]);
 
   // Debounced search
   useEffect(() => {
@@ -141,7 +142,7 @@ export function OrderTable({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchInput, search, isComposing]);
+  }, [searchInput, search, isComposing, buildParams, navigateWithParams]);
 
   const handleResetFilters = () => {
     setSearchInput("");

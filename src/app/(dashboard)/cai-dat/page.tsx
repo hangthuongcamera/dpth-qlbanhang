@@ -1,8 +1,14 @@
 import { CuaHangSettingsForm } from "@/components/cai-dat/cua-hang-settings-form";
 import { DEFAULT_CUA_HANG_SETTINGS } from "@/lib/cua-hang-settings";
 import { createClient } from "@/lib/supabase/server";
+import { isOwner } from "@/lib/supabase/user-profile";
+import { redirect } from "next/navigation";
 
 export default async function CaiDatPage() {
+  if (!(await isOwner())) {
+    redirect("/dashboard");
+  }
+
   const supabase = await createClient();
   const { data, error } = await supabase.from("cai_dat_cua_hang").select("*").eq("id", true).maybeSingle();
 

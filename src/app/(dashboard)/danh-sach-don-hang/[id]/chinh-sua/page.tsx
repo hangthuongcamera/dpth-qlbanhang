@@ -4,18 +4,26 @@ import { OrderEditForm } from "@/components/don-hang/order-edit-form";
 import { buttonVariants } from "@/components/ui/button";
 import { getDuLieuTaoDonHang } from "@/lib/supabase/don-hang-server";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
 
 export default async function ChinhSuaDonHangPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const userProfile = await getCurrentUserProfile();
   const supabase = await createClient();
   const [{ data: order, error: orderError }, { data: details, error: detailsError }, productData] = await Promise.all([
-    supabase.from("don_hang").select("id, ma_don_hang, khach_hang_id, loai_don_hang, trang_thai, ngay_dat, han_giao, dia_chi_giao_hang, ghi_chu, giam_gia, phi_van_chuyen").eq("id", id).maybeSingle(),
+    supabase.from("don_hang").select("id, ma_don_hang, khach_hang_id, loai_don_hang, trang_thai, ngay_dat, han_giao, dia_chi_giao_hang, ghi_chu, giam_gia, phi_van_chuyen, created_by").eq("id", id).maybeSingle(),
     supabase.from("don_hang_chi_tiet").select("id, san_pham_id, bien_the_san_pham_id, so_luong, don_gia, gia_goc, gia_da_chinh_sua_thu_cong").eq("don_hang_id", id).order("created_at"),
     getDuLieuTaoDonHang(),
   ]);
   if (orderError) throw new Error("Không thể tải đơn hàng. Hãy chạy migration 20261017150000_order_edit_and_shipping_address.sql trong Supabase trước.");
   if (!order) notFound();
   if (detailsError) throw new Error("Không thể tải chi tiết đơn hàng.");
+
+  // Nhân viên chỉ được sửa đơn hàng do chính mình tạo
+  if (userProfile?.vai_tro === "staff" && order.created_by && order.created_by !== userProfile.user_id) {
+    redirect(`/danh-sach-don-hang/${id}`);
+  }
+
   if (order.trang_thai !== "xac_nhan" && order.trang_thai !== "dang_thuc_hien") redirect(`/danh-sach-don-hang/${id}`);
 
   const rows = details ?? [];
