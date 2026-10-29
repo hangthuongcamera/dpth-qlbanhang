@@ -160,7 +160,7 @@ export default async function DanhSachDonHangPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="app-page">
       <OrderTable
         orders={orders}
         currentPage={currentPage}
@@ -177,3 +177,4 @@ export default async function DanhSachDonHangPage({ searchParams }: PageProps) {
     </div>
   );
 }
+

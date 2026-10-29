@@ -8,6 +8,7 @@ import { Plus, ChevronDown, ChevronUp, CheckCircle2, Search, X, XCircle } from "
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { LoaiSanPham, SanPham } from "@/types/san-pham";
+import { formatCurrency } from "@/types/don-hang";
 
 type ProductTableProps = {
   products: SanPham[];
@@ -96,10 +97,7 @@ export function ProductTable({
     return query ? `/danh-sach-san-pham?${query}` : "/danh-sach-san-pham";
   };
 
-  const formatCurrency = (value: number) =>
-    `${new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(value)} ₫`;
-
-  const activeCount = products.filter((product) => product.trang_thai).length;
+const activeCount = products.filter((product) => product.trang_thai).length;
 
   return (
     <>
@@ -129,7 +127,7 @@ export function ProductTable({
         </Button>
       </div>
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-[minmax(0,1fr)_200px_190px] sm:items-end">
+      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-[minmax(0,1fr)_200px_190px] sm:items-end">
         <label className="grid gap-1.5 text-sm font-medium text-slate-700">
           Tìm sản phẩm
           <span className="relative block">
@@ -208,7 +206,7 @@ export function ProductTable({
                   {isExpanded && hasVariantAttributes && <TableRow>
                     <TableCell colSpan={6} className="bg-slate-50 p-0">
                       <div className="overflow-x-auto px-4 py-3 sm:px-8">
-                        <table className="w-full min-w-[520px] text-left text-sm">
+                        <table className="app-data-table w-full min-w-[520px] text-left text-sm">
                           <thead className="bg-slate-100 text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2.5">Tên biến thể / SKU</th><th className="px-3 py-2.5">Giá bán</th><th className="px-3 py-2.5">Trạng thái</th></tr></thead>
                           <tbody className="divide-y divide-slate-200 bg-white">
                             {variants.map((variant) => <tr key={variant.id} tabIndex={0} className="cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary" onClick={() => router.push(`/danh-sach-san-pham/${product.id}/bien-the/${variant.id}`)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); router.push(`/danh-sach-san-pham/${product.id}/bien-the/${variant.id}`); } }}>
@@ -253,6 +251,9 @@ export function ProductTable({
     </>
   );
 }
+
+
+
 
 
 

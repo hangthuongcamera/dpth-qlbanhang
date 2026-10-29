@@ -4,8 +4,8 @@ const variantSchema = z.object({
   id: z.string().uuid().optional(),
   ma_sku: z.string().trim().max(100, "Mã SKU quá dài").optional().or(z.literal("")),
   thuoc_tinh: z.record(z.string(), z.string()),
-  gia_ban: z.coerce.number().finite("Giá bán không hợp lệ").min(0, "Giá bán không được âm"),
-  gia_nhap: z.coerce.number().finite("Giá nhập không hợp lệ").min(0, "Giá nhập không được âm"),
+  gia_ban: z.coerce.number().finite("Giá bán không hợp lệ").int("Giá bán phải là số nguyên VND").min(0, "Giá bán không được âm"),
+  gia_nhap: z.coerce.number().finite("Giá nhập không hợp lệ").int("Giá nhập phải là số nguyên VND").min(0, "Giá nhập không được âm"),
   trang_thai: z.boolean(),
 });
 
@@ -14,8 +14,8 @@ export const sanPhamSchema = z.object({
   ten_san_pham: z.string().trim().min(1, "Vui lòng nhập tên sản phẩm").max(255),
   loai_san_pham_id: z.string().uuid("Vui lòng chọn loại sản phẩm"),
   don_vi_tinh: z.string().trim().min(1, "Vui lòng nhập đơn vị tính").max(50),
-  gia_ban: z.coerce.number().finite("Giá bán không hợp lệ").min(0, "Giá bán không được âm"),
-  gia_nhap: z.coerce.number().finite("Giá nhập không hợp lệ").min(0, "Giá nhập không được âm"),
+  gia_ban: z.coerce.number().finite("Giá bán không hợp lệ").int("Giá bán phải là số nguyên VND").min(0, "Giá bán không được âm"),
+  gia_nhap: z.coerce.number().finite("Giá nhập không hợp lệ").int("Giá nhập phải là số nguyên VND").min(0, "Giá nhập không được âm"),
   mo_ta: z.string().trim().max(2000, "Mô tả quá dài").optional().or(z.literal("")),
   trang_thai: z.boolean(),
   bien_the: z.array(variantSchema),
@@ -52,3 +52,4 @@ export const sanPhamSchema = z.object({
 });
 
 export type SanPhamFormData = z.infer<typeof sanPhamSchema>;
+

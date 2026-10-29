@@ -172,7 +172,7 @@ export function CategoryManager({
   };
 
   return (
-    <div className="min-w-0 space-y-4 p-4 md:p-6">
+    <div className="min-w-0 space-y-4 app-page">
       {notification && (
         <div
           role={notification.type === "success" ? "status" : "alert"}
@@ -335,6 +335,7 @@ export function CategoryManager({
     </div>
   );
 }
+
 
 
 

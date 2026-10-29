@@ -53,6 +53,7 @@ export const khachHangSchema = z.object({
 
   han_muc_cong_no: z
     .number()
+    .int("Hạn mức công nợ phải là số nguyên VND")
     .min(0, "Hạn mức công nợ không được âm"),
 
   ghi_chu: z
@@ -70,3 +71,4 @@ export const khachHangSchema = z.object({
 });
 
 export type KhachHangSchema = z.infer<typeof khachHangSchema>;
+

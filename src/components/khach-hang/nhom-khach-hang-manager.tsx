@@ -79,7 +79,7 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
   }
 
   return (
-    <div className="min-w-0 space-y-4 p-4 md:p-6">
+    <div className="min-w-0 space-y-4 app-page">
       {notice && (
         <div
           role={notice.type === "success" ? "status" : "alert"}
@@ -95,7 +95,7 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
         <Link href="/nhom-khach-hang/them" className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/80"><Plus className="mr-2 h-4 w-4" />Thêm nhóm</Link>
       </div>
       <div className="overflow-x-auto rounded-xl border bg-white">
-        <table className="w-full min-w-[700px] text-left text-sm">
+        <table className="app-data-table w-full min-w-[700px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold text-slate-600"><tr><th className="px-4 py-3">Tên nhóm</th><th className="px-4 py-3 text-center">Đang hoạt động</th><th className="px-4 py-3 text-center">Dùng giá nhóm</th><th className="px-4 py-3 text-right">Thao tác</th></tr></thead>
           <tbody className="divide-y divide-slate-100">
             {groups.map((group) => <tr key={group.id} className="hover:bg-slate-50/70">
@@ -128,4 +128,6 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
     </div>
   );
 }
+
+
 

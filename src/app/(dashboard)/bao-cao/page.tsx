@@ -3,6 +3,7 @@ import { DollarSign, Package, TrendingUp } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isOwner } from "@/lib/supabase/user-profile";
 import { redirect } from "next/navigation";
+import { formatCurrency } from "@/types/don-hang";
 
 type SearchParams = { fromDate?: string; toDate?: string; tab?: string };
 type OrderRow = { id: string; ngay_dat: string; tam_tinh: number | string; giam_gia: number | string; phi_van_chuyen: number | string; tong_tien: number | string; trang_thai: string };
@@ -23,9 +24,7 @@ function shiftDate(day: string, amount: number) {
   date.setUTCDate(date.getUTCDate() + amount);
   return date.toISOString().slice(0, 10);
 }
-function money(value: number) {
-  return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
-}
+
 function displayDate(day: string) {
   return new Intl.DateTimeFormat("vi-VN", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(day + "T12:00:00Z"));
 }
@@ -191,7 +190,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
   const periodLabel = (key: string) => grouping === "month" ? key.slice(5) + "/" + key.slice(0, 4) : displayDate(key);
 
   return (
-    <main className="space-y-6 p-4 md:p-6">
+    <main className="space-y-6 app-page">
       {/* Thanh chuyển đổi Tab Báo cáo */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-3" role="tablist" aria-label="Loại báo cáo">
         <Link
@@ -240,7 +239,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
       {currentTab === "doanh-thu" && (
         <section className="grid gap-6 xl:grid-cols-2">
           {/* Doanh thu theo thời gian */}
-          <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <h2 className="font-semibold text-slate-900">Doanh thu theo thời gian</h2>
@@ -248,7 +247,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
               </div>
               <div className="text-right">
                 <div className="text-xs text-slate-500">Tổng doanh thu thuần</div>
-                <div className="text-lg font-semibold text-slate-900">{money(totalRevenue)}</div>
+                <div className="text-lg font-semibold text-slate-900">{formatCurrency(totalRevenue)}</div>
               </div>
             </div>
 
@@ -264,7 +263,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
                       <div className="h-3 overflow-hidden rounded-full bg-slate-100">
                         <div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(2, (val / maxRevenue) * 100)}%` }} />
                       </div>
-                      <span className="min-w-24 text-right font-medium text-slate-800">{money(val)}</span>
+                      <span className="min-w-24 text-right font-medium text-slate-800">{formatCurrency(val)}</span>
                     </div>
                   );
                 })}
@@ -274,7 +273,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
           </article>
 
           {/* 10 mặt hàng bán chạy */}
-          <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <h2 className="font-semibold text-slate-900">10 mặt hàng bán chạy nhất</h2>
             <p className="mt-1 text-sm text-slate-500">Xếp hạng theo tổng số lượng bán trong kỳ.</p>
             {bestSellers.length === 0 ? (
@@ -315,25 +314,25 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
         <section className="space-y-6">
           {/* 3 Thẻ KPI Lợi Nhuận Tổng Quan */}
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
                 Tổng doanh thu thuần
               </div>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{money(totalRevenue)}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{formatCurrency(totalRevenue)}</p>
               <p className="mt-1 text-xs text-slate-400">Đã trừ giảm giá của {orders.length} đơn</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <Package className="h-4 w-4 text-amber-600" />
                 Tổng giá vốn (COGS)
               </div>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{money(totalCost)}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{formatCurrency(totalCost)}</p>
               <p className="mt-1 text-xs text-slate-400">Snapshot theo giá vốn thời điểm bán</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                   <TrendingUp className="h-4 w-4 text-primary" />
@@ -343,14 +342,14 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
                   Biên LN: {totalMargin.toFixed(1)}%
                 </span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-emerald-600">{money(totalProfit)}</p>
+              <p className="mt-2 text-2xl font-bold text-emerald-600">{formatCurrency(totalProfit)}</p>
               <p className="mt-1 text-xs text-slate-400">Doanh thu thuần trừ tổng giá vốn</p>
             </div>
           </div>
 
           <div className="grid gap-6 xl:grid-cols-2">
             {/* Lợi nhuận theo thời gian */}
-            <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h2 className="font-semibold text-slate-900">Lợi nhuận theo thời gian</h2>
@@ -358,7 +357,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
                 </div>
                 <div className="text-right">
                   <div className="text-xs text-slate-500">Tổng lợi nhuận</div>
-                  <div className="text-lg font-semibold text-emerald-600">{money(totalProfit)}</div>
+                  <div className="text-lg font-semibold text-emerald-600">{formatCurrency(totalProfit)}</div>
                 </div>
               </div>
 
@@ -376,16 +375,16 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
                         <div className="flex items-center justify-between text-sm">
                           <span className="font-medium text-slate-700">{periodLabel(key)}</span>
                           <span className="font-semibold text-emerald-600">
-                            {money(profit)} <span className="text-xs font-normal text-slate-400">({margin.toFixed(1)}%)</span>
+                            {formatCurrency(profit)} <span className="text-xs font-normal text-slate-400">({margin.toFixed(1)}%)</span>
                           </span>
                         </div>
                         <div className="h-2.5 overflow-hidden rounded-full bg-slate-100 flex">
-                          <div className="h-full bg-amber-400" title={`Giá vốn: ${money(cost)}`} style={{ width: `${Math.min(100, (cost / (rev || 1)) * 100)}%` }} />
-                          <div className="h-full bg-emerald-500" title={`Lợi nhuận: ${money(profit)}`} style={{ width: `${Math.min(100, Math.max(0, (profit / (rev || 1)) * 100))}%` }} />
+                          <div className="h-full bg-amber-400" title={`Giá vốn: ${formatCurrency(cost)}`} style={{ width: `${Math.min(100, (cost / (rev || 1)) * 100)}%` }} />
+                          <div className="h-full bg-emerald-500" title={`Lợi nhuận: ${formatCurrency(profit)}`} style={{ width: `${Math.min(100, Math.max(0, (profit / (rev || 1)) * 100))}%` }} />
                         </div>
                         <div className="flex justify-between text-xs text-slate-400">
-                          <span>Doanh thu: {money(rev)}</span>
-                          <span>Vốn: {money(cost)}</span>
+                          <span>Doanh thu: {formatCurrency(rev)}</span>
+                          <span>Vốn: {formatCurrency(cost)}</span>
                         </div>
                       </div>
                     );
@@ -396,7 +395,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
             </article>
 
             {/* Top 10 mặt hàng sinh lời cao nhất */}
-            <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <h2 className="font-semibold text-slate-900">10 mặt hàng sinh lời cao nhất</h2>
               <p className="mt-1 text-sm text-slate-500">Xếp hạng theo tổng tiền lãi gộp thu về trong kỳ.</p>
               {mostProfitable.length === 0 ? (
@@ -425,8 +424,8 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
                             </div>
                           </td>
                           <td className="py-3 px-3 text-right font-medium text-slate-700">{item.quantity.toLocaleString("vi-VN")}</td>
-                          <td className="py-3 px-3 text-right text-slate-600">{money(item.revenue)}</td>
-                          <td className="py-3 px-3 text-right font-semibold text-emerald-600">{money(item.profit)}</td>
+                          <td className="py-3 px-3 text-right text-slate-600">{formatCurrency(item.revenue)}</td>
+                          <td className="py-3 px-3 text-right font-semibold text-emerald-600">{formatCurrency(item.profit)}</td>
                           <td className="py-3 px-3 text-right font-medium text-slate-800">{item.margin.toFixed(1)}%</td>
                         </tr>
                       ))}
@@ -441,3 +440,6 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
     </main>
   );
 }
+
+
+

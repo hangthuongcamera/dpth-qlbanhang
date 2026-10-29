@@ -13,7 +13,7 @@ export default async function NhanVienPage() {
   const danhSach = await layDanhSachNhanVien();
 
   return (
-    <main className="space-y-6 p-4 md:p-6">
+    <main className="space-y-6 app-page">
       <NhanVienManager
         danhSach={danhSach}
         currentUserId={currentProfile?.user_id ?? ""}
@@ -21,3 +21,4 @@ export default async function NhanVienPage() {
     </main>
   );
 }
+

@@ -317,7 +317,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       {posTabsHeader}
     </div>, posHeaderTarget)}
     <div className={pos ? "grid items-start gap-x-2 gap-y-0 lg:h-[calc(100vh-54px)] lg:min-h-[calc(100vh-54px)] lg:items-stretch lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.4fr)] lg:grid-rows-[auto_auto_minmax(0,1fr)]" : "space-y-4"}>
-    <section className={`grid ${pos ? "gap-1 p-3 pb-0 sm:p-4 sm:pb-0" : "gap-3 p-4 sm:p-5"} border bg-white ${pos ? "grid-cols-1 order-3 rounded-none border-x border-t border-b-0 lg:col-start-2 lg:row-start-1" : "rounded-xl sm:grid-cols-2"}`}>
+    <section className={`grid ${pos ? "gap-1 p-3 pb-0 sm:p-4 sm:pb-0" : "gap-3 p-4"} border bg-white ${pos ? "grid-cols-1 order-3 rounded-none border-x border-t border-b-0 lg:col-start-2 lg:row-start-1" : "rounded-xl sm:grid-cols-2"}`}>
       <div className={pos ? "relative min-w-0 sm:col-span-2" : "relative grid gap-1.5 text-sm font-medium"}>
         {!pos && <label htmlFor={inputId("customer-input")} className="flex items-center gap-1 whitespace-nowrap">Khách hàng <span className="text-red-500">*</span></label>}
         <div className="relative min-w-0">
@@ -580,12 +580,12 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       </div>
 
     </section>
-    <section className={`grid ${pos ? "gap-1 p-3 pt-1 pb-1 sm:p-4 sm:pt-1 sm:pb-1" : "gap-4 p-4 sm:p-5"} border bg-white sm:grid-cols-2 ${pos ? "order-4 rounded-none border-x border-y-0 lg:col-start-2 lg:row-start-2" : "rounded-xl"}`}>
+    <section className={`grid ${pos ? "gap-1 p-3 pt-1 pb-1 sm:p-4 sm:pt-1 sm:pb-1" : "gap-4 p-4"} border bg-white sm:grid-cols-2 ${pos ? "order-4 rounded-none border-x border-y-0 lg:col-start-2 lg:row-start-2" : "rounded-xl"}`}>
       <label className={pos ? `${posFieldRowClass} !text-sm !leading-5` : "grid gap-1.5 text-sm font-medium"}><span className={pos ? "whitespace-nowrap" : ""}>Giảm giá</span>{pos ? <span className="relative min-w-0"><Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} className={`${lineInputClass} h-5 !text-sm !leading-5 pr-6 text-right`} /><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} className={lineInputClass} />}</label>
       {(!pos || deliveryEnabled) && <label className={pos ? posFieldRowClass : "grid gap-1.5 text-sm font-medium"}><span className={pos ? "whitespace-nowrap" : ""}>Phí vận chuyển</span><Input type="text" inputMode="numeric" value={formatNumber(shipping)} onChange={(event) => setShipping(parseCurrencyInput(event.target.value))} className={lineInputClass} /></label>}
       <div className={`sm:col-span-2 flex flex-col text-sm ${pos ? "gap-1" : "gap-2"}`}>{!pos && <><div className="flex justify-between"><span>Tạm tính</span><span>{formatCurrency(subtotal)}</span></div><div className="flex justify-between"><span>Giảm giá</span><span>−{formatCurrency(Number(discount) || 0)}</span></div></>}{(!pos || deliveryEnabled) && <div className="flex justify-between"><span>Phí vận chuyển</span><span>{formatCurrency(Number(shipping) || 0)}</span></div>}<div className={`flex justify-between font-semibold ${pos ? "h-5 items-center text-sm leading-5" : ""}`}><span>Tổng tiền</span>{pos ? <span className="relative ml-auto block w-32 shrink-0 pr-6 text-right text-sm"><span>{formatNumber(total)}</span><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <strong className="text-lg">{formatCurrency(total)}</strong>}</div></div>
     </section>
-    <section className={`grid ${pos ? "gap-2 p-3 sm:p-4 pt-1 lg:flex lg:flex-col" : "gap-4 p-4 sm:p-5"} border bg-white sm:grid-cols-2 ${pos ? "order-5 rounded-none border-x border-t-0 lg:col-start-2 lg:row-start-3" : "rounded-xl"}`}>
+    <section className={`grid ${pos ? "gap-2 p-3 sm:p-4 pt-1 lg:flex lg:flex-col" : "gap-4 p-4"} border bg-white sm:grid-cols-2 ${pos ? "order-5 rounded-none border-x border-t-0 lg:col-start-2 lg:row-start-3" : "rounded-xl"}`}>
       <div className={pos ? "grid gap-2 sm:grid-cols-2" : "contents"}>
       <div className={pos ? `${posFieldRowClass} !text-sm !leading-5` : "grid gap-1.5 text-sm font-medium"}>
         <label htmlFor={inputId("payment-amount-input")} className={pos ? "whitespace-nowrap" : ""}>{orderType === "dat_hang" ? "Tiền cọc" : "Khách đưa"}</label>
@@ -639,6 +639,10 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
     </DialogContent>
   </Dialog></>;
 }
+
+
+
+
 
 
 

@@ -81,7 +81,7 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
     const variantId = variant?.id ?? null;
     const found = lines.find((line) => line.sanPhamId === product.id && line.variantId === variantId);
     if (found) {
-      setLines((current) => current.map((line) => line.key === found.key ? { ...line, qty: Number((line.qty + 1).toFixed(2)) } : line));
+      setLines((current) => current.map((line) => line.key === found.key ? { ...line, qty: line.qty + 1 } : line));
     } else {
       const fallback = Number(variant?.gia_ban ?? product.gia_ban);
       const basePrice = getBasePrice(product.id, variantId, fallback);
@@ -111,7 +111,7 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
       setError("Hạn giao hàng không được trước ngày đặt hàng.");
       return;
     }
-    if (discount < 0 || discount > subtotal || shipping < 0 || lines.some((line) => line.qty <= 0 || line.price < 0)) {
+    if (!Number.isSafeInteger(discount) || discount < 0 || discount > subtotal || !Number.isSafeInteger(shipping) || shipping < 0 || lines.some((line) => !Number.isSafeInteger(line.qty) || line.qty < 1 || !Number.isSafeInteger(line.price) || line.price < 0 || !Number.isSafeInteger(line.basePrice) || line.basePrice < 0)) {
       setError("Vui lòng kiểm tra số lượng, đơn giá, giảm giá và phí vận chuyển.");
       return;
     }
@@ -158,7 +158,7 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
 
   return <form onSubmit={submit} className="space-y-4">
     {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-5">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-4">
       <label className="grid gap-1.5 text-sm font-medium">Mã đơn hàng<Input value={order.ma_don_hang} readOnly className="bg-slate-50" /></label>
       <label className="grid gap-1.5 text-sm font-medium">Khách hàng<Input value={order.customerLabel} readOnly className="bg-slate-50" aria-label="Khách hàng không thể thay đổi" /></label>
       {order.loai_don_hang === "dat_hang" && <label className="grid gap-1.5 text-sm font-medium">Hạn giao hàng<Input type="date" min={order.ngay_dat} value={deliveryDate} onChange={(event) => setDeliveryDate(event.target.value)} required /></label>}
@@ -175,12 +175,12 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
         {searchOpen && <div className="absolute inset-x-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-lg border bg-white py-1 shadow-lg">{results.map(({ product, variant, label }) => <button type="button" key={variant?.id ?? product.id} onMouseDown={(event) => event.preventDefault()} onClick={() => addProduct(product, variant)} className="block w-full px-3 py-2 text-left text-sm hover:bg-slate-50"><span className="block font-medium">{label}</span><span className="text-xs text-slate-500">{formatCurrency(Number(variant?.gia_ban ?? product.gia_ban))} · {product.don_vi_tinh}</span></button>)}{results.length === 0 && <p className="px-3 py-3 text-sm text-slate-500">Không tìm thấy sản phẩm phù hợp.</p>}</div>}
       </div></div>
 
-      <div className="hidden overflow-x-auto px-4 pb-4 md:block"><table className="w-full min-w-[720px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="px-3 py-2">Sản phẩm / biến thể</th><th className="px-3 py-2">ĐVT</th><th className="px-3 py-2">Số lượng</th><th className="px-3 py-2">Đơn giá</th><th className="px-3 py-2">Thành tiền</th><th /></tr></thead><tbody className="divide-y">{lines.map((line) => <tr key={line.key}><td className="max-w-sm px-3 py-3 font-medium">{line.label}</td><td className="px-3 py-3">{line.unit || "—"}</td><td className="px-3 py-3"><Input type="number" min="0.01" step="0.01" value={line.qty} onChange={(event) => { const qty = Number(event.target.value); setLines((current) => current.map((item) => item.key === line.key ? { ...item, qty } : item)); }} className="w-24" /></td><td className="px-3 py-3">{priceInput(line)}</td><td className="whitespace-nowrap px-3 py-3">{formatCurrency(line.qty * line.price)}</td><td className="px-3 py-3"><Button type="button" size="icon" variant="ghost" aria-label={`Xóa ${line.label}`} onClick={() => setLines((current) => current.filter((item) => item.key !== line.key))}><Trash2 className="h-4 w-4 text-red-600" /></Button></td></tr>)}</tbody></table></div>
-      <div className="divide-y divide-slate-100 px-4 pb-4 md:hidden">{lines.map((line) => <div key={line.key} className="space-y-3 py-4 first:pt-0 last:pb-0"><div className="flex items-start justify-between gap-2"><div><p className="text-sm font-medium">{line.label}</p><p className="mt-1 text-xs text-slate-500">ĐVT: {line.unit || "—"}</p></div><Button type="button" size="icon" variant="ghost" aria-label={`Xóa ${line.label}`} onClick={() => setLines((current) => current.filter((item) => item.key !== line.key))}><Trash2 className="h-4 w-4 text-red-600" /></Button></div><div className="grid grid-cols-2 gap-3"><label className="grid gap-1 text-xs font-medium text-slate-600">Số lượng<Input type="number" min="0.01" step="0.01" value={line.qty} onChange={(event) => { const qty = Number(event.target.value); setLines((current) => current.map((item) => item.key === line.key ? { ...item, qty } : item)); }} /></label><label className="grid gap-1 text-xs font-medium text-slate-600">Đơn giá{priceInput(line)}</label></div><div className="text-right text-sm font-semibold">Thành tiền: {formatCurrency(line.qty * line.price)}</div></div>)}</div>
+      <div className="hidden overflow-x-auto px-4 pb-4 md:block"><table className="app-data-table w-full min-w-[720px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="px-3 py-2">Sản phẩm / biến thể</th><th className="px-3 py-2">ĐVT</th><th className="px-3 py-2">Số lượng</th><th className="px-3 py-2">Đơn giá</th><th className="px-3 py-2">Thành tiền</th><th /></tr></thead><tbody className="divide-y">{lines.map((line) => <tr key={line.key}><td className="max-w-sm px-3 py-3 font-medium">{line.label}</td><td className="px-3 py-3">{line.unit || "—"}</td><td className="px-3 py-3"><Input type="number" min="1" step="1" value={line.qty} onChange={(event) => { const qty = Number(event.target.value); if (Number.isSafeInteger(qty) && qty >= 1) setLines((current) => current.map((item) => item.key === line.key ? { ...item, qty } : item)); }} className="w-24" /></td><td className="px-3 py-3">{priceInput(line)}</td><td className="whitespace-nowrap px-3 py-3">{formatCurrency(line.qty * line.price)}</td><td className="px-3 py-3"><Button type="button" size="icon" variant="ghost" aria-label={`Xóa ${line.label}`} onClick={() => setLines((current) => current.filter((item) => item.key !== line.key))}><Trash2 className="h-4 w-4 text-red-600" /></Button></td></tr>)}</tbody></table></div>
+      <div className="divide-y divide-slate-100 px-4 pb-4 md:hidden">{lines.map((line) => <div key={line.key} className="space-y-3 py-4 first:pt-0 last:pb-0"><div className="flex items-start justify-between gap-2"><div><p className="text-sm font-medium">{line.label}</p><p className="mt-1 text-xs text-slate-500">ĐVT: {line.unit || "—"}</p></div><Button type="button" size="icon" variant="ghost" aria-label={`Xóa ${line.label}`} onClick={() => setLines((current) => current.filter((item) => item.key !== line.key))}><Trash2 className="h-4 w-4 text-red-600" /></Button></div><div className="grid grid-cols-2 gap-3"><label className="grid gap-1 text-xs font-medium text-slate-600">Số lượng<Input type="number" min="1" step="1" value={line.qty} onChange={(event) => { const qty = Number(event.target.value); if (Number.isSafeInteger(qty) && qty >= 1) setLines((current) => current.map((item) => item.key === line.key ? { ...item, qty } : item)); }} /></label><label className="grid gap-1 text-xs font-medium text-slate-600">Đơn giá{priceInput(line)}</label></div><div className="text-right text-sm font-semibold">Thành tiền: {formatCurrency(line.qty * line.price)}</div></div>)}</div>
       {lines.length === 0 && <p className="px-4 pb-6 text-center text-sm text-slate-500">Đơn hàng cần có ít nhất một sản phẩm.</p>}
     </section>
 
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-5">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-4">
       <label className="grid gap-1.5 text-sm font-medium">Giảm giá<Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} /></label>
       <label className="grid gap-1.5 text-sm font-medium">Phí vận chuyển<Input type="text" inputMode="numeric" value={formatNumber(shipping)} onChange={(event) => setShipping(parseCurrencyInput(event.target.value))} /></label>
       <div className="sm:col-span-2 flex flex-col gap-1 text-right text-sm"><span>Tạm tính: {formatCurrency(subtotal)}</span><span>Giảm giá: −{formatCurrency(discount)}</span><span>Phí vận chuyển: {formatCurrency(shipping)}</span><strong className="text-lg">Tổng tiền mới: {formatCurrency(total)}</strong></div>
@@ -188,6 +188,10 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
     <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href={`/danh-sach-don-hang/${order.id}`} className={buttonVariants({ variant: "outline" })}>Hủy</Link><Button type="submit" disabled={saving || !lines.length}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Lưu thay đổi"}</Button></div>
   </form>;
 }
+
+
+
+
 
 
 

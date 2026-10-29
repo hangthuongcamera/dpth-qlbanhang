@@ -658,7 +658,7 @@ export function OrderTable({
       {/* Delete Confirmation Modal */}
       {orderToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl animate-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md rounded-xl bg-white p-4 md:p-6 shadow-xl animate-in zoom-in-95 duration-200">
             <div className="flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
                 <AlertTriangle className="h-6 w-6" />
@@ -718,6 +718,8 @@ export function OrderTable({
     </div>
   );
 }
+
+
 
 
 

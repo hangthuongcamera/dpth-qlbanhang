@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { UserCog, Plus, Pencil, Trash2, CheckCircle, XCircle, UserRound, KeyRound, ShieldAlert } from "lucide-react";
+import { Plus, Pencil, Trash2, CheckCircle, XCircle, UserRound, KeyRound, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -82,8 +82,7 @@ export function NhanVienManager({ danhSach: initialDanhSach, currentUserId }: Pr
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3"><UserCog className="h-6 w-6 text-primary" aria-hidden="true" /><div><h1 className="text-xl font-semibold text-slate-900">Quản lý nhân viên</h1><p className="text-sm text-slate-500">Phân quyền và quản lý tài khoản nhân viên / quản trị viên</p></div></div>
+      <div className="flex justify-end">
         <Button onClick={openThem} className="shrink-0 gap-2"><Plus className="h-4 w-4" />Thêm nhân viên</Button>
       </div>
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -120,3 +119,5 @@ export function NhanVienManager({ danhSach: initialDanhSach, currentUserId }: Pr
     </div>
   );
 }
+
+

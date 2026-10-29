@@ -24,11 +24,11 @@ export type PhieuThuInput = {
 function validateInput(input: PhieuThuInput) {
   if (!input.khach_hang_id) throw new Error("Vui lòng chọn khách hàng.");
   if (!input.ngay_thu) throw new Error("Vui lòng chọn ngày thu.");
-  if (!Number.isFinite(input.tong_tien) || input.tong_tien <= 0) throw new Error("Số tiền thu phải lớn hơn 0.");
+  if (!Number.isSafeInteger(input.tong_tien) || input.tong_tien <= 0) throw new Error("Số tiền thu phải lớn hơn 0.");
   if (!["tien_mat", "chuyen_khoan", "the", "vi_dien_tu", "khac"].includes(input.phuong_thuc_thanh_toan)) {
     throw new Error("Phương thức thanh toán không hợp lệ.");
   }
-  if (input.phan_bo.some((item) => !item.don_hang_id || !Number.isFinite(item.so_tien) || item.so_tien <= 0)) {
+  if (input.phan_bo.some((item) => !item.don_hang_id || !Number.isSafeInteger(item.so_tien) || item.so_tien <= 0)) {
     throw new Error("Số tiền phân bổ phải lớn hơn 0.");
   }
   if (input.phan_bo.reduce((sum, item) => sum + item.so_tien, 0) > input.tong_tien) {
@@ -107,7 +107,7 @@ export async function xoaPhieuThuNhap(id: string) {
 
 export async function phanBoSoDuPhieuThu(id: string, phanBo: PhanBoPhieuThuInput[]) {
   if (!id || phanBo.length === 0) throw new Error("Chưa có khoản phân bổ.");
-  if (phanBo.some((item) => !item.don_hang_id || !Number.isFinite(item.so_tien) || item.so_tien <= 0)) {
+  if (phanBo.some((item) => !item.don_hang_id || !Number.isSafeInteger(item.so_tien) || item.so_tien <= 0)) {
     throw new Error("Số tiền phân bổ phải lớn hơn 0.");
   }
   const supabase = await createClient();
@@ -118,3 +118,4 @@ export async function phanBoSoDuPhieuThu(id: string, phanBo: PhanBoPhieuThuInput
   if (error) throw new Error(error.message);
   invalidateReceiptData();
 }
+

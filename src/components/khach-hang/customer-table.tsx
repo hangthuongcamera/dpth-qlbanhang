@@ -37,6 +37,7 @@ import { ngungHoatDongKhachHang, xoaKhachHang } from "@/lib/supabase/khach-hang-
 import { goiYKhachHang, type CustomerSearchSuggestion } from "@/lib/supabase/search-suggestions";
 
 import type { KhachHang } from "@/types/khach-hang";
+import { formatCurrency } from "@/types/don-hang";
 
 type CustomerWithDebt = KhachHang & {
   cong_no_hien_tai: number;
@@ -89,15 +90,7 @@ export function CustomerTable({
     return () => clearTimeout(timeoutId);
   }, [notification]);
 
-  const formatCurrency = (value: number | null | undefined) => {
-    return (
-      new Intl.NumberFormat("vi-VN", {
-        maximumFractionDigits: 0,
-      }).format(Number(value ?? 0)) + " ₫"
-    );
-  };
-
-  const getInitial = (name: string) => {
+const getInitial = (name: string) => {
     return name?.trim().charAt(0).toUpperCase() || "?";
   };
 
@@ -352,7 +345,7 @@ export function CustomerTable({
 
       <div
         key={`customer-search-${search}`}
-        className="grid gap-3 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-[minmax(0,1fr)_220px_auto] sm:items-end"
+        className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-[minmax(0,1fr)_220px_auto] sm:items-end"
       >
         <label className="relative block">
           <span className="sr-only">Tìm khách hàng</span>
@@ -494,7 +487,7 @@ export function CustomerTable({
 
       {/* Bảng khách hàng trên máy tính */}
       <div className="app-data-table-shell !mt-3 hidden overflow-x-auto rounded-xl border border-slate-200 bg-white md:block">
-        <Table>
+        <Table className="app-data-table--compact">
           <TableHeader>
             <TableRow>
               <TableHead>Mã KH</TableHead>
@@ -739,7 +732,7 @@ export function CustomerTable({
             aria-modal="true"
             aria-labelledby="delete-dialog-title"
             aria-describedby="delete-dialog-description"
-            className="relative z-10 w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-300 sm:p-6"
+            className="relative z-10 w-full max-w-md rounded-xl border border-slate-200 bg-white p-4 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-300 md:p-6"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-50">
@@ -836,6 +829,11 @@ export function CustomerTable({
     </div>
   );
 }
+
+
+
+
+
 
 
 

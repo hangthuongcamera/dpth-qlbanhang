@@ -34,7 +34,7 @@ export default async function EditCustomerPage({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 app-page">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           Chỉnh sửa khách hàng
@@ -53,3 +53,4 @@ export default async function EditCustomerPage({
     </div>
   );
 }
+

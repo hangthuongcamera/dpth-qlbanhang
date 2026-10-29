@@ -25,6 +25,7 @@ import {
 
 import type { KhachHang } from "@/types/khach-hang";
 import type { NhomKhachHangOption } from "@/types/khach-hang";
+import { formatNumber, parseCurrencyInput } from "@/types/don-hang";
 
 interface CustomerFormProps {
   mode?: "create" | "edit";
@@ -32,11 +33,7 @@ interface CustomerFormProps {
   groups: NhomKhachHangOption[];
 }
 
-function formatNumber(value: number): string {
-  return new Intl.NumberFormat("vi-VN", {
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+
 
 export function CustomerForm({
   mode = "create",
@@ -176,7 +173,7 @@ export function CustomerForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto w-full min-w-0 space-y-4 sm:space-y-6">
       <section className="rounded-xl border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-4 sm:px-5">
+        <div className="border-b border-slate-200 px-4 py-4 px-4">
           <h2 className="text-base font-semibold text-slate-900">
             {mode === "edit"
               ? "Chỉnh sửa thông tin khách hàng"
@@ -191,7 +188,7 @@ export function CustomerForm({
         </div>
 
         {/* Ảnh đại diện */}
-        <div className="flex min-w-0 items-center gap-3 px-4 py-4 sm:gap-4 sm:px-5">
+        <div className="flex min-w-0 items-center gap-3 px-4 py-4 sm:gap-4 px-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md border border-slate-200 bg-slate-50">
             {customer?.anh_dai_dien_url ? (
               <img
@@ -225,7 +222,7 @@ export function CustomerForm({
           </div>
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-4 p-4 sm:gap-5 sm:p-5 md:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 p-4 sm:gap-5 md:grid-cols-2">
           {/* Mã khách hàng: chỉ hiển thị khi chỉnh sửa */}
           {mode === "edit" && customer && (
             <div className="space-y-2">
@@ -390,8 +387,7 @@ export function CustomerForm({
                 form.watch("han_muc_cong_no") ?? 0
               )}
               onChange={(event) => {
-                const rawValue = event.target.value.replace(/\D/g, "");
-                const numberValue = rawValue === "" ? 0 : Number(rawValue);
+                const numberValue = parseCurrencyInput(event.target.value);
 
                 form.setValue("han_muc_cong_no", numberValue, {
                   shouldDirty: true,
@@ -544,4 +540,9 @@ export function CustomerForm({
     </form>
   );
 }
+
+
+
+
+
 

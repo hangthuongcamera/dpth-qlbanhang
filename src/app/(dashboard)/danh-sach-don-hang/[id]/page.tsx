@@ -83,7 +83,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
     };
   });
 
-  return <div className="space-y-4 p-4 md:p-6">
+  return <div className="space-y-4 app-page">
     <OrderNotificationToast />
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
@@ -112,7 +112,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
         <Link href="/danh-sach-don-hang" className={buttonVariants({ variant: "outline" })}>Quay lại danh sách</Link>
       </div>
     </div>
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-6 sm:p-5">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-6 sm:p-4">
       <div>
         <p className="text-xs text-slate-500">Loại đơn</p>
         <span className={`mt-1 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${typeBadge.badgeClass}`}>
@@ -133,7 +133,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
     <section className="rounded-xl border bg-white overflow-hidden">
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="app-data-table w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs text-slate-500">
             <tr>
               <th className="px-4 py-3">Sản phẩm / biến thể</th>
@@ -221,7 +221,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
         <div className="border-b px-4 py-3 font-semibold text-sm">Lịch sử thanh toán</div>
         {/* Desktop Table View */}
         <div className="hidden md:block overflow-x-auto">
-          <table className="w-full min-w-[520px] text-left text-sm">
+          <table className="app-data-table w-full min-w-[520px] text-left text-sm">
             <thead className="bg-slate-50 text-xs text-slate-500">
               <tr>
                 <th className="px-4 py-2">Ngày thu</th>
@@ -268,4 +268,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
     {order.ghi_chu && <section className="rounded-xl border bg-white p-4"><h3 className="text-sm font-semibold">Ghi chú</h3><p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">{order.ghi_chu}</p></section>}
   </div>;
 }
+
+
+
 

@@ -71,5 +71,6 @@ export default async function SanPhamPage({ searchParams }: PageProps) {
   variants.forEach((variant) => byProduct.set(variant.san_pham_id, [...(byProduct.get(variant.san_pham_id) ?? []), variant]));
   const products = rows.map((product) => ({ ...product, bien_the_san_pham: byProduct.get(product.id) ?? [] }));
 
-  return <div className="p-4 md:p-6"><ProductTable products={products} categories={categories as LoaiSanPham[]} search={search} status={status} categoryId={categoryId} currentPage={currentPage} totalPages={totalPages} totalCount={totalCount} pageSize={pageSize} /></div>;
+  return <div className="app-page"><ProductTable products={products} categories={categories as LoaiSanPham[]} search={search} status={status} categoryId={categoryId} currentPage={currentPage} totalPages={totalPages} totalCount={totalCount} pageSize={pageSize} /></div>;
 }
+

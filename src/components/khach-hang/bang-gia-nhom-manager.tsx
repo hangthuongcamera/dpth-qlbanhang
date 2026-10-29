@@ -7,6 +7,7 @@ import { ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { luuGiaNhomKhachHang, type NhomKhachHang } from "@/lib/supabase/nhom-khach-hang-actions";
+import { formatCurrency, formatNumber, parseCurrencyInput } from "@/types/don-hang";
 
 export type GiaNhomRow = {
   key: string;
@@ -25,8 +26,8 @@ type RowStatus = "dirty" | "saving" | "saved" | "error";
 export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: NhomKhachHang[]; rows: GiaNhomRow[]; selectedGroupId: string }) {
   const router = useRouter();
   const group = groups.find((item) => item.id === selectedGroupId);
-  const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(rows.map((row) => [row.key, row.giaNhom === null ? "" : String(row.giaNhom)])));
-  const [savedValues, setSavedValues] = useState<Record<string, string>>(() => Object.fromEntries(rows.map((row) => [row.key, row.giaNhom === null ? "" : String(row.giaNhom)])));
+  const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(rows.map((row) => [row.key, row.giaNhom === null ? "" : formatNumber(row.giaNhom)])));
+  const [savedValues, setSavedValues] = useState<Record<string, string>>(() => Object.fromEntries(rows.map((row) => [row.key, row.giaNhom === null ? "" : formatNumber(row.giaNhom)])));
   const [rowStatuses, setRowStatuses] = useState<Record<string, RowStatus>>({});
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [searchInput, setSearchInput] = useState("");
@@ -55,7 +56,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
 
   async function persistPrice(row: GiaNhomRow): Promise<boolean> {
     const raw = values[row.key]?.trim() ?? "";
-    const price = raw === "" ? null : Number(raw);
+    const price = raw === "" ? null : parseCurrencyInput(raw);
     if (price !== null && (!Number.isFinite(price) || price < 0)) {
       setRowStatuses((current) => ({ ...current, [row.key]: "error" }));
       setRowErrors((current) => ({ ...current, [row.key]: "Giá nhóm phải là số không âm." }));
@@ -63,7 +64,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     }
 
     const savedRaw = savedValues[row.key]?.trim() ?? "";
-    const savedPrice = savedRaw === "" ? null : Number(savedRaw);
+    const savedPrice = savedRaw === "" ? null : parseCurrencyInput(savedRaw);
     if (price === savedPrice) {
       setRowStatuses((current) => ({ ...current, [row.key]: "saved" }));
       setRowErrors((current) => ({ ...current, [row.key]: "" }));
@@ -74,7 +75,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     setRowErrors((current) => ({ ...current, [row.key]: "" }));
     try {
       await luuGiaNhomKhachHang({ nhomId: selectedGroupId, sanPhamId: row.sanPhamId, bienTheId: row.bienTheId, donGia: price });
-      const normalized = price === null ? "" : String(price);
+      const normalized = price === null ? "" : formatNumber(price);
       setSavedValues((current) => ({ ...current, [row.key]: normalized }));
       setRowStatuses((current) => ({ ...current, [row.key]: "saved" }));
       setRowErrors((current) => ({ ...current, [row.key]: "" }));
@@ -102,8 +103,8 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     const dirtyRows = rows.filter((row) => {
       const raw = values[row.key]?.trim() ?? "";
       const savedRaw = savedValues[row.key]?.trim() ?? "";
-      const price = raw === "" ? null : Number(raw);
-      const savedPrice = savedRaw === "" ? null : Number(savedRaw);
+      const price = raw === "" ? null : parseCurrencyInput(raw);
+      const savedPrice = savedRaw === "" ? null : parseCurrencyInput(savedRaw);
       return price === null ? savedPrice !== null : !Number.isFinite(price) || price !== savedPrice;
     });
     const results = await Promise.all(dirtyRows.map((row) => save(row)));
@@ -130,7 +131,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     .filter((page) => page >= 1 && page <= totalPages)
     .sort((first, second) => first - second);
 
-  return <div className="min-w-0 space-y-4 p-4 md:p-6">
+  return <div className="min-w-0 space-y-4 app-page">
     <label className="grid max-w-lg gap-1.5 text-sm font-medium text-slate-700">Nhóm khách hàng
       <select value={selectedGroupId} onChange={(event) => router.push(event.target.value ? `/bang-gia-nhom?nhom=${event.target.value}` : "/bang-gia-nhom")} className="h-10 rounded-md border border-slate-200 bg-white px-3 font-normal">
         <option value="">Chọn nhóm khách hàng</option>
@@ -160,8 +161,8 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
             {visibleRows.map((row) => <tr key={row.key}>
               <td className="break-words px-4 py-3"><div className="font-medium text-slate-900">{row.tenSanPham}</div>{row.tenBienThe && <div className="text-xs text-slate-500">{row.tenBienThe}</div>}</td>
               <td className="break-all px-4 py-3 text-slate-500">{row.maSku || row.maSanPham}</td>
-              <td className="whitespace-nowrap px-4 py-3">{new Intl.NumberFormat("vi-VN").format(row.giaMacDinh)}</td>
-              <td className="px-4 py-3"><input type="number" min="0" step="0.01" value={values[row.key] ?? ""} disabled={rowStatuses[row.key] === "saving"} onChange={(event) => { setValues((current) => ({ ...current, [row.key]: event.target.value })); setRowStatuses((current) => ({ ...current, [row.key]: "dirty" })); setRowErrors((current) => ({ ...current, [row.key]: "" })); }} onBlur={() => void save(row)} placeholder="Dùng giá mặc định" className="h-9 w-full max-w-40 rounded-md border border-slate-200 px-3 disabled:bg-slate-100" aria-label={`Giá nhóm cho ${row.tenBienThe || row.tenSanPham}`} aria-describedby={`gia-nhom-status-${row.key}`} />
+              <td className="whitespace-nowrap px-4 py-3">{formatCurrency(row.giaMacDinh)}</td>
+              <td className="px-4 py-3"><input type="text" inputMode="numeric" value={values[row.key] ?? ""} disabled={rowStatuses[row.key] === "saving"} onChange={(event) => { setValues((current) => ({ ...current, [row.key]: event.target.value === "" ? "" : formatNumber(parseCurrencyInput(event.target.value)) })); setRowStatuses((current) => ({ ...current, [row.key]: "dirty" })); setRowErrors((current) => ({ ...current, [row.key]: "" })); }} onBlur={() => void save(row)} placeholder="Dùng giá mặc định" className="h-9 w-full max-w-40 rounded-md border border-slate-200 px-3 disabled:bg-slate-100" aria-label={`Giá nhóm cho ${row.tenBienThe || row.tenSanPham}`} aria-describedby={`gia-nhom-status-${row.key}`} />
                 {rowStatuses[row.key] && <p id={`gia-nhom-status-${row.key}`} role={rowStatuses[row.key] === "error" ? "alert" : "status"} className={`mt-1 text-xs ${rowStatuses[row.key] === "error" ? "text-red-600" : rowStatuses[row.key] === "dirty" ? "text-amber-700" : "text-slate-500"}`}>{rowStatuses[row.key] === "saving" ? "Đang lưu..." : rowStatuses[row.key] === "saved" ? "Đã lưu" : rowStatuses[row.key] === "dirty" ? "Chưa lưu" : rowErrors[row.key]}</p>}
               </td>
             </tr>)}
@@ -185,6 +186,8 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
     </>}
   </div>;
 }
+
+
 
 
 

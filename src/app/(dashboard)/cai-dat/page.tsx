@@ -16,10 +16,11 @@ export default async function CaiDatPage() {
     throw new Error("Không thể tải cấu hình cửa hàng.");
   }
 
-  return <main className="space-y-6 p-4 md:p-6">
+  return <main className="space-y-6 app-page">
     {(error?.code === "42P01" || error?.code === "PGRST205") && <div role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Cần chạy migration <code>20261024160000_store_settings.sql</code> trên Supabase để lưu cấu hình.</div>}
     <CuaHangSettingsForm settings={(data as typeof DEFAULT_CUA_HANG_SETTINGS | null) ?? DEFAULT_CUA_HANG_SETTINGS} />
   </main>;
 }
+
 
 

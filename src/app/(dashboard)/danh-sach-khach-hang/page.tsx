@@ -139,7 +139,7 @@ export default async function KhachHangPage({
   }));
 
   return (
-    <div className="p-4 md:p-3">
+    <div className="app-page">
       <CustomerTable
         customers={customersWithDebt}
         currentPage={currentPage}
@@ -152,4 +152,6 @@ export default async function KhachHangPage({
     </div>
   );
 }
+
+
 

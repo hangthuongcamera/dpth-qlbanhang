@@ -9,10 +9,10 @@ export default async function ChiTietNhomKhachHangPage({ params }: { params: Pro
   try {
     [group, customers] = await Promise.all([getNhomKhachHangById(id), getKhachHangTrongNhom(id)]);
   } catch {
-    return <div className="p-6 text-sm text-slate-600">Không thể tải thông tin nhóm khách hàng.</div>;
+    return <div className="app-page text-sm text-slate-600">Không thể tải thông tin nhóm khách hàng.</div>;
   }
   return (
-    <div className="space-y-5 p-4 md:p-6">
+    <div className="space-y-5 app-page">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3"><Link href="/nhom-khach-hang" aria-label="Quay lại danh sách nhóm" className="mt-0.5 rounded-lg p-2 text-slate-600 hover:bg-slate-100"><ArrowLeft className="h-5 w-5" /></Link><div><h2 className="text-xl font-semibold text-slate-900">{group.ten_nhom}</h2><p className="mt-1 text-sm text-slate-500">{customers.length} khách hàng thuộc nhóm này</p></div></div>
         <Link href={`/nhom-khach-hang/${group.id}/chinh-sua`} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"><Pencil className="h-4 w-4" />Sửa nhóm</Link>
@@ -21,5 +21,7 @@ export default async function ChiTietNhomKhachHangPage({ params }: { params: Pro
     </div>
   );
 }
+
+
 
 

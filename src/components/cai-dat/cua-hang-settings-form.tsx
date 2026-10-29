@@ -32,7 +32,7 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
   }, [state]);
 
   return <form action={formAction} className="space-y-6">
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="font-semibold text-slate-900">Thông tin cửa hàng trên hóa đơn</h2>
       <p className="mt-1 text-sm text-slate-500">Thông tin này được đưa vào bill K80 và phiếu giao hàng A4/A5.</p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -43,7 +43,7 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
       </div>
     </section>
 
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="font-semibold text-slate-900">Tài khoản nhận tiền VietQR</h2>
       <p className="mt-1 text-sm text-slate-500">Mã QR trên hóa đơn sẽ dùng tài khoản này và tự điền số tiền còn phải thu cùng mã đơn hàng.</p>
       <div className="mt-4 grid gap-4 sm:grid-cols-4">
@@ -58,6 +58,7 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
     <div className="flex justify-end"><Button type="submit" disabled={pending}>{pending ? "Đang lưu..." : "Lưu cấu hình"}</Button></div>
   </form>;
 }
+
 
 
 

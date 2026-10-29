@@ -4,8 +4,9 @@ import { getNhomKhachHang } from "@/lib/supabase/nhom-khach-hang-actions";
 export default async function ThemKhachHangPage() {
   const groups = await getNhomKhachHang();
   return (
-    <div className="p-4 md:p-6">
+    <div className="app-page">
       <CustomerForm groups={groups} />
     </div>
   );
 }
+

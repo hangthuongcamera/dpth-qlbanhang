@@ -12,6 +12,7 @@ import { luuSanPham } from "@/lib/supabase/san-pham-actions";
 import { taoLoaiSanPham } from "@/lib/supabase/loai-san-pham-actions";
 import { sanPhamSchema, type SanPhamFormData } from "@/lib/validations/san-pham";
 import type { LoaiSanPham, SanPham } from "@/types/san-pham";
+import { formatNumber, parseCurrencyInput } from "@/types/don-hang";
 
 type ProductFormProps = { categories: LoaiSanPham[]; product?: SanPham; initialProductCode?: string };
 type AttributeDefinition = { key: string; name: string; values: string[]; draftValue: string };
@@ -231,8 +232,8 @@ export function ProductForm({ categories, product, initialProductCode }: Product
       {error && <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
       <section className="rounded-xl border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-4 sm:px-5"><h2 className="font-semibold text-slate-900">Thông tin sản phẩm</h2><p className="mt-1 text-sm text-slate-500">Thông tin chung và loại sản phẩm.</p></div>
-        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
+        <div className="border-b border-slate-200 px-4 py-4"><h2 className="font-semibold text-slate-900">Thông tin sản phẩm</h2><p className="mt-1 text-sm text-slate-500">Thông tin chung và loại sản phẩm.</p></div>
+        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-4">
           <div className="space-y-2"><Label htmlFor="ma_san_pham">Mã sản phẩm</Label><Input id="ma_san_pham" value={values.ma_san_pham} readOnly maxLength={100} placeholder="Tự sinh khi lưu (THSP-00001)" className="bg-slate-50 text-slate-600" /><p className="text-xs text-slate-500">Mã được tạo tự động và giữ nguyên khi chỉnh sửa.</p></div>
           <div className="space-y-2"><Label htmlFor="ten_san_pham">Tên sản phẩm *</Label><Input id="ten_san_pham" value={values.ten_san_pham} onChange={(e) => updateProduct("ten_san_pham", e.target.value)} required maxLength={255} /></div>
           <div className="space-y-2">
@@ -258,7 +259,7 @@ export function ProductForm({ categories, product, initialProductCode }: Product
               <div><p className="text-sm font-medium text-slate-800">Sản phẩm có thuộc tính</p><p className="mt-0.5 text-xs text-slate-500">Bật nếu sản phẩm có nhiều biến thể như màu sắc hoặc kích cỡ.</p></div>
               <button type="button" role="switch" aria-checked={hasAttributes} aria-label="Sản phẩm có thuộc tính" onClick={() => { if (!hasAttributes && attributes.length === 0) setAttributes([{ key: `${Date.now()}-0`, name: "", values: [], draftValue: "" }]); setHasAttributes(!hasAttributes); }} className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${hasAttributes ? "bg-primary" : "bg-slate-300"}`}><span className={`inline-block h-5 w-5 translate-y-0.5 rounded-full bg-white shadow transition-transform ${hasAttributes ? "translate-x-5" : "translate-x-0.5"}`} /></button>
             </div>
-            {!hasAttributes && <div className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2"><div className="sm:col-span-2"><h3 className="text-sm font-semibold text-slate-800">Sản phẩm đơn</h3><p className="mt-1 text-xs text-slate-500">Không có thuộc tính; nhập giá trực tiếp cho sản phẩm.</p></div><div className="space-y-2"><Label htmlFor="gia_nhap_san_pham">Giá nhập *</Label><Input id="gia_nhap_san_pham" type="number" min="0" step="0.01" value={values.gia_nhap} onChange={(e) => updateProduct("gia_nhap", Number(e.target.value))} required /></div><div className="space-y-2"><Label htmlFor="gia_ban_san_pham">Giá bán *</Label><Input id="gia_ban_san_pham" type="number" min="0" step="0.01" value={values.gia_ban} onChange={(e) => updateProduct("gia_ban", Number(e.target.value))} required /></div></div>}
+            {!hasAttributes && <div className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2"><div className="sm:col-span-2"><h3 className="text-sm font-semibold text-slate-800">Sản phẩm đơn</h3><p className="mt-1 text-xs text-slate-500">Không có thuộc tính; nhập giá trực tiếp cho sản phẩm.</p></div><div className="space-y-2"><Label htmlFor="gia_nhap_san_pham">Giá nhập *</Label><Input id="gia_nhap_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_nhap)} onChange={(e) => updateProduct("gia_nhap", parseCurrencyInput(e.target.value))} required /></div><div className="space-y-2"><Label htmlFor="gia_ban_san_pham">Giá bán *</Label><Input id="gia_ban_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_ban)} onChange={(e) => updateProduct("gia_ban", parseCurrencyInput(e.target.value))} required /></div></div>}
 
             {hasAttributes && <div className="space-y-3 rounded-lg border border-slate-200 bg-white p-3">
               {attributes.map((attribute, index) => <div key={attribute.key} className="grid gap-3 rounded-md border border-slate-200 bg-white p-3 sm:grid-cols-[minmax(140px,0.8fr)_minmax(220px,1.5fr)_auto] sm:items-start">
@@ -275,18 +276,18 @@ export function ProductForm({ categories, product, initialProductCode }: Product
       </section>
 
       {hasAttributes && <section className="rounded-xl border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-4 sm:px-5"><h2 className="font-semibold text-slate-900">Biến thể</h2><p className="mt-1 text-sm text-slate-500">Các tổ hợp được cập nhật ngay khi nhấn Enter cho từng giá trị. Mỗi biến thể có SKU và giá riêng.</p></div>
-        <div className="space-y-4 p-4 sm:p-5">
+        <div className="border-b border-slate-200 px-4 py-4"><h2 className="font-semibold text-slate-900">Biến thể</h2><p className="mt-1 text-sm text-slate-500">Các tổ hợp được cập nhật ngay khi nhấn Enter cho từng giá trị. Mỗi biến thể có SKU và giá riêng.</p></div>
+        <div className="space-y-4 p-4">
           {values.bien_the.length === 0 && <div className="rounded-lg border border-dashed border-slate-300 p-4 text-sm text-slate-600">Nhập tên thuộc tính và ít nhất một giá trị, sau đó nhấn Enter để tạo danh sách biến thể.</div>}
           {values.bien_the.length > 0 && <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full min-w-[900px] text-left text-sm">
+            <table className="app-data-table w-full min-w-[900px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500"><tr><th className="px-3 py-3">Thuộc tính</th><th className="px-3 py-3">Mã SKU</th><th className="px-3 py-3">Giá nhập</th><th className="px-3 py-3">Giá bán</th><th className="px-3 py-3">Trạng thái</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
                 {values.bien_the.map((variant, index) => <tr id={variant.id ? `bien-the-${variant.id}` : undefined} key={variant.id ?? `new-${index}`}>
                   <td className="px-3 py-3 font-medium text-slate-700">{Object.entries(variant.thuoc_tinh).map(([name, value]) => `${name}: ${value}`).join(" · ") || "Mặc định"}</td>
                   <td className="px-3 py-3"><Input aria-label={`Mã SKU biến thể ${index + 1}`} value={variant.ma_sku ?? ""} onChange={(e) => updateVariant(index, "ma_sku", e.target.value)} placeholder="Tự sinh khi lưu" maxLength={100} /></td>
-                  <td className="px-3 py-3"><Input aria-label={`Giá nhập biến thể ${index + 1}`} type="number" min="0" step="0.01" value={variant.gia_nhap} onChange={(e) => updateVariant(index, "gia_nhap", Number(e.target.value))} required /></td>
-                  <td className="px-3 py-3"><Input aria-label={`Giá bán biến thể ${index + 1}`} type="number" min="0" step="0.01" value={variant.gia_ban} onChange={(e) => updateVariant(index, "gia_ban", Number(e.target.value))} required /></td>
+                  <td className="px-3 py-3"><Input aria-label={`Giá nhập biến thể ${index + 1}`} type="text" inputMode="numeric" value={formatNumber(variant.gia_nhap)} onChange={(e) => updateVariant(index, "gia_nhap", parseCurrencyInput(e.target.value))} required /></td>
+                  <td className="px-3 py-3"><Input aria-label={`Giá bán biến thể ${index + 1}`} type="text" inputMode="numeric" value={formatNumber(variant.gia_ban)} onChange={(e) => updateVariant(index, "gia_ban", parseCurrencyInput(e.target.value))} required /></td>
                   <td className="px-3 py-3"><label className="flex items-center gap-2 whitespace-nowrap text-xs text-slate-600"><input type="checkbox" checked={variant.trang_thai} onChange={(e) => updateVariant(index, "trang_thai", e.target.checked)} className="h-4 w-4 accent-primary" />Kinh doanh</label></td>
                 </tr>)}
               </tbody>
@@ -303,3 +304,9 @@ export function ProductForm({ categories, product, initialProductCode }: Product
     </form>
   );
 }
+
+
+
+
+
+

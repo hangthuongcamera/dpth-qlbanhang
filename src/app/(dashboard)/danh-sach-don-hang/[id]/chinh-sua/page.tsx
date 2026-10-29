@@ -62,7 +62,7 @@ export default async function ChinhSuaDonHangPage({ params }: { params: Promise<
     phi_van_chuyen: Number(order.phi_van_chuyen),
   };
 
-  return <div className="p-4 md:p-6">
+  return <div className="app-page">
     <div className="mx-auto mb-5 flex w-full max-w-6xl items-center justify-between gap-3">
       <div><h1 className="text-xl font-semibold text-slate-900">Chỉnh sửa đơn {order.ma_don_hang}</h1><p className="mt-1 text-sm text-slate-500">Khách hàng và loại đơn được giữ nguyên.</p></div>
       <Link href={`/danh-sach-don-hang/${id}`} className={buttonVariants({ variant: "outline" })}>Quay lại</Link>
@@ -70,3 +70,4 @@ export default async function ChinhSuaDonHangPage({ params }: { params: Promise<
     <div className="mx-auto w-full max-w-6xl"><OrderEditForm order={pageOrder} initialLines={initialLines} {...productData} /></div>
   </div>;
 }
+

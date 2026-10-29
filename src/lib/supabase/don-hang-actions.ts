@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "./server";
+import { formatCurrency } from "@/types/don-hang";
 
 export type ChiTietDonHangInput = {
   san_pham_id: string;
@@ -29,7 +30,7 @@ export async function taoDonHang(input: {
 }) {
   if (!input.khach_hang_id) throw new Error("Vui lòng chọn khách hàng.");
   if (!input.chi_tiet.length) throw new Error("Vui lòng thêm ít nhất một sản phẩm vào đơn.");
-  if (input.chi_tiet.some((item) => !Number.isSafeInteger(item.so_luong) || item.so_luong < 1 || !Number.isFinite(item.don_gia) || item.don_gia < 0 || !Number.isFinite(item.gia_goc) || item.gia_goc < 0)) {
+  if (input.chi_tiet.some((item) => !Number.isSafeInteger(item.so_luong) || item.so_luong < 1 || !Number.isSafeInteger(item.don_gia) || item.don_gia < 0 || !Number.isSafeInteger(item.gia_goc) || item.gia_goc < 0)) {
     throw new Error("Số lượng phải là số nguyên từ 1 trở lên và đơn giá không được âm.");
   }
   const supabase = await createClient();
@@ -87,11 +88,14 @@ export async function taoDonHang(input: {
       gia_von: cost,
     };
   });
+  if (details.some((item) => !Number.isSafeInteger(item.don_gia) || !Number.isSafeInteger(item.gia_goc) || !Number.isSafeInteger(item.gia_von ?? 0))) {
+    throw new Error("Giá sản phẩm, giá nhóm và giá vốn phải là số nguyên VND. Vui lòng cập nhật giá sản phẩm trước khi tạo đơn.");
+  }
   const subtotal = details.reduce((sum, item) => sum + item.so_luong * item.don_gia, 0);
-  if (!Number.isFinite(input.giam_gia) || input.giam_gia < 0 || input.giam_gia > subtotal) throw new Error("Giảm giá phải nằm trong khoảng từ 0 đến tạm tính.");
-  if (!Number.isFinite(input.phi_van_chuyen) || input.phi_van_chuyen < 0) throw new Error("Phí vận chuyển không được âm.");
+  if (!Number.isSafeInteger(input.giam_gia) || input.giam_gia < 0 || input.giam_gia > subtotal) throw new Error("Giảm giá phải nằm trong khoảng từ 0 đến tạm tính.");
+  if (!Number.isSafeInteger(input.phi_van_chuyen) || input.phi_van_chuyen < 0) throw new Error("Phí vận chuyển không được âm.");
   const total = subtotal - input.giam_gia + input.phi_van_chuyen;
-  if (!Number.isFinite(input.so_tien_thanh_toan) || input.so_tien_thanh_toan < 0) throw new Error("Số tiền thanh toán không hợp lệ.");
+  if (!Number.isSafeInteger(input.so_tien_thanh_toan) || input.so_tien_thanh_toan < 0) throw new Error("Số tiền thanh toán không hợp lệ.");
   if (input.loai_don_hang === "ban_nhanh" && input.giao_hang && (!input.so_dien_thoai_giao_hang?.trim() || !input.dia_chi_giao_hang?.trim())) {
     throw new Error("Vui lòng nhập đủ số điện thoại và địa chỉ giao hàng.");
   }
@@ -145,13 +149,13 @@ export async function capNhatDonHang(input: {
   if (!input.don_hang_id) throw new Error("Đơn hàng không hợp lệ.");
   if (!input.chi_tiet.length) throw new Error("Đơn hàng cần có ít nhất một sản phẩm.");
   if (input.chi_tiet.some((item) =>
-    !Number.isFinite(item.so_luong) || item.so_luong <= 0 ||
-    !Number.isFinite(item.don_gia) || item.don_gia < 0 ||
-    !Number.isFinite(item.gia_goc) || item.gia_goc < 0
+    !Number.isSafeInteger(item.so_luong) || item.so_luong < 1 ||
+    !Number.isSafeInteger(item.don_gia) || item.don_gia < 0 ||
+    !Number.isSafeInteger(item.gia_goc) || item.gia_goc < 0
   )) {
     throw new Error("Số lượng phải lớn hơn 0 và đơn giá không được âm.");
   }
-  if (!Number.isFinite(input.giam_gia) || input.giam_gia < 0 || !Number.isFinite(input.phi_van_chuyen) || input.phi_van_chuyen < 0) {
+  if (!Number.isSafeInteger(input.giam_gia) || input.giam_gia < 0 || !Number.isSafeInteger(input.phi_van_chuyen) || input.phi_van_chuyen < 0) {
     throw new Error("Giảm giá và phí vận chuyển không được âm.");
   }
 
@@ -171,7 +175,7 @@ export async function capNhatDonHang(input: {
 
 export async function thuTienDonHang(input: { don_hang_id: string; so_tien: number; phuong_thuc_thanh_toan: string }) {
   if (!input.don_hang_id) throw new Error("Đơn hàng không hợp lệ.");
-  if (!Number.isFinite(input.so_tien) || input.so_tien <= 0) throw new Error("Số tiền thu phải lớn hơn 0.");
+  if (!Number.isSafeInteger(input.so_tien) || input.so_tien <= 0) throw new Error("Số tiền thu phải lớn hơn 0.");
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("thu_tien_don_hang", {
     p_don_hang_id: input.don_hang_id,
@@ -233,7 +237,7 @@ export async function xoaDonHang(id: string) {
     const totalPaid = (allocations ?? []).reduce((sum, item) => sum + Number(item.so_tien || 0), 0);
     if (totalPaid > 0) {
       throw new Error(
-        `Đơn hàng ${order.ma_don_hang} đã phát sinh thu tiền (${totalPaid.toLocaleString("vi-VN")} ₫). Để bảo toàn sổ quỹ kế toán, vui lòng chuyển trạng thái đơn sang "Đã hủy" thay vì xóa.`
+        `Đơn hàng ${order.ma_don_hang} đã phát sinh thu tiền (${formatCurrency(totalPaid)}). Để bảo toàn sổ quỹ kế toán, vui lòng chuyển trạng thái đơn sang "Đã hủy" thay vì xóa.`
       );
     }
 
@@ -251,5 +255,9 @@ export async function xoaDonHang(id: string) {
 
   throw new Error(error.message || "Không thể xóa đơn hàng.");
 }
+
+
+
+
 
 

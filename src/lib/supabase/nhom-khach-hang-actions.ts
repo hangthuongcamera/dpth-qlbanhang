@@ -181,7 +181,7 @@ export async function luuGiaNhomKhachHang(input: {
   bienTheId: string | null;
   donGia: number | null;
 }) {
-  if (input.donGia !== null && (!Number.isFinite(input.donGia) || input.donGia < 0)) {
+  if (input.donGia !== null && (!Number.isSafeInteger(input.donGia) || input.donGia < 0)) {
     throw new Error("Giá nhóm phải là số không âm.");
   }
   const supabase = await createClient();
@@ -212,4 +212,5 @@ export async function luuGiaNhomKhachHang(input: {
     : await supabase.from("gia_nhom_khach_hang").insert(values);
   if (error) throw new Error(error.message);
 }
+
 

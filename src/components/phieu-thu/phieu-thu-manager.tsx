@@ -159,14 +159,14 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
     } finally { setWorking(false); }
   }
 
-  return <div className="space-y-4 p-4 sm:p-6">
+  return <div className="space-y-4 app-page">
     <OrderNotificationToast />
     <div className="flex flex-wrap items-center justify-end gap-3">
       <Button onClick={() => setFormReceipt(null)}><Plus className="mr-2 h-4 w-4" />Lập phiếu thu</Button>
     </div>
     {formReceipt !== undefined && <ReceiptForm initial={formReceipt} customers={customers} orders={orders} onClose={() => setFormReceipt(undefined)} onSaved={() => { setFormReceipt(undefined); router.refresh(); }} />}
 
-    <section className="grid gap-3 rounded-xl border border-slate-200 bg-white p-3 md:grid-cols-[5fr_3.75fr_3.75fr_3.75fr_3.75fr] md:items-end">
+    <section className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[5fr_3.75fr_3.75fr_3.75fr_3.75fr] md:items-end">
         <div className="relative grid gap-1.5 text-sm font-medium text-slate-700">
         <label htmlFor="receipt-search">Tìm phiếu thu</label>
         <div className="relative">
@@ -324,7 +324,7 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
   }
 
   return <>
-    <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-4">
       <div className="flex items-center justify-between gap-3"><div><h2 className="text-lg font-semibold text-slate-900">{initial ? "Sửa phiếu nháp " + initial.ma_phieu_thu : "Lập phiếu thu"}</h2><p className="text-sm text-slate-500">Phiếu nháp chưa ảnh hưởng công nợ.</p></div><Button variant="ghost" size="icon" onClick={onClose} aria-label="Đóng form"><X className="h-4 w-4" /></Button></div>
       {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
@@ -376,7 +376,7 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
       </div>
       <div className="space-y-3 border-t pt-4">
         <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-medium text-slate-900">Phân bổ vào đơn hàng</h3><p className="text-xs text-slate-500">Gợi ý phân bổ theo đơn cũ trước (FIFO). Tiền chưa phân bổ có thể dùng sau.</p></div><Button type="button" variant="outline" size="sm" onClick={autoAllocateFifo} disabled={!customerId || numericAmount <= 0 || customerOrders.length === 0}>Phân bổ FIFO</Button></div>
-        <div className="overflow-x-auto rounded-lg border"><table className="w-full min-w-[620px] text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2">Đơn hàng</th><th className="px-3 py-2">Ngày đặt</th><th className="px-3 py-2 text-right">Còn nợ</th><th className="px-3 py-2 text-right">Phân bổ</th></tr></thead><tbody className="divide-y">
+        <div className="overflow-x-auto rounded-lg border"><table className="app-data-table w-full min-w-[620px] text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2">Đơn hàng</th><th className="px-3 py-2">Ngày đặt</th><th className="px-3 py-2 text-right">Còn nợ</th><th className="px-3 py-2 text-right">Phân bổ</th></tr></thead><tbody className="divide-y">
           {customerOrders.map((order) => <tr key={order.id}><td className="px-3 py-2 font-medium">{order.ma_don_hang}</td><td className="px-3 py-2">{dateOnly(order.ngay_dat)}</td><td className="px-3 py-2 text-right">{formatCurrency(order.con_no)}</td><td className="px-3 py-2"><Input inputMode="numeric" value={allocations[order.id] ?? ""} onChange={(event) => setAllocations((current) => ({ ...current, [order.id]: formatNumber(parseCurrencyInput(event.target.value)) }))} placeholder="0" className="ml-auto h-9 max-w-36 text-right" /></td></tr>)}
           {!customerId && <tr><td colSpan={4} className="px-3 py-8 text-center text-slate-500">Chọn khách hàng để xem các đơn còn nợ.</td></tr>}
           {customerId && customerOrders.length === 0 && <tr><td colSpan={4} className="px-3 py-8 text-center text-slate-500">Khách hàng không có đơn còn nợ.</td></tr>}
@@ -418,7 +418,7 @@ function ReceiptDetailDialog({ receipt, orders, onClose }: { receipt: Receipt | 
       <p><span className="text-slate-500">Người nộp:</span> {receipt.nguoi_nop || "—"}</p><p><span className="text-slate-500">Trạng thái:</span> <strong>{statusLabels[receipt.trang_thai] ?? receipt.trang_thai}</strong></p>
       {receipt.ghi_chu && <p className="sm:col-span-2"><span className="text-slate-500">Ghi chú:</span> {receipt.ghi_chu}</p>}
     </div>
-    <div className="overflow-x-auto rounded-lg border"><table className="w-full min-w-[520px] text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2">Đơn hàng</th><th className="px-3 py-2">Ngày đặt</th><th className="px-3 py-2 text-right">Số tiền phân bổ</th></tr></thead><tbody className="divide-y">
+    <div className="overflow-x-auto rounded-lg border"><table className="app-data-table w-full min-w-[520px] text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2">Đơn hàng</th><th className="px-3 py-2">Ngày đặt</th><th className="px-3 py-2 text-right">Số tiền phân bổ</th></tr></thead><tbody className="divide-y">
       {receipt.allocations.map((item, index) => <tr key={item.id ?? item.don_hang_id + "-" + index}><td className="px-3 py-2 font-medium">{item.order?.ma_don_hang ?? item.don_hang_id}</td><td className="px-3 py-2">{dateOnly(item.order?.ngay_dat ?? "")}</td><td className="px-3 py-2 text-right">{formatCurrency(Number(item.so_tien))}</td></tr>)}
       {receipt.allocations.length === 0 && <tr><td colSpan={3} className="px-3 py-8 text-center text-slate-500">Phiếu thu chưa phân bổ vào đơn hàng.</td></tr>}
     </tbody></table></div>
@@ -456,6 +456,10 @@ function ReceiptPrintButton({ receipt }: { receipt: Receipt }) {
     </div></article>
   </>;
 }
+
+
+
+
 
 
 

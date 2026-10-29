@@ -69,5 +69,6 @@ export default async function CongNoPage() {
     (transactionsByCustomer[row.khach_hang_id] ??= []).push(item);
   }
 
-  return <div className="p-4 md:p-6"><CongNoManager customers={customers} transactionsByCustomer={transactionsByCustomer} /></div>;
+  return <div className="app-page"><CongNoManager customers={customers} transactionsByCustomer={transactionsByCustomer} /></div>;
 }
+
