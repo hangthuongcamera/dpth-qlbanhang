@@ -1,13 +1,11 @@
 "use client";
 
-import { Menu, UserRound } from "lucide-react";
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MobileSidebar } from "./mobile-sidebar";
+import { UserProfileMenu } from "./user-profile-menu";
 import { useState } from "react";
-import { LogoutButton } from "./logout-button";
 import type { VaiTro } from "@/lib/supabase/user-profile";
 
 const pageConfig = {
@@ -65,7 +63,7 @@ const pageConfig = {
   },
   "/nhan-vien": {
     title: "Nhân viên",
-    description: "Quản lý tài khoản nhân viên.",
+    description: "Quản lý tài khoản và phân quyền nhân viên.",
   },
 } as const;
 
@@ -89,7 +87,7 @@ export function Header({ showMobileMenu = true, vaiTro = "staff", hoTen = "" }: 
     })?.[1] ?? pageConfig["/dashboard"];
 
   const displayName = hoTen || "Admin";
-  const roleLabel = vaiTro === "owner" ? "Chủ cửa hàng" : "Nhân viên";
+  const roleLabel = vaiTro === "owner" ? "Quản trị viên" : "Nhân viên";
 
   return (
     <header className={`sticky top-0 z-30 flex items-center justify-between px-4 md:px-6 ${isFastSale ? "relative h-[54px] min-h-[54px] bg-primary text-primary-foreground" : "relative min-h-16 border-b border-slate-200 bg-white"}`}>
@@ -124,17 +122,12 @@ export function Header({ showMobileMenu = true, vaiTro = "staff", hoTen = "" }: 
       </div>
 
       <div className={`${showMobileMenu ? "hidden md:flex" : "flex"} shrink-0 items-center gap-2`}>
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className={isFastSale ? "text-white" : "text-slate-600"}>
-            <UserRound className="h-4 w-4" aria-hidden="true" />
-          </AvatarFallback>
-        </Avatar>
-
-        <div className="hidden sm:block">
-          <p className={`text-sm font-medium ${isFastSale ? "text-white" : "text-slate-900"}`}>{displayName}</p>
-          <p className={`text-xs ${isFastSale ? "text-white/80" : "text-slate-500"}`}>{roleLabel}</p>
-        </div>
-        <LogoutButton light={isFastSale} />
+        <UserProfileMenu
+          displayName={displayName}
+          roleLabel={roleLabel}
+          vaiTro={vaiTro}
+          isFastSale={isFastSale}
+        />
       </div>
     </header>
   );

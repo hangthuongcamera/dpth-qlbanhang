@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { dangNhap } from "@/lib/supabase/dang-nhap-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     let active = true;
@@ -18,34 +19,21 @@ export default function LoginPage() {
     void supabase.auth.getUser().then(({ data }) => {
       if (active && data?.user) window.location.replace("/dashboard");
     });
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    setLoading(true);
-
-    try {
-      const supabase = createClient();
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-
-      if (authError || !data.session) {
-        setError(authError ? "Email hoặc mật khẩu không chính xác." : "Đăng nhập chưa tạo được phiên. Vui lòng thử lại.");
-        return;
+    startTransition(async () => {
+      try {
+        const result = await dangNhap({ ten_dang_nhap: credential, mat_khau: password });
+        if (result.error) { setError(result.error); return; }
+        window.location.href = "/dashboard";
+      } catch {
+        setError("Không thể đăng nhập. Vui lòng kiểm tra kết nối và thử lại.");
       }
-
-      window.location.href = "/dashboard";
-    } catch {
-      setError("Không thể đăng nhập. Vui lòng kiểm tra kết nối và thử lại.");
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   return (
@@ -55,23 +43,17 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-primary">Thanh Hằng</h1>
           <p className="mt-2 text-sm text-slate-500">Đăng nhập hệ thống quản lý bán hàng</p>
         </div>
-
         <form onSubmit={handleLogin} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" autoComplete="username" placeholder="Nhập email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Label htmlFor="login-name">Email hoặc tên đăng nhập</Label>
+            <Input id="login-name" type="text" autoComplete="username" placeholder="Nhập email hoặc tên đăng nhập" value={credential} onChange={(e) => setCredential(e.target.value)} required />
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="password">Mật khẩu</Label>
             <Input id="password" type="password" autoComplete="current-password" placeholder="Nhập mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-          </Button>
+          <Button type="submit" className="w-full" disabled={isPending}>{isPending ? "Đang đăng nhập..." : "Đăng nhập"}</Button>
         </form>
       </div>
     </main>

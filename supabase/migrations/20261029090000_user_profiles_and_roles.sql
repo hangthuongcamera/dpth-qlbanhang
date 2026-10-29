@@ -1,10 +1,10 @@
 -- Migration: Phân quyền người dùng (user_profiles)
 -- Ngày: 29/10/2026
 -- Mô tả:
---   1. Tạo bảng user_profiles lưu thông tin & vai trò người dùng (owner / staff)
---   2. RPC them_nhan_vien: chủ shop tạo tài khoản nhân viên (gọi qua service role)
---   3. Trigger tự động tạo profile cho user mới đăng ký (owner mặc định nếu chưa có ai)
---   4. Trigger bảo vệ: không cho xóa/hạ cấp owner cuối cùng
+--   1. Tạo bảng user_profiles để lưu hồ sơ và vai trò người dùng
+--   2. Tự tạo/backfill profile khi có tài khoản Auth
+--   3. Gán người tạo cho đơn hàng để theo dõi nhân viên lập đơn
+--   Bảo vệ owner cuối cùng được bổ sung ở migration hardening kế tiếp.
 
 -- ===========================================================================
 -- 1. Bảng user_profiles
@@ -189,3 +189,5 @@ $$;
 -- 5. Notify PostgREST reload schema
 -- ===========================================================================
 NOTIFY pgrst, 'reload schema';
+
+
