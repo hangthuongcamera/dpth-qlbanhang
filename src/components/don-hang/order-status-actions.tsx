@@ -140,7 +140,7 @@ export function OrderStatusActions({
             />
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-2 md:gap-0">
             <Button
               type="button"
               variant="outline"

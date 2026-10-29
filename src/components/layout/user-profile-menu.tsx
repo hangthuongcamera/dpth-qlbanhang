@@ -59,7 +59,7 @@ export function UserProfileMenu({
             </AvatarFallback>
           </Avatar>
 
-          <div className="hidden text-left sm:block">
+          <div className="hidden text-left md:block">
             <p className={`text-sm font-medium leading-none ${isFastSale ? "text-white" : "text-slate-900"}`}>
               {displayName}
             </p>
@@ -78,7 +78,7 @@ export function UserProfileMenu({
                 <p className="text-sm font-semibold leading-none text-slate-900">{displayName}</p>
                 <div className="flex items-center gap-1.5 pt-0.5">
                   <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${
                       vaiTro === "owner"
                         ? "bg-red-50 text-primary border border-red-200"
                         : "bg-slate-100 text-slate-700"

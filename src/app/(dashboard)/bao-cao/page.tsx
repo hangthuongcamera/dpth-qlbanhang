@@ -190,7 +190,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
   const periodLabel = (key: string) => grouping === "month" ? key.slice(5) + "/" + key.slice(0, 4) : displayDate(key);
 
   return (
-    <main className="space-y-6 app-page">
+    <main className="space-y-4 md:space-y-6 app-page">
       {/* Thanh chuyển đổi Tab Báo cáo */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-3" role="tablist" aria-label="Loại báo cáo">
         <Link
@@ -237,15 +237,15 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
 
       {/* TAB 1: BÁO CÁO DOANH THU */}
       {currentTab === "doanh-thu" && (
-        <section className="grid gap-6 xl:grid-cols-2">
+        <section className="grid gap-4 md:gap-6 xl:grid-cols-2">
           {/* Doanh thu theo thời gian */}
-          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h2 className="font-semibold text-slate-900">Doanh thu theo thời gian</h2>
+          <article className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="flex min-w-0 flex-col items-start gap-2 md:flex-row md:flex-wrap md:justify-between">
+              <div className="min-w-0 max-w-full">
+                <h2 className="break-words font-semibold text-slate-900">Doanh thu theo thời gian</h2>
                 <p className="mt-1 text-sm text-slate-500">{displayDate(fromDate)} – {displayDate(toDate)}</p>
               </div>
-              <div className="text-right">
+              <div className="w-full min-w-0 text-left md:w-auto md:text-right">
                 <div className="text-xs text-slate-500">Tổng doanh thu thuần</div>
                 <div className="text-lg font-semibold text-slate-900">{formatCurrency(totalRevenue)}</div>
               </div>
@@ -254,7 +254,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
             {periodKeys.length === 0 ? (
               <p className="py-12 text-center text-sm text-slate-500">Không có đơn hàng trong khoảng thời gian này.</p>
             ) : (
-              <div className="mt-5 space-y-3">
+              <div className="mt-4 space-y-3 md:mt-5">
                 {periodKeys.map((key) => {
                   const val = periodRevenue.get(key) ?? 0;
                   return (
@@ -273,8 +273,8 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
           </article>
 
           {/* 10 mặt hàng bán chạy */}
-          <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="font-semibold text-slate-900">10 mặt hàng bán chạy nhất</h2>
+          <article className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <h2 className="break-words font-semibold text-slate-900">10 mặt hàng bán chạy nhất</h2>
             <p className="mt-1 text-sm text-slate-500">Xếp hạng theo tổng số lượng bán trong kỳ.</p>
             {bestSellers.length === 0 ? (
               <p className="py-12 text-center text-sm text-slate-500">Chưa có mặt hàng được bán trong khoảng thời gian này.</p>
@@ -311,10 +311,10 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
 
       {/* TAB 2: BÁO CÁO LỢI NHUẬN */}
       {currentTab === "loi-nhuan" && (
-        <section className="space-y-6">
+        <section className="space-y-4 md:space-y-6">
           {/* 3 Thẻ KPI Lợi Nhuận Tổng Quan */}
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
                 Tổng doanh thu thuần
@@ -323,7 +323,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
               <p className="mt-1 text-xs text-slate-400">Đã trừ giảm giá của {orders.length} đơn</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <Package className="h-4 w-4 text-amber-600" />
                 Tổng giá vốn (COGS)
@@ -332,13 +332,13 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
               <p className="mt-1 text-xs text-slate-400">Snapshot theo giá vốn thời điểm bán</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center justify-between">
+            <div className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex min-w-0 flex-col items-start gap-2 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   Lợi nhuận gộp
                 </div>
-                <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+                <span className="max-w-full break-words rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
                   Biên LN: {totalMargin.toFixed(1)}%
                 </span>
               </div>
@@ -347,15 +347,15 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
             </div>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid gap-4 md:gap-6 xl:grid-cols-2">
             {/* Lợi nhuận theo thời gian */}
-            <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <h2 className="font-semibold text-slate-900">Lợi nhuận theo thời gian</h2>
+            <article className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex min-w-0 flex-col items-start gap-2 md:flex-row md:flex-wrap md:justify-between">
+                <div className="min-w-0 max-w-full">
+                  <h2 className="break-words font-semibold text-slate-900">Lợi nhuận theo thời gian</h2>
                   <p className="mt-1 text-sm text-slate-500">{displayDate(fromDate)} – {displayDate(toDate)}</p>
                 </div>
-                <div className="text-right">
+                <div className="w-full min-w-0 text-left md:w-auto md:text-right">
                   <div className="text-xs text-slate-500">Tổng lợi nhuận</div>
                   <div className="text-lg font-semibold text-emerald-600">{formatCurrency(totalProfit)}</div>
                 </div>
@@ -364,7 +364,7 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
               {periodKeys.length === 0 ? (
                 <p className="py-12 text-center text-sm text-slate-500">Không có dữ liệu trong khoảng thời gian này.</p>
               ) : (
-                <div className="mt-5 space-y-4">
+                <div className="mt-4 space-y-4 md:mt-5">
                   {periodKeys.map((key) => {
                     const rev = periodRevenue.get(key) ?? 0;
                     const cost = periodCost.get(key) ?? 0;
@@ -395,8 +395,8 @@ export default async function BaoCaoPage({ searchParams }: { searchParams: Promi
             </article>
 
             {/* Top 10 mặt hàng sinh lời cao nhất */}
-            <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h2 className="font-semibold text-slate-900">10 mặt hàng sinh lời cao nhất</h2>
+            <article className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h2 className="break-words font-semibold text-slate-900">10 mặt hàng sinh lời cao nhất</h2>
               <p className="mt-1 text-sm text-slate-500">Xếp hạng theo tổng tiền lãi gộp thu về trong kỳ.</p>
               {mostProfitable.length === 0 ? (
                 <p className="py-12 text-center text-sm text-slate-500">Chưa có sản phẩm trong khoảng thời gian này.</p>

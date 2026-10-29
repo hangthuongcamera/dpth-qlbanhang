@@ -114,7 +114,7 @@ export function MobileSidebar({
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="left" className="w-72 bg-white p-0 text-slate-700 [&_[data-slot=sheet-close]]:text-slate-500 [&_[data-slot=sheet-close]]:hover:bg-slate-100">
+        <SheetContent side="left" className="app-mobile-menu w-72 bg-white p-0 text-slate-700 [&_[data-slot=sheet-close]]:text-slate-500 [&_[data-slot=sheet-close]]:hover:bg-slate-100">
           <SheetHeader className="border-b border-slate-200 bg-slate-50 px-6 py-4 text-left text-slate-900">
             <SheetTitle className="text-left text-slate-900">
               <div className="text-lg font-bold text-primary">

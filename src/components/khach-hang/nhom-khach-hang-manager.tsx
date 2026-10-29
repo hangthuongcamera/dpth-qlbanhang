@@ -84,14 +84,14 @@ export function NhomKhachHangManager({ groups }: { groups: NhomKhachHang[] }) {
         <div
           role={notice.type === "success" ? "status" : "alert"}
           aria-live={notice.type === "success" ? "polite" : "assertive"}
-          className={`fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notice.type === "success" ? "border-emerald-200" : "border-red-200"}`}
+          className={`app-mobile-toast fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notice.type === "success" ? "border-emerald-200" : "border-red-200"}`}
         >
           {notice.type === "success" ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" /> : <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />}
           <p className={`flex-1 text-sm ${notice.type === "success" ? "text-emerald-800" : "text-red-700"}`}>{notice.message}</p>
           <button type="button" aria-label="Đóng thông báo" onClick={() => setNotice(null)} className="rounded-md p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><X className="h-4 w-4" /></button>
         </div>
       )}
-      <div className="flex justify-end">
+      <div className="app-list-actions">
         <Link href="/nhom-khach-hang/them" className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/80"><Plus className="mr-2 h-4 w-4" />Thêm nhóm</Link>
       </div>
       <div className="overflow-x-auto rounded-xl border bg-white">

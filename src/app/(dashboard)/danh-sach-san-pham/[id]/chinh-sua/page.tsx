@@ -18,7 +18,7 @@ export default async function ChinhSuaSanPhamPage({ params }: PageProps) {
   const categories = await getLoaiSanPham(true);
   return (
     <div className="app-page">
-      <div className="mx-auto mb-5 flex w-full max-w-5xl items-center justify-between gap-3">
+      <div className="app-detail-header mx-auto mb-4 md:mb-5 w-full max-w-5xl">
         <div><h1 className="text-xl font-semibold text-slate-900">Chỉnh sửa sản phẩm</h1><p className="mt-1 text-sm text-slate-500">{product.ten_san_pham} · {product.ma_san_pham}</p></div>
         <Link className={buttonVariants({ variant: "outline" })} href="/danh-sach-san-pham">Quay lại</Link>
       </div>

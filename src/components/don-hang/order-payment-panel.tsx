@@ -38,7 +38,7 @@ export function OrderPaymentPanel({ orderId, orderCode, customerName, remaining,
   }
 
   return <>
-  <form onSubmit={submit} className="grid gap-3 rounded-xl border bg-white p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+  <form onSubmit={submit} className="grid gap-3 rounded-xl border bg-white p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
     <label className="grid gap-1.5 text-sm font-medium">
       {orderType === "dat_hang" ? "Thanh toán phần còn lại" : "Số tiền thu"}
       <Input
@@ -58,7 +58,7 @@ export function OrderPaymentPanel({ orderId, orderCode, customerName, remaining,
     <Button type="submit" disabled={saving || amount <= 0 || amount > remaining || (orderType === "dat_hang" && amount !== remaining)}>{saving ? "Đang lưu..." : orderType === "dat_hang" ? "Thanh toán phần còn lại" : "Ghi nhận thanh toán"}</Button>
   </form>
   <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-    <DialogContent className="sm:max-w-md">
+    <DialogContent className="md:max-w-md">
       <DialogHeader><DialogTitle>Xem trước phiếu thu</DialogTitle><DialogDescription>Kiểm tra khoản thu cho đơn hàng trước khi ghi nhận.</DialogDescription></DialogHeader>
       <div className="space-y-2 rounded-lg bg-slate-50 p-4 text-sm">
         <div className="flex justify-between gap-3"><span>Mã đơn hàng</span><strong>{orderCode}</strong></div>

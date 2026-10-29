@@ -111,11 +111,11 @@ export function Header({ showMobileMenu = true, vaiTro = "staff", hoTen = "" }: 
         </div>}
 
         {isFastSale ? <div id="fast-sale-header-slot" className="flex min-w-0 flex-1 items-center" /> : <div className="min-w-0">
-          <h1 className="absolute inset-x-0 top-1/2 mx-auto w-fit max-w-[calc(100vw-8rem)] -translate-y-1/2 truncate text-center text-xl font-semibold uppercase text-slate-900 md:static md:top-auto md:mx-0 md:w-auto md:max-w-none md:translate-y-0 md:text-left md:normal-case">
+          <h1 className="absolute inset-x-0 top-1/2 mx-auto w-fit max-w-[calc(100vw-8rem)] -translate-y-1/2 truncate text-center text-lg font-semibold uppercase text-slate-900 md:static md:top-auto md:mx-0 md:w-auto md:max-w-none md:translate-y-0 md:text-left md:normal-case">
             {currentPage.title}
           </h1>
 
-          <p className="hidden truncate text-xs text-slate-500 sm:block">
+          <p className="hidden truncate text-xs text-slate-500 md:block">
             {currentPage.description}
           </p>
         </div>}

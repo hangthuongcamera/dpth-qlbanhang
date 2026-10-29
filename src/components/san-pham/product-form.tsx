@@ -228,12 +228,12 @@ export function ProductForm({ categories, product, initialProductCode }: Product
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-5xl space-y-5">
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-5xl space-y-4 md:space-y-5">
       {error && <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
       <section className="rounded-xl border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-4"><h2 className="font-semibold text-slate-900">Thông tin sản phẩm</h2><p className="mt-1 text-sm text-slate-500">Thông tin chung và loại sản phẩm.</p></div>
-        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-4">
+        <div className="grid gap-4 p-4 md:grid-cols-2">
           <div className="space-y-2"><Label htmlFor="ma_san_pham">Mã sản phẩm</Label><Input id="ma_san_pham" value={values.ma_san_pham} readOnly maxLength={100} placeholder="Tự sinh khi lưu (THSP-00001)" className="bg-slate-50 text-slate-600" /><p className="text-xs text-slate-500">Mã được tạo tự động và giữ nguyên khi chỉnh sửa.</p></div>
           <div className="space-y-2"><Label htmlFor="ten_san_pham">Tên sản phẩm *</Label><Input id="ten_san_pham" value={values.ten_san_pham} onChange={(e) => updateProduct("ten_san_pham", e.target.value)} required maxLength={255} /></div>
           <div className="space-y-2">
@@ -242,7 +242,7 @@ export function ProductForm({ categories, product, initialProductCode }: Product
             {categoryOptions.length === 0 && <p className="text-xs text-amber-700">Chưa có loại sản phẩm. Tạo loại mới ngay tại đây để tiếp tục.</p>}
             {showQuickCategory && <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
               <div className="mb-3 flex items-center justify-between"><p className="text-sm font-medium text-slate-800">Tạo loại sản phẩm nhanh</p><button type="button" aria-label="Đóng" onClick={() => setShowQuickCategory(false)} className="rounded p-1 text-slate-500 hover:bg-white"><X className="h-4 w-4" /></button></div>
-              <div className="grid gap-3 sm:grid-cols-[minmax(100px,0.8fr)_minmax(160px,1.2fr)_auto] sm:items-end">
+              <div className="grid gap-3 md:grid-cols-[minmax(100px,0.8fr)_minmax(160px,1.2fr)_auto] md:items-end">
                 <div className="space-y-1"><Label htmlFor="ma_loai_moi">Mã loại *</Label><Input id="ma_loai_moi" value={categoryCode} onChange={(e) => setCategoryCode(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handleCreateCategory(); } }} placeholder="VD: AO_THUN" maxLength={100} required /></div>
                 <div className="space-y-1"><Label htmlFor="ten_loai_moi">Tên loại *</Label><Input id="ten_loai_moi" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handleCreateCategory(); } }} placeholder="VD: Áo thun" maxLength={255} required /></div>
                 <Button type="button" onClick={handleCreateCategory} disabled={isCreatingCategory}>{isCreatingCategory ? "Đang tạo..." : "Tạo và chọn"}</Button>
@@ -251,18 +251,18 @@ export function ProductForm({ categories, product, initialProductCode }: Product
             </div>}
           </div>
           <div className="space-y-2"><Label htmlFor="don_vi_tinh">Đơn vị tính *</Label><Input id="don_vi_tinh" value={values.don_vi_tinh} onChange={(e) => updateProduct("don_vi_tinh", e.target.value)} required maxLength={50} /></div>
-          <div className="space-y-2 sm:col-span-2"><Label htmlFor="mo_ta">Mô tả</Label><Textarea id="mo_ta" value={values.mo_ta ?? ""} onChange={(e) => updateProduct("mo_ta", e.target.value)} rows={3} maxLength={2000} /></div>
-          <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2"><input type="checkbox" checked={values.trang_thai} onChange={(e) => updateProduct("trang_thai", e.target.checked)} className="h-4 w-4 accent-primary" />Đang kinh doanh</label>
+          <div className="space-y-2 md:col-span-2"><Label htmlFor="mo_ta">Mô tả</Label><Textarea id="mo_ta" value={values.mo_ta ?? ""} onChange={(e) => updateProduct("mo_ta", e.target.value)} rows={3} maxLength={2000} /></div>
+          <label className="flex items-center gap-2 text-sm text-slate-700 md:col-span-2"><input type="checkbox" checked={values.trang_thai} onChange={(e) => updateProduct("trang_thai", e.target.checked)} className="h-4 w-4 accent-primary" />Đang kinh doanh</label>
 
-          <div className="space-y-4 sm:col-span-2">
+          <div className="space-y-4 md:col-span-2">
             <div className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-3">
               <div><p className="text-sm font-medium text-slate-800">Sản phẩm có thuộc tính</p><p className="mt-0.5 text-xs text-slate-500">Bật nếu sản phẩm có nhiều biến thể như màu sắc hoặc kích cỡ.</p></div>
               <button type="button" role="switch" aria-checked={hasAttributes} aria-label="Sản phẩm có thuộc tính" onClick={() => { if (!hasAttributes && attributes.length === 0) setAttributes([{ key: `${Date.now()}-0`, name: "", values: [], draftValue: "" }]); setHasAttributes(!hasAttributes); }} className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${hasAttributes ? "bg-primary" : "bg-slate-300"}`}><span className={`inline-block h-5 w-5 translate-y-0.5 rounded-full bg-white shadow transition-transform ${hasAttributes ? "translate-x-5" : "translate-x-0.5"}`} /></button>
             </div>
-            {!hasAttributes && <div className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2"><div className="sm:col-span-2"><h3 className="text-sm font-semibold text-slate-800">Sản phẩm đơn</h3><p className="mt-1 text-xs text-slate-500">Không có thuộc tính; nhập giá trực tiếp cho sản phẩm.</p></div><div className="space-y-2"><Label htmlFor="gia_nhap_san_pham">Giá nhập *</Label><Input id="gia_nhap_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_nhap)} onChange={(e) => updateProduct("gia_nhap", parseCurrencyInput(e.target.value))} required /></div><div className="space-y-2"><Label htmlFor="gia_ban_san_pham">Giá bán *</Label><Input id="gia_ban_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_ban)} onChange={(e) => updateProduct("gia_ban", parseCurrencyInput(e.target.value))} required /></div></div>}
+            {!hasAttributes && <div className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-2"><div className="md:col-span-2"><h3 className="text-sm font-semibold text-slate-800">Sản phẩm đơn</h3><p className="mt-1 text-xs text-slate-500">Không có thuộc tính; nhập giá trực tiếp cho sản phẩm.</p></div><div className="space-y-2"><Label htmlFor="gia_nhap_san_pham">Giá nhập *</Label><Input id="gia_nhap_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_nhap)} onChange={(e) => updateProduct("gia_nhap", parseCurrencyInput(e.target.value))} required /></div><div className="space-y-2"><Label htmlFor="gia_ban_san_pham">Giá bán *</Label><Input id="gia_ban_san_pham" type="text" inputMode="numeric" value={formatNumber(values.gia_ban)} onChange={(e) => updateProduct("gia_ban", parseCurrencyInput(e.target.value))} required /></div></div>}
 
             {hasAttributes && <div className="space-y-3 rounded-lg border border-slate-200 bg-white p-3">
-              {attributes.map((attribute, index) => <div key={attribute.key} className="grid gap-3 rounded-md border border-slate-200 bg-white p-3 sm:grid-cols-[minmax(140px,0.8fr)_minmax(220px,1.5fr)_auto] sm:items-start">
+              {attributes.map((attribute, index) => <div key={attribute.key} className="grid gap-3 rounded-md border border-slate-200 bg-white p-3 md:grid-cols-[minmax(140px,0.8fr)_minmax(220px,1.5fr)_auto] md:items-start">
                 <div className="space-y-2"><Label htmlFor={`attribute-name-${index}`}>Tên thuộc tính</Label><Input id={`attribute-name-${index}`} value={attribute.name} onChange={(e) => setAttributeName(index, e.target.value)} placeholder="Ví dụ: Size, Chất liệu" maxLength={60} /></div>
                 <div className="space-y-2"><Label htmlFor={`attribute-value-${index}`}>Giá trị (nhập từng giá trị, nhấn Enter)</Label><Input id={`attribute-value-${index}`} value={attribute.draftValue} onChange={(e) => setAttributes((current) => current.map((item, i) => i === index ? { ...item, draftValue: e.target.value } : item))} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitAttributeValue(index); } }} placeholder="Nhập giá trị rồi nhấn Enter" maxLength={100} />
                   {attribute.values.length > 0 && <div className="flex flex-wrap gap-2">{attribute.values.map((value, valueIndex) => <span key={`${value}-${valueIndex}`} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">{value}<button type="button" aria-label={`Xóa giá trị ${value}`} onClick={() => removeAttributeValue(index, valueIndex)} className="rounded-full p-0.5 hover:bg-slate-200"><X className="h-3 w-3" /></button></span>)}</div>}
@@ -297,7 +297,7 @@ export function ProductForm({ categories, product, initialProductCode }: Product
         </div>
       </section>}
 
-      <div className="flex flex-col-reverse gap-3 pb-2 sm:flex-row sm:justify-end">
+      <div className="app-form-actions pb-2">
         <Button type="button" variant="outline" onClick={() => router.push("/danh-sach-san-pham")} disabled={isSaving}>Hủy</Button>
         <Button type="submit" disabled={isSaving}><Save className="mr-2 h-4 w-4" />{isSaving ? "Đang lưu..." : product ? "Lưu thay đổi" : "Tạo sản phẩm"}</Button>
       </div>

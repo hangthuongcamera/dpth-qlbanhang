@@ -41,7 +41,7 @@ export function OrderPrintDialog({ order, customer, lines, paidAmount, remaining
   return <>
     <Button type="button" variant="outline" onClick={() => setOpen(true)}><Printer className="mr-2 h-4 w-4" />In hóa đơn</Button>
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="md:max-w-lg">
         <DialogHeader>
           <DialogTitle>In đơn hàng {order.ma_don_hang}</DialogTitle>
           <DialogDescription>Chọn mẫu in phù hợp với thiết bị và giấy in.</DialogDescription>

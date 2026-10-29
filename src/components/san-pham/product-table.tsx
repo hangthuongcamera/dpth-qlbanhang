@@ -105,7 +105,7 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         <div
           role="status"
           aria-live="polite"
-          className={`fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notification.type === "success" ? "border-emerald-200" : "border-red-200"}`}
+          className={`app-mobile-toast fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notification.type === "success" ? "border-emerald-200" : "border-red-200"}`}
         >
           {notification.type === "success" ? (
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
@@ -121,13 +121,13 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         </div>
       )}
     <div className="min-w-0 space-y-4">
-      <div className="flex items-center justify-end gap-3">
+      <div className="app-list-actions">
         <Button onClick={() => router.push("/danh-sach-san-pham/them")} className="shrink-0">
           <Plus className="mr-2 h-4 w-4" /> Thêm sản phẩm
         </Button>
       </div>
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-[minmax(0,1fr)_200px_190px] sm:items-end">
+      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_200px_190px] md:items-end">
         <label className="grid gap-1.5 text-sm font-medium text-slate-700">
           Tìm sản phẩm
           <span className="relative block">
@@ -205,7 +205,7 @@ const activeCount = products.filter((product) => product.trang_thai).length;
                   </TableRow>
                   {isExpanded && hasVariantAttributes && <TableRow>
                     <TableCell colSpan={6} className="bg-slate-50 p-0">
-                      <div className="overflow-x-auto px-4 py-3 sm:px-8">
+                      <div className="overflow-x-auto px-4 py-3 md:px-8">
                         <table className="app-data-table w-full min-w-[520px] text-left text-sm">
                           <thead className="bg-slate-100 text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2.5">Tên biến thể / SKU</th><th className="px-3 py-2.5">Giá bán</th><th className="px-3 py-2.5">Trạng thái</th></tr></thead>
                           <tbody className="divide-y divide-slate-200 bg-white">
@@ -226,7 +226,7 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         </Table>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
           <span>{totalCount ? `Hiển thị ${(currentPage - 1) * pageSize + 1}–${Math.min(currentPage * pageSize, totalCount)} trong ${totalCount} sản phẩm` : "Chưa có dữ liệu"} · {activeCount} đang kinh doanh ở trang này</span>
           <label className="flex items-center gap-2">

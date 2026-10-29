@@ -16,11 +16,11 @@ export function DashboardShell({ children, vaiTro = "staff", hoTen = "" }: Dashb
   const isFastSale = usePathname().startsWith("/ban-nhanh");
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-dvh min-w-0 bg-slate-50">
       {!isFastSale && <Sidebar vaiTro={vaiTro} />}
-      <div className={isFastSale ? "" : "md:pl-64"}>
+      <div className={`min-w-0 ${isFastSale ? "" : "md:pl-64"}`}>
         <Header showMobileMenu={!isFastSale} vaiTro={vaiTro} hoTen={hoTen} />
-        <main>
+        <main className="min-w-0">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

@@ -170,7 +170,7 @@ export function BangGiaNhomManager({ groups, rows, selectedGroupId }: { groups: 
           </tbody>
         </table>
       </div>
-      {filteredRows.length > 0 && <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+      {filteredRows.length > 0 && <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
           <span>Hiển thị {firstRow}–{lastRow} trong {filteredRows.length} sản phẩm</span>
           <label className="flex items-center gap-2">Số dòng

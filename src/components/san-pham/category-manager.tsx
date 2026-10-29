@@ -177,7 +177,7 @@ export function CategoryManager({
         <div
           role={notification.type === "success" ? "status" : "alert"}
           aria-live={notification.type === "success" ? "polite" : "assertive"}
-          className={`fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notification.type === "success" ? "border-emerald-200" : "border-red-200"}`}
+          className={`app-mobile-toast fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${notification.type === "success" ? "border-emerald-200" : "border-red-200"}`}
         >
           {notification.type === "success" ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" /> : <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />}
           <p className={`flex-1 text-sm ${notification.type === "success" ? "text-emerald-800" : "text-red-700"}`}>{notification.message}</p>
@@ -187,7 +187,7 @@ export function CategoryManager({
         </div>
       )}
 
-      <div className="flex justify-end">
+      <div className="app-list-actions">
         <Button type="button" onClick={openCreateDialog}>
           <Plus className="mr-2 h-4 w-4" />Thêm danh mục
         </Button>
@@ -250,7 +250,7 @@ export function CategoryManager({
         </table>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
           <span>{totalCount ? `Hiển thị ${(currentPage - 1) * pageSize + 1}–${Math.min(currentPage * pageSize, totalCount)} trong ${totalCount} danh mục` : "Chưa có danh mục phù hợp"}</span>
           <label className="flex items-center gap-2">
@@ -273,7 +273,7 @@ export function CategoryManager({
       </div>
 
       <Dialog open={formOpen} onOpenChange={(open) => { if (!open) closeForm(); }}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="md:max-w-lg">
           <form onSubmit={handleSave}>
             <DialogHeader>
               <DialogTitle>{editingCategory ? "Sửa danh mục" : "Thêm danh mục"}</DialogTitle>

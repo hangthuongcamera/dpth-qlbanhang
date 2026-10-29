@@ -195,8 +195,8 @@ export function OrderTable({
       <OrderNotificationToast />
 
       {/* Top Header & Actions */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+      <div className="app-list-actions">
+        <div className="flex flex-wrap items-center gap-2 md:ml-auto">
           <Link href="/don-dat-hang" className={buttonVariants({ variant: "outline" })}>
             + Đơn đặt hàng
           </Link>
@@ -208,9 +208,9 @@ export function OrderTable({
 
       {/* Filters Card */}
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
           {/* Search box */}
-          <div className="relative sm:col-span-2 lg:col-span-2">
+          <div className="relative md:col-span-2 lg:col-span-2">
             <Search className="app-search-icon" />
             <Input
               type="text"
@@ -482,12 +482,12 @@ export function OrderTable({
                   </Link>
                   <div className="flex flex-wrap items-center justify-end gap-1.5">
                     <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${typeBadge.badgeClass}`}
+                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${typeBadge.badgeClass}`}
                     >
                       {typeBadge.label}
                     </span>
                     <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold ${statusBadge.badgeClass}`}
+                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${statusBadge.badgeClass}`}
                     >
                       {statusBadge.label}
                     </span>
@@ -561,7 +561,7 @@ export function OrderTable({
 
 
         {/* Pagination Footer */}
-        <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             <span>
               Hiển thị <strong>{startIndex}</strong> - <strong>{endIndex}</strong> trên{" "}
@@ -588,7 +588,7 @@ export function OrderTable({
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center gap-1 self-center sm:self-auto">
+            <div className="flex items-center gap-1 self-center md:self-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -684,7 +684,7 @@ export function OrderTable({
               </div>
             )}
 
-            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <div className="app-form-actions mt-4 md:mt-6">
               <Button
                 type="button"
                 variant="outline"

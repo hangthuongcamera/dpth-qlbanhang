@@ -8,7 +8,7 @@ export default async function ThemSanPhamPage() {
   const [categories, productCode] = await Promise.all([getLoaiSanPham(), getMaSanPhamTiepTheo()]);
   return (
     <div className="app-page">
-      <div className="mx-auto mb-5 flex w-full max-w-5xl items-center justify-between gap-3">
+      <div className="app-detail-header mx-auto mb-4 md:mb-5 w-full max-w-5xl">
         <div><h1 className="text-xl font-semibold text-slate-900">Thêm sản phẩm</h1><p className="mt-1 text-sm text-slate-500">Nhập thông tin sản phẩm và các biến thể.</p></div>
         <Link className={buttonVariants({ variant: "outline" })} href="/danh-sach-san-pham">Quay lại</Link>
       </div>

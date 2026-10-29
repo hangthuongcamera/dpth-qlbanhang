@@ -63,7 +63,7 @@ export default async function ChinhSuaDonHangPage({ params }: { params: Promise<
   };
 
   return <div className="app-page">
-    <div className="mx-auto mb-5 flex w-full max-w-6xl items-center justify-between gap-3">
+    <div className="app-detail-header mx-auto mb-4 md:mb-5 w-full max-w-6xl">
       <div><h1 className="text-xl font-semibold text-slate-900">Chỉnh sửa đơn {order.ma_don_hang}</h1><p className="mt-1 text-sm text-slate-500">Khách hàng và loại đơn được giữ nguyên.</p></div>
       <Link href={`/danh-sach-don-hang/${id}`} className={buttonVariants({ variant: "outline" })}>Quay lại</Link>
     </div>

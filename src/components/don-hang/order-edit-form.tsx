@@ -158,12 +158,12 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
 
   return <form onSubmit={submit} className="space-y-4">
     {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-4">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 md:grid-cols-2">
       <label className="grid gap-1.5 text-sm font-medium">Mã đơn hàng<Input value={order.ma_don_hang} readOnly className="bg-slate-50" /></label>
       <label className="grid gap-1.5 text-sm font-medium">Khách hàng<Input value={order.customerLabel} readOnly className="bg-slate-50" aria-label="Khách hàng không thể thay đổi" /></label>
       {order.loai_don_hang === "dat_hang" && <label className="grid gap-1.5 text-sm font-medium">Hạn giao hàng<Input type="date" min={order.ngay_dat} value={deliveryDate} onChange={(event) => setDeliveryDate(event.target.value)} required /></label>}
-      <label className="grid gap-1.5 text-sm font-medium sm:col-span-2">Địa chỉ giao hàng<Textarea value={shippingAddress} onChange={(event) => setShippingAddress(event.target.value)} maxLength={500} rows={2} /></label>
-      <label className="grid gap-1.5 text-sm font-medium sm:col-span-2">Ghi chú<Textarea value={note} onChange={(event) => setNote(event.target.value)} maxLength={1000} rows={3} /></label>
+      <label className="grid gap-1.5 text-sm font-medium md:col-span-2">Địa chỉ giao hàng<Textarea value={shippingAddress} onChange={(event) => setShippingAddress(event.target.value)} maxLength={500} rows={2} /></label>
+      <label className="grid gap-1.5 text-sm font-medium md:col-span-2">Ghi chú<Textarea value={note} onChange={(event) => setNote(event.target.value)} maxLength={1000} rows={3} /></label>
     </section>
 
     <section className="overflow-visible rounded-xl border bg-white">
@@ -180,12 +180,12 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
       {lines.length === 0 && <p className="px-4 pb-6 text-center text-sm text-slate-500">Đơn hàng cần có ít nhất một sản phẩm.</p>}
     </section>
 
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 sm:p-4">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 md:grid-cols-2">
       <label className="grid gap-1.5 text-sm font-medium">Giảm giá<Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} /></label>
       <label className="grid gap-1.5 text-sm font-medium">Phí vận chuyển<Input type="text" inputMode="numeric" value={formatNumber(shipping)} onChange={(event) => setShipping(parseCurrencyInput(event.target.value))} /></label>
-      <div className="sm:col-span-2 flex flex-col gap-1 text-right text-sm"><span>Tạm tính: {formatCurrency(subtotal)}</span><span>Giảm giá: −{formatCurrency(discount)}</span><span>Phí vận chuyển: {formatCurrency(shipping)}</span><strong className="text-lg">Tổng tiền mới: {formatCurrency(total)}</strong></div>
+      <div className="md:col-span-2 flex flex-col gap-1 text-right text-sm"><span>Tạm tính: {formatCurrency(subtotal)}</span><span>Giảm giá: −{formatCurrency(discount)}</span><span>Phí vận chuyển: {formatCurrency(shipping)}</span><strong className="text-lg">Tổng tiền mới: {formatCurrency(total)}</strong></div>
     </section>
-    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href={`/danh-sach-don-hang/${order.id}`} className={buttonVariants({ variant: "outline" })}>Hủy</Link><Button type="submit" disabled={saving || !lines.length}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Lưu thay đổi"}</Button></div>
+    <div className="app-form-actions"><Link href={`/danh-sach-don-hang/${order.id}`} className={buttonVariants({ variant: "outline" })}>Hủy</Link><Button type="submit" disabled={saving || !lines.length}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Lưu thay đổi"}</Button></div>
   </form>;
 }
 

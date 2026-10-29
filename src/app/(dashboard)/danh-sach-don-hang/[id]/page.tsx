@@ -85,7 +85,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
 
   return <div className="space-y-4 app-page">
     <OrderNotificationToast />
-    <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="app-detail-header">
       <div>
         <div className="flex items-center gap-2.5">
           <h2 className="text-xl font-semibold">Đơn hàng {order.ma_don_hang}</h2>
@@ -112,7 +112,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
         <Link href="/danh-sach-don-hang" className={buttonVariants({ variant: "outline" })}>Quay lại danh sách</Link>
       </div>
     </div>
-    <section className="grid gap-4 rounded-xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-6 sm:p-4">
+    <section className="grid gap-4 rounded-xl border bg-white p-4 md:grid-cols-2 lg:grid-cols-6">
       <div>
         <p className="text-xs text-slate-500">Loại đơn</p>
         <span className={`mt-1 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${typeBadge.badgeClass}`}>
@@ -128,7 +128,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
         </span>
       </div>
       <div><p className="text-xs text-slate-500">{order.loai_don_hang === "ban_nhanh" ? "Số điện thoại giao hàng" : "Số điện thoại"}</p><p className="mt-1 font-medium">{order.giao_hang ? order.so_dien_thoai_giao_hang || "—" : order.loai_don_hang === "ban_nhanh" ? "—" : customer?.so_dien_thoai ?? "—"}</p></div>
-      <div className="sm:col-span-2 lg:col-span-3"><p className="text-xs text-slate-500">Địa chỉ giao hàng</p><p className="mt-1 font-medium">{order.giao_hang ? order.dia_chi_giao_hang || "—" : order.loai_don_hang === "ban_nhanh" ? "Không giao hàng" : order.dia_chi_giao_hang || customer?.dia_chi || "—"}</p></div>
+      <div className="md:col-span-2 lg:col-span-3"><p className="text-xs text-slate-500">Địa chỉ giao hàng</p><p className="mt-1 font-medium">{order.giao_hang ? order.dia_chi_giao_hang || "—" : order.loai_don_hang === "ban_nhanh" ? "Không giao hàng" : order.dia_chi_giao_hang || customer?.dia_chi || "—"}</p></div>
     </section>
     <section className="rounded-xl border bg-white overflow-hidden">
       {/* Desktop Table View */}
@@ -193,7 +193,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
                 <span>
                   {Number(item.so_luong)} × {formatCurrency(Number(item.don_gia))}
                   {item.gia_da_chinh_sua_thu_cong && (
-                    <span className="ml-1 text-[11px] text-slate-400 line-through">
+                    <span className="ml-1 text-xs text-slate-400 line-through">
                       ({formatCurrency(Number(item.gia_goc))})
                     </span>
                   )}
@@ -214,7 +214,7 @@ export default async function DonHangChiTietPage({ params }: Props) {
     </section>
 
     <section className="ml-auto grid max-w-sm gap-1 rounded-xl border bg-white p-4 text-right text-sm"><p>Tạm tính: {formatCurrency(Number(order.tam_tinh))}</p><p>Giảm giá: −{formatCurrency(Number(order.giam_gia))}</p><p>Phí vận chuyển: {formatCurrency(Number(order.phi_van_chuyen))}</p><p className="pt-2 text-lg font-semibold">Tổng tiền: {formatCurrency(Number(order.tong_tien))}</p></section>
-    <section className="grid gap-2 rounded-xl border bg-white p-4 sm:grid-cols-3"><div><p className="text-xs text-slate-500">Đã thanh toán</p><p className="mt-1 font-medium">{formatCurrency(paidAmount)}</p></div><div><p className="text-xs text-slate-500">Còn phải thu</p><p className="mt-1 font-medium">{formatCurrency(remainingAmount)}</p></div><div><p className="text-xs text-slate-500">Trạng thái thanh toán</p><p className="mt-1 font-medium">{paymentStatus}</p></div></section>
+    <section className="grid gap-2 rounded-xl border bg-white p-4 md:grid-cols-3"><div><p className="text-xs text-slate-500">Đã thanh toán</p><p className="mt-1 font-medium">{formatCurrency(paidAmount)}</p></div><div><p className="text-xs text-slate-500">Còn phải thu</p><p className="mt-1 font-medium">{formatCurrency(remainingAmount)}</p></div><div><p className="text-xs text-slate-500">Trạng thái thanh toán</p><p className="mt-1 font-medium">{paymentStatus}</p></div></section>
 
     {paymentHistory.length > 0 && (
       <section className="rounded-xl border bg-white overflow-hidden">

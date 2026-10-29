@@ -82,7 +82,7 @@ export function OrderDeleteButton({
               </div>
             )}
 
-            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <div className="app-form-actions mt-4 md:mt-6">
               <Button
                 type="button"
                 variant="outline"

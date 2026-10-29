@@ -31,11 +31,11 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
     notifyOrder({ type: state.ok ? "success" : "error", message: state.message });
   }, [state]);
 
-  return <form action={formAction} className="space-y-6">
+  return <form action={formAction} className="space-y-4 md:space-y-6">
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="font-semibold text-slate-900">Thông tin cửa hàng trên hóa đơn</h2>
       <p className="mt-1 text-sm text-slate-500">Thông tin này được đưa vào bill K80 và phiếu giao hàng A4/A5.</p>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
         <Field label="Tên cửa hàng" name="ten_cua_hang" value={settings.ten_cua_hang} required maxLength={120} />
         <Field label="Hotline / Zalo" name="hotline" value={settings.hotline} required maxLength={40} />
         <Field label="Địa chỉ cửa hàng" name="dia_chi" value={settings.dia_chi} maxLength={300} />
@@ -46,7 +46,7 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="font-semibold text-slate-900">Tài khoản nhận tiền VietQR</h2>
       <p className="mt-1 text-sm text-slate-500">Mã QR trên hóa đơn sẽ dùng tài khoản này và tự điền số tiền còn phải thu cùng mã đơn hàng.</p>
-      <div className="mt-4 grid gap-4 sm:grid-cols-4">
+      <div className="mt-4 grid gap-4 md:grid-cols-4">
         <Field label="Tên chủ tài khoản" name="ten_chu_tai_khoan" value={settings.ten_chu_tai_khoan} required maxLength={120} />
         <Field label="Số tài khoản" name="so_tai_khoan" value={settings.so_tai_khoan} required maxLength={20} />
         <Field label="Tên ngân hàng" name="ten_ngan_hang" value={settings.ten_ngan_hang} required maxLength={100} />
@@ -55,7 +55,7 @@ export function CuaHangSettingsForm({ settings }: { settings: CuaHangSettings })
     </section>
 
     <OrderNotificationToast />
-    <div className="flex justify-end"><Button type="submit" disabled={pending}>{pending ? "Đang lưu..." : "Lưu cấu hình"}</Button></div>
+    <div className="app-form-actions"><Button type="submit" disabled={pending}>{pending ? "Đang lưu..." : "Lưu cấu hình"}</Button></div>
   </form>;
 }
 

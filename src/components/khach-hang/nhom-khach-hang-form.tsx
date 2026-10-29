@@ -68,7 +68,7 @@ export function NhomKhachHangForm({
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-5xl space-y-5 app-page">
+    <form onSubmit={submit} className="mx-auto w-full max-w-5xl space-y-4 md:space-y-5 app-page">
       <div className="flex items-center gap-3"><Link href={returnHref} aria-label={group ? "Quay lại chi tiết nhóm" : "Quay lại danh sách nhóm"} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100"><ArrowLeft className="h-5 w-5" /></Link><div><h2 className="text-lg font-semibold">{group ? "Sửa nhóm khách hàng" : "Thêm nhóm khách hàng"}</h2><p className="mt-1 text-sm text-slate-500">{group ? "Cập nhật tên nhóm khách hàng." : "Đặt tên nhóm và chọn khách hàng muốn thêm vào nhóm."}</p></div></div>
       <section className="space-y-4 rounded-xl border bg-white p-4">
         <div className="space-y-2"><Label htmlFor="ten-nhom">Tên nhóm khách hàng <span className="text-red-600">*</span></Label><Input id="ten-nhom" value={name} onChange={(event) => setName(event.target.value)} maxLength={120} placeholder="Nhập tên nhóm" required /></div>
@@ -80,7 +80,7 @@ export function NhomKhachHangForm({
         </div>
       </section>
       {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-      <div className="flex justify-end gap-2"><Button type="button" variant="outline" disabled={busy} onClick={() => router.push(returnHref)}>Hủy</Button><Button type="submit" disabled={busy || !name.trim()}>{busy ? "Đang lưu..." : group ? "Lưu thay đổi" : "Tạo nhóm"}</Button></div>
+      <div className="app-form-actions"><Button type="button" variant="outline" disabled={busy} onClick={() => router.push(returnHref)}>Hủy</Button><Button type="submit" disabled={busy || !name.trim()}>{busy ? "Đang lưu..." : group ? "Lưu thay đổi" : "Tạo nhóm"}</Button></div>
     </form>
   );
 }

@@ -290,7 +290,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
   const pos = orderType === "ban_nhanh";
   const inputId = (base: string) => pos && posInstanceId !== undefined ? `${base}-${posInstanceId}` : base;
   const lineInputClass = pos ? "h-10 w-full min-w-0 rounded-none border-0 border-b border-slate-300 bg-transparent px-1 text-sm shadow-none focus-visible:border-primary focus-visible:ring-0" : "";
-  const posFieldRowClass = "sm:col-span-2 grid grid-cols-[165px_minmax(0,1fr)] items-center gap-x-3 text-sm font-medium";
+  const posFieldRowClass = "md:col-span-2 grid grid-cols-[165px_minmax(0,1fr)] items-center gap-x-3 text-sm font-medium";
   const hasPosHeader = Boolean(posTabsHeader);
 
   useEffect(() => {
@@ -317,8 +317,8 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       {posTabsHeader}
     </div>, posHeaderTarget)}
     <div className={pos ? "grid items-start gap-x-2 gap-y-0 lg:h-[calc(100vh-54px)] lg:min-h-[calc(100vh-54px)] lg:items-stretch lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.4fr)] lg:grid-rows-[auto_auto_minmax(0,1fr)]" : "space-y-4"}>
-    <section className={`grid ${pos ? "gap-1 p-3 pb-0 sm:p-4 sm:pb-0" : "gap-3 p-4"} border bg-white ${pos ? "grid-cols-1 order-3 rounded-none border-x border-t border-b-0 lg:col-start-2 lg:row-start-1" : "rounded-xl sm:grid-cols-2"}`}>
-      <div className={pos ? "relative min-w-0 sm:col-span-2" : "relative grid gap-1.5 text-sm font-medium"}>
+    <section className={`grid ${pos ? "gap-1 p-3 pb-0 md:p-4 md:pb-0" : "gap-3 p-4"} border bg-white ${pos ? "grid-cols-1 order-3 rounded-none border-x border-t border-b-0 lg:col-start-2 lg:row-start-1" : "rounded-xl md:grid-cols-2"}`}>
+      <div className={pos ? "relative min-w-0 md:col-span-2" : "relative grid gap-1.5 text-sm font-medium"}>
         {!pos && <label htmlFor={inputId("customer-input")} className="flex items-center gap-1 whitespace-nowrap">Khách hàng <span className="text-red-500">*</span></label>}
         <div className="relative min-w-0">
           <Search aria-hidden="true" className={pos ? "app-search-icon app-search-icon--toolbar" : "app-search-icon"} />
@@ -345,7 +345,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
           {customerSearchOpen && customerMatches.length > 0 && <div className="absolute inset-x-0 top-full z-20 mt-1 max-h-64 overflow-y-auto rounded-lg border bg-white py-1 shadow-lg">{customerMatches.map((item) => <button type="button" key={item.id} onMouseDown={(event) => event.preventDefault()} onClick={() => changeCustomer(item.id)} className={`block w-full px-3 py-2 text-left text-sm hover:bg-slate-50 ${customerId === item.id ? "bg-primary/10 font-medium text-primary" : ""}`}><div className="flex items-center justify-between"><span className="font-medium">{item.ten_khach_hang}</span><span className="text-xs text-slate-500">{item.ma_khach_hang}</span></div>{item.so_dien_thoai && <div className="text-xs text-slate-400">SĐT: {item.so_dien_thoai}</div>}</button>)}</div>}
         </div>
       </div>
-      {pos && <div aria-hidden="true" className="sm:col-span-2 border-t border-slate-200" />}
+      {pos && <div aria-hidden="true" className="md:col-span-2 border-t border-slate-200" />}
       {orderType === "dat_hang" && <label className="grid gap-1.5 text-sm font-medium">
         <span className="flex items-center gap-1">Ngày đặt <span className="text-red-500">*</span></span>
         <Input type="date" value={orderDate} onChange={(event) => setOrderDate(event.target.value)} required />
@@ -370,7 +370,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       )}
       {orderType === "dat_hang" && <label className="grid gap-1.5 text-sm font-medium">Ghi chú<Input value={note} onChange={(event) => setNote(event.target.value)} maxLength={1000} /></label>}
       {pos && <>
-        <div className="sm:col-span-2 grid grid-cols-[165px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 text-sm leading-5">
+        <div className="md:col-span-2 grid grid-cols-[165px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 text-sm leading-5">
           <span className="whitespace-nowrap font-medium">Giao hàng</span>
           <button type="button" role="switch" aria-label="Giao hàng" aria-checked={deliveryEnabled} onClick={() => { if (deliveryEnabled) setShipping(0); setDeliveryEnabled((current) => !current); }} className="h-5 justify-self-start inline-flex items-center rounded-lg p-0 text-sm leading-5 font-medium text-slate-700 transition">
             <span className={`relative h-5 w-9 rounded-full transition-colors ${deliveryEnabled ? "bg-primary" : "bg-slate-300"}`}>
@@ -378,20 +378,20 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
             </span>
           </button>
         </div>
-        {deliveryEnabled && <div className={`sm:col-span-2 grid ${pos ? "grid-cols-1 gap-2" : "gap-3 sm:grid-cols-2"}`}>
-          <p className={pos ? "text-xs font-semibold uppercase tracking-wide text-slate-500" : "sm:col-span-2 text-xs font-semibold uppercase tracking-wide text-slate-500"}>Thông tin giao hàng</p>
+        {deliveryEnabled && <div className={`md:col-span-2 grid ${pos ? "grid-cols-1 gap-2" : "gap-3 md:grid-cols-2"}`}>
+          <p className={pos ? "text-xs font-semibold uppercase tracking-wide text-slate-500" : "md:col-span-2 text-xs font-semibold uppercase tracking-wide text-slate-500"}>Thông tin giao hàng</p>
           <label className={pos ? posFieldRowClass : "grid gap-1.5 text-sm font-medium"}>
             <span className="whitespace-nowrap">Số điện thoại</span>
             <span><Input ref={deliveryPhoneInputRef} type="tel" inputMode="tel" autoComplete="tel" value={deliveryPhone} onChange={(event) => { setDeliveryPhone(event.target.value); if (fieldErrors.deliveryPhone) setFieldErrors((current) => ({ ...current, deliveryPhone: "" })); }} aria-invalid={Boolean(fieldErrors.deliveryPhone)} className={`${lineInputClass} ${fieldErrors.deliveryPhone ? "border-red-500" : ""}`} />
             {fieldErrors.deliveryPhone && <span className="text-xs font-normal text-red-600">{fieldErrors.deliveryPhone}</span>}</span>
           </label>
-          <label className={pos ? posFieldRowClass : "grid gap-1.5 text-sm font-medium sm:col-span-2"}>
+          <label className={pos ? posFieldRowClass : "grid gap-1.5 text-sm font-medium md:col-span-2"}>
             <span className="whitespace-nowrap">Địa chỉ giao hàng</span>
             <span><Input ref={deliveryAddressInputRef} autoComplete="street-address" value={deliveryAddress} onChange={(event) => { setDeliveryAddress(event.target.value); if (fieldErrors.deliveryAddress) setFieldErrors((current) => ({ ...current, deliveryAddress: "" })); }} aria-invalid={Boolean(fieldErrors.deliveryAddress)} className={`${lineInputClass} ${fieldErrors.deliveryAddress ? "border-red-500" : ""}`} />
             {fieldErrors.deliveryAddress && <span className="text-xs font-normal text-red-600">{fieldErrors.deliveryAddress}</span>}</span>
           </label>
         </div>}
-        <div aria-hidden="true" className="sm:col-span-2 border-t border-slate-200" />
+        <div aria-hidden="true" className="md:col-span-2 border-t border-slate-200" />
       </>}
     </section>
     <section className={`${pos ? "rounded-none border bg-white order-2 lg:col-start-1 lg:row-start-1 lg:row-span-3 lg:flex lg:flex-col" : "rounded-xl border bg-white"}`}>
@@ -544,7 +544,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
               <div>
                 <label className="mb-1 block text-xs font-medium text-slate-500">Đơn giá</label>
                 <div className={pos ? "flex h-9 items-center gap-2 rounded-none border-0 border-b border-slate-300 px-0 focus-within:border-primary focus-within:ring-0" : "flex h-9 items-center gap-2 rounded-md border border-input px-2 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50"}>
-                  {line.manual && <span className="shrink-0 text-[11px] text-slate-400 line-through">{formatCurrency(line.basePrice)}</span>}
+                  {line.manual && <span className="shrink-0 text-xs text-slate-400 line-through">{formatCurrency(line.basePrice)}</span>}
                   <Input
                     type="text"
                     inputMode="numeric"
@@ -580,13 +580,13 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       </div>
 
     </section>
-    <section className={`grid ${pos ? "gap-1 p-3 pt-1 pb-1 sm:p-4 sm:pt-1 sm:pb-1" : "gap-4 p-4"} border bg-white sm:grid-cols-2 ${pos ? "order-4 rounded-none border-x border-y-0 lg:col-start-2 lg:row-start-2" : "rounded-xl"}`}>
+    <section className={`grid ${pos ? "gap-1 p-3 pt-1 pb-1 md:p-4 md:pt-1 md:pb-1" : "gap-4 p-4"} border bg-white md:grid-cols-2 ${pos ? "order-4 rounded-none border-x border-y-0 lg:col-start-2 lg:row-start-2" : "rounded-xl"}`}>
       <label className={pos ? `${posFieldRowClass} !text-sm !leading-5` : "grid gap-1.5 text-sm font-medium"}><span className={pos ? "whitespace-nowrap" : ""}>Giảm giá</span>{pos ? <span className="relative min-w-0"><Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} className={`${lineInputClass} h-5 !text-sm !leading-5 pr-6 text-right`} /><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <Input type="text" inputMode="numeric" value={formatNumber(discount)} onChange={(event) => setDiscount(parseCurrencyInput(event.target.value))} className={lineInputClass} />}</label>
       {(!pos || deliveryEnabled) && <label className={pos ? posFieldRowClass : "grid gap-1.5 text-sm font-medium"}><span className={pos ? "whitespace-nowrap" : ""}>Phí vận chuyển</span><Input type="text" inputMode="numeric" value={formatNumber(shipping)} onChange={(event) => setShipping(parseCurrencyInput(event.target.value))} className={lineInputClass} /></label>}
-      <div className={`sm:col-span-2 flex flex-col text-sm ${pos ? "gap-1" : "gap-2"}`}>{!pos && <><div className="flex justify-between"><span>Tạm tính</span><span>{formatCurrency(subtotal)}</span></div><div className="flex justify-between"><span>Giảm giá</span><span>−{formatCurrency(Number(discount) || 0)}</span></div></>}{(!pos || deliveryEnabled) && <div className="flex justify-between"><span>Phí vận chuyển</span><span>{formatCurrency(Number(shipping) || 0)}</span></div>}<div className={`flex justify-between font-semibold ${pos ? "h-5 items-center text-sm leading-5" : ""}`}><span>Tổng tiền</span>{pos ? <span className="relative ml-auto block w-32 shrink-0 pr-6 text-right text-sm"><span>{formatNumber(total)}</span><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <strong className="text-lg">{formatCurrency(total)}</strong>}</div></div>
+      <div className={`md:col-span-2 flex flex-col text-sm ${pos ? "gap-1" : "gap-2"}`}>{!pos && <><div className="flex justify-between"><span>Tạm tính</span><span>{formatCurrency(subtotal)}</span></div><div className="flex justify-between"><span>Giảm giá</span><span>−{formatCurrency(Number(discount) || 0)}</span></div></>}{(!pos || deliveryEnabled) && <div className="flex justify-between"><span>Phí vận chuyển</span><span>{formatCurrency(Number(shipping) || 0)}</span></div>}<div className={`flex justify-between font-semibold ${pos ? "h-5 items-center text-sm leading-5" : ""}`}><span>Tổng tiền</span>{pos ? <span className="relative ml-auto block w-32 shrink-0 pr-6 text-right text-sm"><span>{formatNumber(total)}</span><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <strong className="text-lg">{formatCurrency(total)}</strong>}</div></div>
     </section>
-    <section className={`grid ${pos ? "gap-2 p-3 sm:p-4 pt-1 lg:flex lg:flex-col" : "gap-4 p-4"} border bg-white sm:grid-cols-2 ${pos ? "order-5 rounded-none border-x border-t-0 lg:col-start-2 lg:row-start-3" : "rounded-xl"}`}>
-      <div className={pos ? "grid gap-2 sm:grid-cols-2" : "contents"}>
+    <section className={`grid ${pos ? "gap-2 p-3 md:p-4 pt-1 lg:flex lg:flex-col" : "gap-4 p-4"} border bg-white md:grid-cols-2 ${pos ? "order-5 rounded-none border-x border-t-0 lg:col-start-2 lg:row-start-3" : "rounded-xl"}`}>
+      <div className={pos ? "grid gap-2 md:grid-cols-2" : "contents"}>
       <div className={pos ? `${posFieldRowClass} !text-sm !leading-5` : "grid gap-1.5 text-sm font-medium"}>
         <label htmlFor={inputId("payment-amount-input")} className={pos ? "whitespace-nowrap" : ""}>{orderType === "dat_hang" ? "Tiền cọc" : "Khách đưa"}</label>
         <div className="min-w-0"><span className="relative block min-w-0"><Input
@@ -604,19 +604,19 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
         {fieldErrors.paymentAmount && <p className="text-xs text-red-500">{fieldErrors.paymentAmount}</p>}</div>
       </div>
       <label className={pos ? `${posFieldRowClass} !text-sm !leading-5` : "grid gap-1.5 text-sm font-medium"}><span className={pos ? "whitespace-nowrap" : ""}>Phương thức thanh toán</span><select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)} className={`${pos ? `${lineInputClass} h-5 cursor-pointer !text-sm !leading-5 font-normal outline-none` : "h-10 rounded-md border border-slate-200 bg-white px-3 font-normal"}`}><option value="tien_mat">Tiền mặt</option><option value="chuyen_khoan">Chuyển khoản</option><option value="the">Thẻ</option><option value="vi_dien_tu">Ví điện tử</option><option value="khac">Khác</option></select></label>
-      {orderType === "ban_nhanh" && <div className={`sm:col-span-2 flex justify-between ${pos ? "h-5 items-center text-sm leading-5" : "text-sm"}`}><span>{paymentAmount < total ? "Còn nợ" : "Tiền thừa trả khách"}</span>{pos ? <span className="relative ml-auto block w-32 shrink-0 pr-6 text-right"><span>{formatNumber(paymentAmount < total ? total - paymentAmount : changeDue)}</span><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <strong>{formatCurrency(paymentAmount < total ? total - paymentAmount : changeDue)}</strong>}</div>}
-      {orderType === "dat_hang" && <p className="sm:col-span-2 text-sm text-slate-500">Đơn đặt hàng có thể đặt cọc hoặc không cọc (0đ); phần còn lại sẽ thu khi giao hàng / hoàn tất đơn.</p>}
+      {orderType === "ban_nhanh" && <div className={`md:col-span-2 flex justify-between ${pos ? "h-5 items-center text-sm leading-5" : "text-sm"}`}><span>{paymentAmount < total ? "Còn nợ" : "Tiền thừa trả khách"}</span>{pos ? <span className="relative ml-auto block w-32 shrink-0 pr-6 text-right"><span>{formatNumber(paymentAmount < total ? total - paymentAmount : changeDue)}</span><span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-xs text-slate-500">₫</span></span> : <strong>{formatCurrency(paymentAmount < total ? total - paymentAmount : changeDue)}</strong>}</div>}
+      {orderType === "dat_hang" && <p className="md:col-span-2 text-sm text-slate-500">Đơn đặt hàng có thể đặt cọc hoặc không cọc (0đ); phần còn lại sẽ thu khi giao hàng / hoàn tất đơn.</p>}
       </div>
       {pos && <div className="mt-auto flex flex-col gap-1">
         <Input value={note} onChange={(event) => setNote(event.target.value)} maxLength={1000} placeholder="Nhập nội dung ghi chú" aria-label="Ghi chú đơn hàng" className={lineInputClass} />
         <Button type="submit" disabled={saving || lines.length === 0} className="h-11 w-full"><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Hoàn tất thanh toán"}</Button>
       </div>}
     </section>
-    {!pos && <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Button type="button" variant="outline" onClick={() => router.push("/danh-sach-don-hang")} disabled={saving}>Hủy</Button><Button type="submit" disabled={saving}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Tạo đơn hàng"}</Button></div>}
+    {!pos && <div className="app-form-actions"><Button type="button" variant="outline" onClick={() => router.push("/danh-sach-don-hang")} disabled={saving}>Hủy</Button><Button type="submit" disabled={saving}><Save className="mr-2 h-4 w-4" />{saving ? "Đang lưu..." : "Tạo đơn hàng"}</Button></div>}
     </div>
   </form>
   <Dialog open={receiptPreviewOpen} onOpenChange={setReceiptPreviewOpen}>
-    <DialogContent className="sm:max-w-md">
+    <DialogContent className="md:max-w-md">
       <DialogHeader><DialogTitle>Xem trước phiếu thu</DialogTitle><DialogDescription>Kiểm tra khoản thu trước khi lưu đơn. Phiếu thu sẽ được tạo và phân bổ vào đơn này sau khi xác nhận.</DialogDescription></DialogHeader>
       <div className="space-y-2 rounded-lg bg-slate-50 p-4 text-sm">
         <div className="flex justify-between gap-3"><span>Khách hàng</span><strong className="text-right">{customer?.ten_khach_hang ?? "—"}</strong></div>

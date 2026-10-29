@@ -310,7 +310,7 @@ const getInitial = (name: string) => {
         <div
           role="status"
           aria-live="polite"
-          className={`fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${
+          className={`app-mobile-toast fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${
             notification.type === "success"
               ? "border-emerald-200"
               : "border-red-200"
@@ -345,7 +345,7 @@ const getInitial = (name: string) => {
 
       <div
         key={`customer-search-${search}`}
-        className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-[minmax(0,1fr)_220px_auto] sm:items-end"
+        className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_220px_auto] md:items-end"
       >
         <label className="relative block">
           <span className="sr-only">Tìm khách hàng</span>
@@ -387,8 +387,8 @@ const getInitial = (name: string) => {
             {searchSuggestions.length === 0 && <p className="px-3 py-3 text-sm font-normal text-slate-500">Không tìm thấy khách hàng phù hợp.</p>}
           </div>}
         </label>
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:contents">
-          <Button onClick={() => router.push("/danh-sach-khach-hang/them")} className="order-2 h-10 shrink-0 px-3 sm:px-4"><Plus className="mr-1.5 h-4 w-4" /><span className="text-sm">Thêm khách hàng</span></Button>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 md:contents">
+          <Button onClick={() => router.push("/danh-sach-khach-hang/them")} className="order-2 h-10 shrink-0 px-3 md:px-4"><Plus className="mr-1.5 h-4 w-4" /><span className="text-sm">Thêm khách hàng</span></Button>
           <label className="order-1 grid">
           <span className="sr-only">Trạng thái</span>
           <select
@@ -450,6 +450,7 @@ const getInitial = (name: string) => {
                     type="button"
                     variant="outline"
                     size="icon"
+                    data-app-compact-mobile="true"
                     className="h-[30px] w-[30px]"
                     onClick={() => handleEdit(customer.id)}
                     title="Chỉnh sửa khách hàng"
@@ -462,6 +463,7 @@ const getInitial = (name: string) => {
                     type="button"
                     variant="outline"
                     size="icon"
+                    data-app-compact-mobile="true"
                     className="h-[30px] w-[30px] border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                     onClick={() => openDeleteDialog(customer)}
                     title="Xóa khách hàng"
@@ -594,8 +596,8 @@ const getInitial = (name: string) => {
       </div>
 
       {/* Thanh phân trang và chọn số dòng */}
-      <div className="!mt-3 border-t border-slate-200 pt-3 sm:pt-4">
-        <div className="flex min-w-0 items-center justify-between gap-2 sm:hidden">
+      <div className="!mt-3 border-t border-slate-200 pt-3 md:pt-4">
+        <div className="flex min-w-0 items-center justify-between gap-2 md:hidden">
           <p className="min-w-0 whitespace-nowrap text-xs text-slate-500">
             {totalCount === 0
               ? "0 khách"
@@ -623,8 +625,8 @@ const getInitial = (name: string) => {
           </div>
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div className="hidden md:flex md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
           <p className="text-sm text-slate-500">
             {totalCount === 0
               ? "Chưa có dữ liệu"
@@ -780,13 +782,13 @@ const getInitial = (name: string) => {
               </button>
             </div>
 
-            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <div className="app-form-actions mt-4 md:mt-6">
               <Button
                 type="button"
                 variant="outline"
                 disabled={isDeleting}
                 onClick={closeDeleteDialog}
-                className="w-full sm:w-auto"
+                className="w-full md:w-auto"
               >
                 {customerHasHistory && !customerToDelete.trang_thai ? "Đóng" : "Hủy"}
               </Button>
@@ -797,7 +799,7 @@ const getInitial = (name: string) => {
                     type="button"
                     disabled={isDeleting}
                     onClick={handleDeactivate}
-                    className="w-full bg-amber-600 text-white hover:bg-amber-700 sm:w-auto"
+                    className="w-full bg-amber-600 text-white hover:bg-amber-700 md:w-auto"
                   >
                     {isDeleting ? "Đang cập nhật..." : "Chuyển sang Ngừng hoạt động"}
                   </Button>
@@ -807,7 +809,7 @@ const getInitial = (name: string) => {
                   type="button"
                   disabled={isDeleting}
                   onClick={handleDelete}
-                  className="w-full bg-red-600 text-white hover:bg-red-700 sm:w-auto"
+                  className="w-full bg-red-600 text-white hover:bg-red-700 md:w-auto"
                 >
                   {isDeleting ? (
                     <>

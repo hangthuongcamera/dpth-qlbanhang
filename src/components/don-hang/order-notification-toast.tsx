@@ -67,7 +67,7 @@ export function OrderNotificationToast() {
     <div
       role={notification.type === "success" ? "status" : "alert"}
       aria-live={notification.type === "success" ? "polite" : "assertive"}
-      className={`fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${
+      className={`app-mobile-toast fixed right-4 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-xl border bg-white p-4 shadow-lg animate-in fade-in-0 slide-in-from-top-3 duration-300 ${
         notification.type === "success" ? "border-emerald-200" : "border-red-200"
       }`}
     >

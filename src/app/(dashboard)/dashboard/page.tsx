@@ -104,11 +104,11 @@ export default async function DashboardPage() {
   const width = 700, height = 220, bar = 48, gap = (width - days.length * bar) / (days.length + 1);
 
   return (
-    <main className="space-y-6 app-page">
-      <section aria-label="Chỉ số kinh doanh" className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <main className="space-y-4 md:space-y-6 app-page">
+      <section aria-label="Chỉ số kinh doanh" className="grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {cards.map(({ label, value, Icon, style }) => <article key={label} className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><div className="flex justify-between gap-3"><div className="text-sm font-medium text-slate-500">{label}</div><span className={"rounded-lg p-2 " + style}><Icon aria-hidden="true" className="h-5 w-5" /></span></div><div className="mt-4 text-2xl font-semibold text-slate-900">{value}</div></article>)}
       </section>
-      <section className={`grid w-full min-w-0 grid-cols-1 gap-6 ${isStaff ? "" : "xl:grid-cols-2"}`}>
+      <section className={`grid w-full min-w-0 grid-cols-1 gap-4 md:gap-6 ${isStaff ? "" : "xl:grid-cols-2"}`}>
         {!isStaff && (
           <article className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <h2 className="font-semibold text-slate-900">Doanh số 7 ngày</h2>

@@ -161,7 +161,7 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
 
   return <div className="space-y-4 app-page">
     <OrderNotificationToast />
-    <div className="flex flex-wrap items-center justify-end gap-3">
+    <div className="app-list-actions">
       <Button onClick={() => setFormReceipt(null)}><Plus className="mr-2 h-4 w-4" />Lập phiếu thu</Button>
     </div>
     {formReceipt !== undefined && <ReceiptForm initial={formReceipt} customers={customers} orders={orders} onClose={() => setFormReceipt(undefined)} onSaved={() => { setFormReceipt(undefined); router.refresh(); }} />}
@@ -324,10 +324,10 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
   }
 
   return <>
-    <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-4">
+    <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3"><div><h2 className="text-lg font-semibold text-slate-900">{initial ? "Sửa phiếu nháp " + initial.ma_phieu_thu : "Lập phiếu thu"}</h2><p className="text-sm text-slate-500">Phiếu nháp chưa ảnh hưởng công nợ.</p></div><Button variant="ghost" size="icon" onClick={onClose} aria-label="Đóng form"><X className="h-4 w-4" /></Button></div>
       {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         <div className="relative grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           <label htmlFor="receipt-customer-search">Khách hàng <span className="text-red-600">*</span></label>
           <div className="relative">
@@ -372,7 +372,7 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
         <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700"><span>Ngày thu</span><Input className="h-10 w-full" type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></label>
         <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700"><span>Số tiền thu</span><Input className="h-10 w-full" inputMode="numeric" value={amount} onChange={(event) => setAmount(formatNumber(parseCurrencyInput(event.target.value)))} placeholder="Nhập số tiền" required /></label>
         <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700"><span>Phương thức thanh toán</span><select value={method} onChange={(event) => setMethod(event.target.value)} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 font-normal">{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-        <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700 sm:col-span-2"><span>Ghi chú</span><Input className="h-10 w-full" value={note} onChange={(event) => setNote(event.target.value)} placeholder="Nội dung thu tiền" /></label>
+        <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700 md:col-span-2"><span>Ghi chú</span><Input className="h-10 w-full" value={note} onChange={(event) => setNote(event.target.value)} placeholder="Nội dung thu tiền" /></label>
       </div>
       <div className="space-y-3 border-t pt-4">
         <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-medium text-slate-900">Phân bổ vào đơn hàng</h3><p className="text-xs text-slate-500">Gợi ý phân bổ theo đơn cũ trước (FIFO). Tiền chưa phân bổ có thể dùng sau.</p></div><Button type="button" variant="outline" size="sm" onClick={autoAllocateFifo} disabled={!customerId || numericAmount <= 0 || customerOrders.length === 0}>Phân bổ FIFO</Button></div>
@@ -385,7 +385,7 @@ function ReceiptForm({ initial, customers, orders, onClose, onSaved }: {
         <div className="flex flex-wrap justify-end gap-2 border-t pt-3"><Button type="button" variant="outline" onClick={onClose}>Đóng</Button><Button type="button" variant="outline" disabled={saving || !customerId || numericAmount <= 0} onClick={() => void saveDraft()}>{saving ? "Đang lưu..." : "Lưu nháp"}</Button><Button type="button" disabled={saving || !customerId || numericAmount <= 0 || allocated > numericAmount} onClick={() => setPreviewOpen(true)}><Check className="mr-2 h-4 w-4" />Xem trước xác nhận</Button></div>
       </div>
     </section>
-    <Dialog open={previewOpen} onOpenChange={setPreviewOpen}><DialogContent className="sm:max-w-lg">
+    <Dialog open={previewOpen} onOpenChange={setPreviewOpen}><DialogContent className="md:max-w-lg">
       <DialogHeader><DialogTitle>Xem trước phiếu thu</DialogTitle><DialogDescription>Kiểm tra thông tin và phân bổ trước khi xác nhận lưu. Mã phiếu được cấp tự động khi lưu.</DialogDescription></DialogHeader>
       <div className="space-y-2 rounded-lg bg-slate-50 p-4 text-sm"><div className="flex justify-between gap-3"><span>Khách hàng</span><strong className="text-right">{customer?.ma_khach_hang} · {customer?.ten_khach_hang}</strong></div><div className="flex justify-between"><span>Ngày thu</span><strong>{dateOnly(date)}</strong></div><div className="flex justify-between"><span>Phương thức</span><strong>{paymentLabels[method]}</strong></div><div className="flex justify-between"><span>Số tiền thu</span><strong>{formatCurrency(numericAmount)}</strong></div><div className="flex justify-between"><span>Đã phân bổ</span><strong>{formatCurrency(allocated)}</strong></div><div className="flex justify-between border-t pt-2"><span>Chưa phân bổ</span><strong>{formatCurrency(unallocated)}</strong></div>{allocationItems.map((item) => <div key={item.don_hang_id} className="flex justify-between text-xs text-slate-600"><span>{orders.find((order) => order.id === item.don_hang_id)?.ma_don_hang}</span><span>{formatCurrency(item.so_tien)}</span></div>)}</div>
       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}<DialogFooter><Button variant="outline" onClick={() => setPreviewOpen(false)} disabled={saving}>Quay lại sửa</Button><Button onClick={() => void confirmAndSave()} disabled={saving}>{saving ? "Đang xác nhận..." : "Xác nhận và lưu phiếu"}</Button></DialogFooter>
@@ -409,20 +409,20 @@ function ReceiptDetailDialog({ receipt, orders, onClose }: { receipt: Receipt | 
     catch (cause) { notifyOrder({ type: "error", message: cause instanceof Error ? cause.message : "Không thể phân bổ số dư." }); }
     finally { setSaving(false); }
   }
-  return <Dialog open={Boolean(receipt)} onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+  return <Dialog open={Boolean(receipt)} onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="max-h-[90vh] overflow-y-auto md:max-w-3xl">
     <DialogHeader><DialogTitle>Phiếu thu {receipt.ma_phieu_thu}</DialogTitle><DialogDescription>Chi tiết khoản thu, trạng thái và các đơn hàng được phân bổ.</DialogDescription></DialogHeader>
-    <div className="grid gap-3 rounded-lg bg-slate-50 p-4 text-sm sm:grid-cols-2">
+    <div className="grid gap-3 rounded-lg bg-slate-50 p-4 text-sm md:grid-cols-2">
       <p><span className="text-slate-500">Khách hàng:</span> <strong>{receipt.customer?.ma_khach_hang} · {receipt.customer?.ten_khach_hang}</strong></p><p><span className="text-slate-500">Ngày thu:</span> <strong>{dateOnly(receipt.ngay_thu)}</strong></p>
       <p><span className="text-slate-500">Số tiền:</span> <strong>{formatCurrency(Number(receipt.tong_tien))}</strong></p><p><span className="text-slate-500">Phương thức:</span> <strong>{paymentLabels[receipt.phuong_thuc_thanh_toan] ?? receipt.phuong_thuc_thanh_toan}</strong></p>
       <p><span className="text-slate-500">Tài khoản nhận:</span> {receipt.tai_khoan_nhan || "—"}</p><p><span className="text-slate-500">Mã tham chiếu:</span> {receipt.ma_tham_chieu || "—"}</p>
       <p><span className="text-slate-500">Người nộp:</span> {receipt.nguoi_nop || "—"}</p><p><span className="text-slate-500">Trạng thái:</span> <strong>{statusLabels[receipt.trang_thai] ?? receipt.trang_thai}</strong></p>
-      {receipt.ghi_chu && <p className="sm:col-span-2"><span className="text-slate-500">Ghi chú:</span> {receipt.ghi_chu}</p>}
+      {receipt.ghi_chu && <p className="md:col-span-2"><span className="text-slate-500">Ghi chú:</span> {receipt.ghi_chu}</p>}
     </div>
     <div className="overflow-x-auto rounded-lg border"><table className="app-data-table w-full min-w-[520px] text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold text-slate-600"><tr><th className="px-3 py-2">Đơn hàng</th><th className="px-3 py-2">Ngày đặt</th><th className="px-3 py-2 text-right">Số tiền phân bổ</th></tr></thead><tbody className="divide-y">
       {receipt.allocations.map((item, index) => <tr key={item.id ?? item.don_hang_id + "-" + index}><td className="px-3 py-2 font-medium">{item.order?.ma_don_hang ?? item.don_hang_id}</td><td className="px-3 py-2">{dateOnly(item.order?.ngay_dat ?? "")}</td><td className="px-3 py-2 text-right">{formatCurrency(Number(item.so_tien))}</td></tr>)}
       {receipt.allocations.length === 0 && <tr><td colSpan={3} className="px-3 py-8 text-center text-slate-500">Phiếu thu chưa phân bổ vào đơn hàng.</td></tr>}
     </tbody></table></div>
-    <div className="flex justify-end gap-6 text-sm"><span>Đã phân bổ: <strong>{formatCurrency(allocated)}</strong></span><span>Chưa phân bổ: <strong>{formatCurrency(remaining)}</strong></span></div>
+    <div className="flex justify-end gap-4 text-sm md:gap-6"><span>Đã phân bổ: <strong>{formatCurrency(allocated)}</strong></span><span>Chưa phân bổ: <strong>{formatCurrency(remaining)}</strong></span></div>
     {receipt.trang_thai === "da_xac_nhan" && remaining > 0 && eligibleOrders.length > 0 && <section className="space-y-2 rounded-lg border p-3"><h3 className="font-medium">Phân bổ số dư vào đơn</h3>
       {eligibleOrders.map((order) => <label key={order.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 text-sm"><span>{order.ma_don_hang}<small className="ml-2 text-slate-500">Còn {formatCurrency(order.con_no)}</small></span><Input inputMode="numeric" value={newAllocations[order.id] ?? ""} onChange={(event) => setNewAllocations((current) => ({ ...current, [order.id]: formatNumber(parseCurrencyInput(event.target.value)) }))} placeholder="0" className="h-9 w-32 text-right" /><span className="text-xs text-slate-500">₫</span></label>)}
       <div className="flex justify-end"><Button size="sm" disabled={saving || newItems.length === 0 || newItems.reduce((sum, item) => sum + item.so_tien, 0) > remaining} onClick={() => void assignRemaining()}>{saving ? "Đang lưu..." : "Lưu phân bổ"}</Button></div>
@@ -442,7 +442,7 @@ function ReceiptPrintButton({ receipt }: { receipt: Receipt }) {
   const unallocated = Math.max(0, Number(receipt.tong_tien) - allocated);
   return <>
     <Button variant="outline" onClick={() => setOpen(true)}><Printer className="mr-2 h-4 w-4" />In phiếu</Button>
-    <Dialog open={open} onOpenChange={setOpen}><DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>In phiếu thu</DialogTitle><DialogDescription>Chọn khổ in. Với mẫu A4, có thể lưu thành PDF trong hộp thoại in.</DialogDescription></DialogHeader><div className="grid grid-cols-2 gap-3"><Button variant="outline" onClick={() => print("a4")}><FileDown className="mr-2 h-4 w-4" />PDF · A4</Button><Button variant="outline" onClick={() => print("k80")}><Printer className="mr-2 h-4 w-4" />Máy in K80</Button></div><Button variant="ghost" onClick={() => setOpen(false)}>Đóng</Button></DialogContent></Dialog>
+    <Dialog open={open} onOpenChange={setOpen}><DialogContent className="md:max-w-md"><DialogHeader><DialogTitle>In phiếu thu</DialogTitle><DialogDescription>Chọn khổ in. Với mẫu A4, có thể lưu thành PDF trong hộp thoại in.</DialogDescription></DialogHeader><div className="grid grid-cols-2 gap-3"><Button variant="outline" onClick={() => print("a4")}><FileDown className="mr-2 h-4 w-4" />PDF · A4</Button><Button variant="outline" onClick={() => print("k80")}><Printer className="mr-2 h-4 w-4" />Máy in K80</Button></div><Button variant="ghost" onClick={() => setOpen(false)}>Đóng</Button></DialogContent></Dialog>
     <article className="receipt-print-root" data-format={format}><div className={"print-paper " + (format === "k80" ? "print-k80" : "print-invoice")}>
       <div className="print-center"><h1>ĐỒNG PHỤC THANH HẰNG</h1><p>Hotline / Zalo: 0933.657.622</p><h2>PHIẾU THU</h2></div><div className="print-separator" />
       <p><strong>Mã phiếu:</strong> {receipt.ma_phieu_thu}</p><p><strong>Ngày thu:</strong> {dateOnly(receipt.ngay_thu)}</p>
