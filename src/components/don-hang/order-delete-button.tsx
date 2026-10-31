@@ -48,7 +48,7 @@ export function OrderDeleteButton({
       <Button
         type="button"
         variant="outline"
-        size="sm"
+        size="md"
         onClick={() => setOpen(true)}
         className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
       >

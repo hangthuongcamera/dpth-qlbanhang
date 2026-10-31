@@ -639,7 +639,7 @@ const getInitial = (name: string) => {
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            size="md"
             disabled={currentPage <= 1}
             onClick={() => goToPage(currentPage - 1)}
           >
@@ -660,7 +660,7 @@ const getInitial = (name: string) => {
 
                 <Button
                   type="button"
-                  size="sm"
+                  size="md"
                   variant={page === currentPage ? "default" : "outline"}
                   aria-current={page === currentPage ? "page" : undefined}
                   aria-label={`Trang ${page}`}
@@ -675,7 +675,7 @@ const getInitial = (name: string) => {
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            size="md"
             disabled={currentPage >= totalPages}
             onClick={() => goToPage(currentPage + 1)}
           >

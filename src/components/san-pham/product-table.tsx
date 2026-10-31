@@ -278,11 +278,11 @@ const activeCount = products.filter((product) => product.trang_thai).length;
           </label>
         </div>
         <div className="flex flex-wrap items-center gap-1">
-          <Button variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => router.push(getHref({ page: currentPage - 1 }))}>Trước</Button>
+          <Button variant="outline" size="md" disabled={currentPage <= 1} onClick={() => router.push(getHref({ page: currentPage - 1 }))}>Trước</Button>
           {Array.from({ length: totalPages }, (_, index) => index + 1)
             .filter((page) => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
-            .map((page) => <Button key={page} size="sm" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => router.push(getHref({ page }))}>{page}</Button>)}
-          <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => router.push(getHref({ page: currentPage + 1 }))}>Sau</Button>
+            .map((page) => <Button key={page} size="md" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => router.push(getHref({ page }))}>{page}</Button>)}
+          <Button variant="outline" size="md" disabled={currentPage >= totalPages} onClick={() => router.push(getHref({ page: currentPage + 1 }))}>Sau</Button>
         </div>
       </div>
     </div>

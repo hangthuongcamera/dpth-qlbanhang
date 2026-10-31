@@ -258,10 +258,10 @@ export function CategoryManager({
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline" size="sm" onClick={() => openEditDialog(category)}>
+                    <Button type="button" variant="outline" size="md" onClick={() => openEditDialog(category)}>
                       <Pencil className="mr-1.5 h-4 w-4" />Sửa
                     </Button>
-                    <Button type="button" variant="outline" size="sm" className="border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800" onClick={() => setCategoryToDelete(category)}>
+                    <Button type="button" variant="outline" size="md" className="border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800" onClick={() => setCategoryToDelete(category)}>
                       <Trash2 className="mr-1.5 h-4 w-4" />Xóa
                     </Button>
                   </div>
@@ -290,11 +290,11 @@ export function CategoryManager({
           </label>
         </div>
         <div className="flex flex-wrap items-center gap-1">
-          <Button type="button" variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => goToPage(currentPage - 1)}>Trước</Button>
+          <Button type="button" variant="outline" size="md" disabled={currentPage <= 1} onClick={() => goToPage(currentPage - 1)}>Trước</Button>
           {Array.from({ length: totalPages }, (_, index) => index + 1)
             .filter((page) => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
-            .map((page) => <Button key={page} type="button" size="sm" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => goToPage(page)}>{page}</Button>)}
-          <Button type="button" variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => goToPage(currentPage + 1)}>Sau</Button>
+            .map((page) => <Button key={page} type="button" size="md" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => goToPage(page)}>{page}</Button>)}
+          <Button type="button" variant="outline" size="md" disabled={currentPage >= totalPages} onClick={() => goToPage(currentPage + 1)}>Sau</Button>
         </div>
       </div>
 

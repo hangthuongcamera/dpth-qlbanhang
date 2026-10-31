@@ -311,9 +311,9 @@ export function BangGiaNhomManager({ products, groups, selectedGroupId }: { prod
         </label>
       </div>
       <div className="flex flex-wrap items-center gap-1">
-        <Button type="button" variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => void goToPage(currentPage - 1)}>Trước</Button>
-        {pageNumbers.map((page) => <Button key={page} type="button" size="sm" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => void goToPage(page)}>{page}</Button>)}
-        <Button type="button" variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => void goToPage(currentPage + 1)}>Sau</Button>
+        <Button type="button" variant="outline" size="md" disabled={currentPage <= 1} onClick={() => void goToPage(currentPage - 1)}>Trước</Button>
+        {pageNumbers.map((page) => <Button key={page} type="button" size="md" variant={page === currentPage ? "default" : "outline"} aria-current={page === currentPage ? "page" : undefined} onClick={() => void goToPage(page)}>{page}</Button>)}
+        <Button type="button" variant="outline" size="md" disabled={currentPage >= totalPages} onClick={() => void goToPage(currentPage + 1)}>Sau</Button>
       </div>
     </div>}
   </div>;

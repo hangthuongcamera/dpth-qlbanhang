@@ -222,7 +222,7 @@ export function MobileSidebar({
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="md"
               onClick={() => {
                 onOpenChange(false);
                 setOpenDoiMatKhau(true);

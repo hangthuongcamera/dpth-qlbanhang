@@ -321,7 +321,7 @@ export function OrderTable({
             <Button
               type="button"
               variant="ghost"
-              size="sm"
+              size="md"
               onClick={handleResetFilters}
               className="text-xs text-slate-600 hover:text-slate-900"
             >
@@ -540,7 +540,7 @@ export function OrderTable({
                   <Button
                     type="button"
                     variant="outline"
-                    size="sm"
+                    size="md"
                     onClick={() => openDeleteModal(order)}
                     className="text-xs text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 h-8 px-3"
                   >
@@ -592,7 +592,7 @@ export function OrderTable({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                size="md"
                 disabled={currentPage <= 1}
                 onClick={() => {
                   const params = buildParams({ page: currentPage - 1 });
@@ -625,7 +625,7 @@ export function OrderTable({
                       key={p}
                       type="button"
                       variant={p === currentPage ? "default" : "outline"}
-                      size="sm"
+                      size="md"
                       onClick={() => {
                         const params = buildParams({ page: p });
                         navigateWithParams(params);
@@ -640,7 +640,7 @@ export function OrderTable({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                size="md"
                 disabled={currentPage >= totalPages}
                 onClick={() => {
                   const params = buildParams({ page: currentPage + 1 });
