@@ -50,6 +50,46 @@ export async function luuSanPham(id: string | null, data: unknown) {
   return savedId as string;
 }
 
+export async function capNhatGiaBanMacDinh(input: { sanPhamId: string; bienTheId: string | null; donGia: number }) {
+  if (!input.sanPhamId?.trim()) throw new Error("Mã sản phẩm không hợp lệ.");
+  if (!Number.isSafeInteger(input.donGia) || input.donGia < 0) {
+    throw new Error("Giá bán phải là số nguyên VND không âm.");
+  }
+
+  const supabase = await createClient();
+  if (input.bienTheId) {
+    const { data, error } = await supabase
+      .from("bien_the_san_pham")
+      .update({ gia_ban: input.donGia })
+      .eq("id", input.bienTheId)
+      .eq("san_pham_id", input.sanPhamId)
+      .eq("trang_thai", true)
+      .select("id")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!data) throw new Error("Không tìm thấy biến thể đang kinh doanh của sản phẩm.");
+    return;
+  }
+
+  const { count, error: variantsError } = await supabase
+    .from("bien_the_san_pham")
+    .select("id", { count: "exact", head: true })
+    .eq("san_pham_id", input.sanPhamId)
+    .eq("trang_thai", true);
+  if (variantsError) throw new Error(variantsError.message);
+  if ((count ?? 0) > 0) throw new Error("Sản phẩm có biến thể; hãy chỉnh giá ở từng biến thể.");
+
+  const { data, error } = await supabase
+    .from("san_pham")
+    .update({ gia_ban: input.donGia })
+    .eq("id", input.sanPhamId)
+    .eq("trang_thai", true)
+    .select("id")
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Không tìm thấy sản phẩm đang kinh doanh.");
+}
+
 export async function xoaSanPham(id: string) {
   if (!id?.trim()) throw new Error("Mã sản phẩm không hợp lệ.");
 

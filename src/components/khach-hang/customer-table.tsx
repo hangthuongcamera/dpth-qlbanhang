@@ -28,11 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import { ngungHoatDongKhachHang, xoaKhachHang } from "@/lib/supabase/khach-hang-actions";
 import { goiYKhachHang, type CustomerSearchSuggestion } from "@/lib/supabase/search-suggestions";
 
@@ -170,14 +165,14 @@ const getInitial = (name: string) => {
     let active = true;
     const query = searchInput.trim();
     const timeoutId = setTimeout(() => {
-      if (!searchOpen || query.length < 2) {
+      if (!searchOpen) {
         if (active) setSearchSuggestions([]);
         return;
       }
       void goiYKhachHang(query).then((items) => {
         if (active) setSearchSuggestions(items);
       });
-    }, searchOpen && query.length >= 2 ? 300 : 0);
+    }, searchOpen && query.length > 0 ? 300 : 0);
     return () => {
       active = false;
       clearTimeout(timeoutId);
@@ -365,11 +360,11 @@ const getInitial = (name: string) => {
             className="app-search-input font-normal"
             role="combobox"
             aria-autocomplete="list"
-            aria-expanded={searchOpen && searchInput.trim().length >= 2}
+            aria-expanded={searchOpen}
             aria-controls="customer-search-suggestions"
             autoComplete="off"
           />
-          {searchOpen && searchInput.trim().length >= 2 && <div id="customer-search-suggestions" role="listbox" className="absolute inset-x-0 top-full z-30 mt-1 max-h-72 overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+          {searchOpen && <div id="customer-search-suggestions" role="listbox" className="absolute inset-x-0 top-full z-30 mt-1 max-h-72 overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
             {searchSuggestions.map((item) => <button
               key={item.id}
               type="button"
@@ -423,19 +418,7 @@ const getInitial = (name: string) => {
               key={customer.id}
               className="min-w-0 rounded-xl border border-slate-200 bg-white px-[10px] py-[5px] shadow-sm"
             >
-              <div className="flex items-start gap-3">
-                <Avatar className="h-9 w-9 shrink-0">
-                  {customer.anh_dai_dien_url && (
-                    <AvatarImage
-                      src={customer.anh_dai_dien_url}
-                      alt={customer.ten_khach_hang}
-                    />
-                  )}
-                  <AvatarFallback>
-                    {getInitial(customer.ten_khach_hang)}
-                  </AvatarFallback>
-                </Avatar>
-
+              <div className="flex items-start">
                 <div className="min-w-0 flex-1">
                   <p className="break-words text-sm font-semibold text-slate-900">
                     {customer.ten_khach_hang}{customer.so_dien_thoai ? ` - ${customer.so_dien_thoai}` : ""}
@@ -476,7 +459,7 @@ const getInitial = (name: string) => {
 
               {/* Thông tin liên hệ */}
               {/* Công nợ và hạn mức */}
-              <div className="mt-3 ml-12 pr-3">
+              <div className="mt-3 pr-3">
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-xs text-slate-500">Công nợ hiện tại</span>
                   <span className="text-right text-sm">{renderDebt(customer.cong_no_hien_tai)}</span>
@@ -520,29 +503,15 @@ const getInitial = (name: string) => {
                   </TableCell>
 
                   <TableCell className="py-1">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-[34px] w-[34px]">
-                        {customer.anh_dai_dien_url && (
-                          <AvatarImage
-                            src={customer.anh_dai_dien_url}
-                            alt={customer.ten_khach_hang}
-                          />
-                        )}
-                        <AvatarFallback>
-                          {getInitial(customer.ten_khach_hang)}
-                        </AvatarFallback>
-                      </Avatar>
-
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-slate-900">
-                          {customer.ten_khach_hang}
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-slate-900">
+                        {customer.ten_khach_hang}
+                      </p>
+                      {customer.email && (
+                        <p className="truncate text-xs text-slate-500">
+                          {customer.email}
                         </p>
-                        {customer.email && (
-                          <p className="truncate text-xs text-slate-500">
-                            {customer.email}
-                          </p>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </TableCell>
 

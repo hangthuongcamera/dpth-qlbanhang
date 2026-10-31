@@ -64,7 +64,7 @@ export function OrderEditForm({ order, initialLines, customers, products, groups
   const results = useMemo(() => {
     const query = normalize(productSearch);
     const matches = choices.filter(({ product, variant, label }) => !query || normalize(`${product.ma_san_pham} ${product.ten_san_pham} ${variant?.ma_sku ?? ""} ${Object.values(variant?.thuoc_tinh ?? {}).join(" ")} ${label}`).includes(query));
-    return matches.slice(0, 40);
+    return matches.slice(0, query ? 40 : 8);
   }, [choices, productSearch]);
   const subtotal = useMemo(() => lines.reduce((sum, line) => sum + Number(line.qty || 0) * Number(line.price || 0), 0), [lines]);
   const total = Math.max(0, subtotal - Number(discount || 0) + Number(shipping || 0));

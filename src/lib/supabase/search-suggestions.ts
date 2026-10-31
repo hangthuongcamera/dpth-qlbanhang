@@ -22,14 +22,13 @@ export type ReceiptSearchSuggestion = {
 
 export async function goiYKhachHang(searchText: string) {
   const query = normalizeVietnameseSearch(searchText).slice(0, 100);
-  if (!query) return [] as CustomerSearchSuggestion[];
-
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let request = supabase
     .from("v_khach_hang_tim_kiem")
     .select("id, ma_khach_hang, ten_khach_hang, so_dien_thoai")
-    .eq("la_khach_le", false)
-    .ilike("tu_khoa_khong_dau", `%${query.replace(/[\\%_,]/g, "\\$&")}%`)
+    .eq("la_khach_le", false);
+  if (query) request = request.ilike("tu_khoa_khong_dau", `%${query.replace(/[\\%_,]/g, "\\$&")}%`);
+  const { data, error } = await request
     .order("ten_khach_hang")
     .limit(8);
 
@@ -42,15 +41,12 @@ export async function goiYKhachHang(searchText: string) {
 
 export async function goiYPhieuThu(searchText: string) {
   const query = normalizeVietnameseSearch(searchText).slice(0, 100);
-  if (!query) return [] as ReceiptSearchSuggestion[];
-
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let request = supabase
     .from("v_phieu_thu_tim_kiem")
-    .select("id, ma_phieu_thu, ngay_thu, tong_tien, trang_thai, ma_khach_hang, ten_khach_hang")
-    .ilike("tu_khoa_khong_dau", `%${query.replace(/[\\%_,]/g, "\\$&")}%`)
-    .order("ngay_thu", { ascending: false })
-    .limit(8);
+    .select("id, ma_phieu_thu, ngay_thu, tong_tien, trang_thai, ma_khach_hang, ten_khach_hang");
+  if (query) request = request.ilike("tu_khoa_khong_dau", `%${query.replace(/[\\%_,]/g, "\\$&")}%`);
+  const { data, error } = await request.order("ngay_thu", { ascending: false }).limit(8);
 
   if (error) {
     console.error("Lỗi tìm gợi ý phiếu thu:", error);

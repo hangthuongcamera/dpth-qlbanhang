@@ -3,5 +3,9 @@ import { getKhachHangChuaCoNhom } from "@/lib/supabase/nhom-khach-hang-actions";
 
 export default async function ThemNhomKhachHangPage() {
   const customers = await getKhachHangChuaCoNhom();
-  return <NhomKhachHangForm availableCustomers={customers} />;
+  return (
+    <div className="app-page">
+      <NhomKhachHangForm availableCustomers={customers} />
+    </div>
+  );
 }

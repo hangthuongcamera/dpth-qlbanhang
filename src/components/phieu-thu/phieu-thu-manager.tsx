@@ -105,12 +105,12 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
     let active = true;
     const query = search.trim();
     const timeoutId = setTimeout(() => {
-      if (!searchOpen || query.length < 2) {
+      if (!searchOpen) {
         if (active) setSuggestions([]);
         return;
       }
       void goiYPhieuThu(query).then((items) => { if (active) setSuggestions(items); });
-    }, searchOpen && query.length >= 2 ? 250 : 0);
+    }, searchOpen && query.length > 0 ? 250 : 0);
     return () => { active = false; clearTimeout(timeoutId); };
   }, [search, searchOpen]);
 

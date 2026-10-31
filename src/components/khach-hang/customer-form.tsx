@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, CheckCircle2, ImagePlus, Save, X, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Save, X, XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,7 +130,7 @@ export function CustomerForm({
         nguoi_lien_he: data.nguoi_lien_he,
         han_muc_cong_no: data.han_muc_cong_no,
         ghi_chu: data.ghi_chu,
-        trang_thai: data.trang_thai,
+        trang_thai: mode === "create" ? true : data.trang_thai,
         nhom_khach_hang_id: data.nhom_khach_hang_id || "",
         anh_dai_dien_url: data.anh_dai_dien_url,
       };
@@ -173,56 +173,14 @@ export function CustomerForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto w-full min-w-0 space-y-4 md:space-y-6">
       <section className="rounded-xl border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-4">
-          <h2 className="text-base font-semibold text-slate-900">
-            {mode === "edit"
-              ? "Chỉnh sửa thông tin khách hàng"
-              : "Thông tin khách hàng"}
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            {mode === "edit"
-              ? "Cập nhật thông tin khách hàng."
-              : "Nhập thông tin cơ bản của khách hàng."}
-          </p>
-        </div>
-
-        {/* Ảnh đại diện */}
-        <div className="flex min-w-0 items-center gap-3 px-4 py-4 md:gap-4">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md border border-slate-200 bg-slate-50">
-            {customer?.anh_dai_dien_url ? (
-              <img
-                src={customer.anh_dai_dien_url}
-                alt={customer.ten_khach_hang}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <ImagePlus className="h-6 w-6 text-slate-400" />
-            )}
+        {mode === "edit" && (
+          <div className="border-b border-slate-200 px-4 py-4">
+            <h2 className="text-base font-semibold text-slate-900">Chỉnh sửa thông tin khách hàng</h2>
+            <p className="mt-1 text-sm text-slate-500">Cập nhật thông tin khách hàng.</p>
           </div>
+        )}
 
-          <div>
-            <p className="text-sm font-medium text-slate-900">
-              Ảnh đại diện
-            </p>
-
-            <p className="mt-1 text-xs text-slate-500">
-              JPG, PNG hoặc WEBP
-            </p>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-2"
-              disabled={isSubmitting}
-            >
-              Chọn ảnh
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid min-w-0 grid-cols-1 gap-4 p-4 md:gap-5 md:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 p-4 md:grid-cols-2 md:gap-5">
           {/* Mã khách hàng: chỉ hiển thị khi chỉnh sửa */}
           {mode === "edit" && customer && (
             <div className="space-y-2">
@@ -305,22 +263,6 @@ export function CustomerForm({
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="nhom_khach_hang_id">Nhóm khách hàng</Label>
-            <select
-              id="nhom_khach_hang_id"
-              {...form.register("nhom_khach_hang_id")}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm"
-            >
-              <option value="">Không thuộc nhóm (dùng giá mặc định)</option>
-              {groups.filter((group) => group.trang_thai || group.id === customer?.nhom_khach_hang_id).map((group) => (
-                <option key={group.id} value={group.id}>
-                  {group.ten_nhom}{group.trang_thai ? "" : " (ngừng hoạt động)"}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -337,6 +279,39 @@ export function CustomerForm({
                 {form.formState.errors.email.message}
               </p>
             )}
+          </div>
+
+          {/* Địa chỉ */}
+          <div className="space-y-2">
+            <Label htmlFor="dia_chi">Địa chỉ khách hàng</Label>
+
+            <Input
+              id="dia_chi"
+              placeholder="Nhập địa chỉ khách hàng"
+              {...form.register("dia_chi")}
+            />
+
+            {form.formState.errors.dia_chi && (
+              <p className="text-xs text-red-500">
+                {form.formState.errors.dia_chi.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nhom_khach_hang_id">Nhóm khách hàng</Label>
+            <select
+              id="nhom_khach_hang_id"
+              {...form.register("nhom_khach_hang_id")}
+              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm"
+            >
+              <option value="">Không thuộc nhóm (dùng giá mặc định)</option>
+              {groups.filter((group) => group.trang_thai || group.id === customer?.nhom_khach_hang_id).map((group) => (
+                <option key={group.id} value={group.id}>
+                  {group.ten_nhom}{group.trang_thai ? "" : " (ngừng hoạt động)"}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Người liên hệ */}
@@ -375,20 +350,15 @@ export function CustomerForm({
 
           {/* Hạn mức công nợ */}
           <div className="space-y-2">
-            <Label htmlFor="han_muc_cong_no">
-              Hạn mức công nợ
-            </Label>
+            <Label htmlFor="han_muc_cong_no">Hạn mức công nợ</Label>
 
             <Input
               id="han_muc_cong_no"
               type="text"
               inputMode="numeric"
-              value={formatNumber(
-                form.watch("han_muc_cong_no") ?? 0
-              )}
+              value={formatNumber(form.watch("han_muc_cong_no") ?? 0)}
               onChange={(event) => {
                 const numberValue = parseCurrencyInput(event.target.value);
-
                 form.setValue("han_muc_cong_no", numberValue, {
                   shouldDirty: true,
                   shouldValidate: true,
@@ -404,25 +374,8 @@ export function CustomerForm({
             )}
           </div>
 
-          {/* Địa chỉ */}
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="dia_chi">Địa chỉ</Label>
-
-            <Input
-              id="dia_chi"
-              placeholder="Nhập địa chỉ"
-              {...form.register("dia_chi")}
-            />
-
-            {form.formState.errors.dia_chi && (
-              <p className="text-xs text-red-500">
-                {form.formState.errors.dia_chi.message}
-              </p>
-            )}
-          </div>
-
-          {/* Trạng thái */}
-          <div className="space-y-2">
+          {/* Trạng thái chỉ áp dụng khi chỉnh sửa hồ sơ */}
+          {mode === "edit" && <div className="space-y-2">
             <Label htmlFor="trang_thai">Trạng thái</Label>
 
             <select
@@ -451,7 +404,7 @@ export function CustomerForm({
                 {form.formState.errors.trang_thai.message}
               </p>
             )}
-          </div>
+          </div>}
 
           {/* Ghi chú */}
           <div className="space-y-2 md:col-span-2">
@@ -470,6 +423,7 @@ export function CustomerForm({
               </p>
             )}
           </div>
+
         </div>
       </section>
 

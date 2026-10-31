@@ -1,4 +1,4 @@
-import { BangGiaNhomManager, type GiaNhomRow } from "@/components/khach-hang/bang-gia-nhom-manager";
+import { BangGiaNhomManager, type GiaNhomProduct, type GiaNhomRow } from "@/components/khach-hang/bang-gia-nhom-manager";
 import { getNhomKhachHang } from "@/lib/supabase/nhom-khach-hang-actions";
 import { createClient } from "@/lib/supabase/server";
 import type { BienTheSanPham, SanPham } from "@/types/san-pham";
@@ -9,7 +9,7 @@ export default async function BangGiaNhomPage({ searchParams }: Props) {
   const [{ nhom: selectedGroupId = "" }, groups, supabase] = await Promise.all([searchParams, getNhomKhachHang(true), createClient()]);
   const [{ data: productData, error: productError }, { data: variantData, error: variantError }] = await Promise.all([
     supabase.from("san_pham").select("id, ma_san_pham, ten_san_pham, gia_ban, trang_thai").eq("trang_thai", true).order("ten_san_pham"),
-    supabase.from("bien_the_san_pham").select("id, san_pham_id, ma_sku, thuoc_tinh, gia_ban, trang_thai").eq("trang_thai", true),
+    supabase.from("bien_the_san_pham").select("id, san_pham_id, ma_sku, thuoc_tinh, gia_ban, trang_thai").eq("trang_thai", true).order("ma_sku"),
   ]);
   if (productError || variantError) throw new Error("Không thể tải danh sách sản phẩm để lập bảng giá nhóm.");
   const validGroupId = groups.some((group) => group.id === selectedGroupId) ? selectedGroupId : "";
@@ -23,18 +23,20 @@ export default async function BangGiaNhomPage({ searchParams }: Props) {
   const products = (productData ?? []) as Pick<SanPham, "id" | "ma_san_pham" | "ten_san_pham" | "gia_ban" | "trang_thai">[];
   const variants = (variantData ?? []) as Pick<BienTheSanPham, "id" | "san_pham_id" | "ma_sku" | "thuoc_tinh" | "gia_ban" | "trang_thai">[];
   const priceMap = new Map((prices ?? []).map((price) => [price.bien_the_san_pham_id ?? price.san_pham_id, Number(price.don_gia)] as const));
-  const rows: GiaNhomRow[] = [];
+  const productsWithPrices: GiaNhomProduct[] = [];
   for (const product of products) {
     const productVariants = variants.filter((variant) => variant.san_pham_id === product.id);
+    const rows: GiaNhomRow[] = [];
     if (productVariants.length) {
       for (const variant of productVariants) {
         const attrs = Object.entries(variant.thuoc_tinh ?? {}).map(([key, value]) => `${key}: ${value}`).join(" · ");
-        rows.push({ key: variant.id, sanPhamId: product.id, bienTheId: variant.id, tenSanPham: product.ten_san_pham, maSanPham: product.ma_san_pham, tenBienThe: attrs, maSku: variant.ma_sku, giaMacDinh: Number(variant.gia_ban), giaNhom: priceMap.get(variant.id) ?? null });
+        rows.push({ key: `variant:${variant.id}`, sanPhamId: product.id, bienTheId: variant.id, tenSanPham: product.ten_san_pham, maSanPham: product.ma_san_pham, tenBienThe: attrs, maSku: variant.ma_sku, giaMacDinh: Number(variant.gia_ban), giaNhom: priceMap.get(variant.id) ?? null });
       }
     } else {
-      rows.push({ key: product.id, sanPhamId: product.id, bienTheId: null, tenSanPham: product.ten_san_pham, maSanPham: product.ma_san_pham, tenBienThe: "", maSku: "", giaMacDinh: Number(product.gia_ban), giaNhom: priceMap.get(product.id) ?? null });
+      rows.push({ key: `product:${product.id}`, sanPhamId: product.id, bienTheId: null, tenSanPham: product.ten_san_pham, maSanPham: product.ma_san_pham, tenBienThe: "", maSku: "", giaMacDinh: Number(product.gia_ban), giaNhom: priceMap.get(product.id) ?? null });
     }
+    productsWithPrices.push({ id: product.id, tenSanPham: product.ten_san_pham, maSanPham: product.ma_san_pham, rows, coBienThe: productVariants.length > 0 });
   }
-  return <BangGiaNhomManager key={validGroupId || "no-group"} groups={groups} rows={rows} selectedGroupId={validGroupId} />;
+  return <BangGiaNhomManager key={validGroupId || "default-prices"} groups={groups} products={productsWithPrices} selectedGroupId={validGroupId} />;
 }
 

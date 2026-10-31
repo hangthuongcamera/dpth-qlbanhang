@@ -17,6 +17,10 @@ const pageConfig = {
     title: "Danh sách khách hàng",
     description: "Quản lý thông tin khách hàng.",
   },
+  "/nhom-khach-hang/them": {
+    title: "Thêm nhóm khách hàng",
+    description: "Tạo nhóm và chọn khách hàng áp dụng.",
+  },
   "/nhom-khach-hang": {
     title: "Nhóm khách hàng",
     description: "Quản lý nhóm và trạng thái áp dụng giá.",
@@ -77,8 +81,15 @@ export function Header({ showMobileMenu = true, vaiTro = "staff", hoTen = "" }: 
   const pathname = usePathname();
   const isFastSale = pathname.startsWith("/ban-nhanh");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const currentPage =
-    Object.entries(pageConfig).find(([path]) => {
+  const isEditCustomerGroup = /^\/nhom-khach-hang\/[^/]+\/chinh-sua$/.test(pathname);
+  const isCustomerGroupDetail = /^\/nhom-khach-hang\/[^/]+$/.test(pathname);
+  const currentPage = pathname === "/danh-sach-khach-hang/them"
+    ? { title: "Thêm khách hàng", description: "Tạo hồ sơ khách hàng mới." }
+    : isEditCustomerGroup
+      ? { title: "Chỉnh sửa nhóm khách hàng", description: "Cập nhật tên và thành viên của nhóm." }
+      : isCustomerGroupDetail
+        ? { title: "Chi tiết nhóm khách hàng", description: "Thông tin nhóm và khách hàng thành viên." }
+      : Object.entries(pageConfig).find(([path]) => {
       if (path === "/dashboard") {
         return pathname === path;
       }

@@ -127,8 +127,8 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         </Button>
       </div>
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_200px_190px] md:items-end">
-        <label className="grid gap-1.5 text-sm font-medium text-slate-700">
+      <div className="grid min-w-0 gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_200px_190px] md:items-end">
+        <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           Tìm sản phẩm
           <span className="relative block">
             <Search aria-hidden="true" className="app-search-icon" />
@@ -146,16 +146,16 @@ const activeCount = products.filter((product) => product.trang_thai).length;
           />
           </span>
         </label>
-        <label className="grid gap-1.5 text-sm font-medium text-slate-700">
+        <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           Loại sản phẩm
-          <select value={categoryId} onChange={(event) => router.push(getHref({ page: 1, category: event.target.value, search: searchInput.trim() }))} className="h-10 rounded-md border border-slate-200 bg-white px-3 font-normal">
+          <select value={categoryId} onChange={(event) => router.push(getHref({ page: 1, category: event.target.value, search: searchInput.trim() }))} className="h-10 w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 font-normal">
             <option value="">Tất cả loại</option>
             {categories.map((category) => <option key={category.id} value={category.id}>{category.ten_loai}</option>)}
           </select>
         </label>
-        <label className="grid gap-1.5 text-sm font-medium text-slate-700">
+        <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           Trạng thái
-          <select value={status} onChange={(event) => router.push(getHref({ page: 1, status: event.target.value, search: searchInput.trim() }))} className="h-10 rounded-md border border-slate-200 bg-white px-3 font-normal">
+          <select value={status} onChange={(event) => router.push(getHref({ page: 1, status: event.target.value, search: searchInput.trim() }))} className="h-10 w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 font-normal">
             <option value="all">Tất cả trạng thái</option>
             <option value="active">Đang kinh doanh</option>
             <option value="inactive">Ngừng kinh doanh</option>
@@ -163,7 +163,45 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         </label>
       </div>
 
-      <div className="app-data-table-shell overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="space-y-3 md:hidden">
+        {products.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">Không tìm thấy sản phẩm.</div>
+        ) : products.map((product) => {
+          const variants = product.bien_the_san_pham ?? [];
+          const hasVariantAttributes = variants.some((variant) => variant.trang_thai && Object.keys(variant.thuoc_tinh ?? {}).length > 0);
+          const isExpanded = expandedProducts.has(product.id);
+          return <article key={product.id} className="min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="flex min-w-0 items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <Link href={`/danh-sach-san-pham/${product.id}`} className="break-words font-semibold text-slate-900 hover:text-primary hover:underline">{product.ten_san_pham}</Link>
+                <p className="mt-1 break-all text-sm text-slate-500">Mã sản phẩm: {product.ma_san_pham}</p>
+              </div>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${product.trang_thai ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
+                {product.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-slate-100 pt-3 text-sm">
+              <div className="min-w-0"><span className="text-xs text-slate-500">Loại</span><p className="break-words text-slate-700">{product.loai_san_pham?.ten_loai ?? "—"}</p></div>
+              <div className="min-w-0"><span className="text-xs text-slate-500">Đơn vị</span><p className="break-words text-slate-700">{product.don_vi_tinh || "—"}</p></div>
+            </div>
+            {hasVariantAttributes && <>
+              <button type="button" aria-expanded={isExpanded} aria-label={`${isExpanded ? "Thu gọn" : "Mở rộng"} biến thể ${product.ten_san_pham}`} onClick={() => setExpandedProducts((current) => { const next = new Set(current); if (next.has(product.id)) next.delete(product.id); else next.add(product.id); return next; })} className="mt-3 flex h-10 w-full items-center justify-between gap-2 border-t border-slate-100 pt-3 text-left text-sm font-medium text-primary">
+                <span>{isExpanded ? "Thu gọn biến thể" : `Xem ${variants.length} biến thể`}</span>{isExpanded ? <ChevronUp className="h-4 w-4 shrink-0" /> : <ChevronDown className="h-4 w-4 shrink-0" />}
+              </button>
+              {isExpanded && <div className="mt-3 space-y-2">
+                {variants.map((variant) => <Link key={variant.id} href={`/danh-sach-san-pham/${product.id}/bien-the/${variant.id}`} className="block min-w-0 rounded-lg border border-slate-200 bg-slate-50 p-3 hover:bg-slate-100">
+                  <p className="break-words text-sm font-medium text-primary">{[product.ten_san_pham, ...Object.entries(variant.thuoc_tinh ?? {}).map(([name, value]) => `${name}: ${value}`)].join(" – ")}</p>
+                  <p className="mt-1 break-all text-xs text-slate-500">SKU: {variant.ma_sku || "—"}</p>
+                  <div className="mt-2 flex items-center justify-between gap-3 text-sm"><span className="text-slate-500">Giá bán</span><span className="font-medium text-slate-900">{formatCurrency(Number(variant.gia_ban))}</span></div>
+                  <div className="mt-2"><span className={`rounded-full px-2.5 py-1 text-xs font-medium ${variant.trang_thai ? "bg-emerald-50 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{variant.trang_thai ? "Đang kinh doanh" : "Ngừng kinh doanh"}</span></div>
+                </Link>)}
+              </div>}
+            </>}
+          </article>;
+        })}
+      </div>
+
+      <div className="app-data-table-shell hidden overflow-x-auto rounded-xl border border-slate-200 bg-white md:block">
         <Table>
           <TableHeader>
             <TableRow>

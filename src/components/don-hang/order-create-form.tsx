@@ -64,7 +64,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
       customerSearch === (customer.la_khach_le ? "Khách lẻ" : `${customer.ma_khach_hang} · ${customer.ten_khach_hang}`)
     );
     if (!query || isCurrentCustomerSelected) {
-      return availableCustomers.slice(0, 50);
+      return availableCustomers.slice(0, 8);
     }
     return availableCustomers.filter((item) => normalize(`${item.ma_khach_hang} ${item.ten_khach_hang} ${item.so_dien_thoai ?? ""}`).includes(query)).slice(0, 50);
   }, [customerSearch, customer, customers, orderType]);
@@ -79,7 +79,7 @@ export function OrderCreateForm({ customers, products, groups, prices, orderType
   const productMatches = useMemo(() => {
     const query = normalize(productSearch);
     if (!query) {
-      return productChoices.slice(0, 50);
+      return productChoices.slice(0, 8);
     }
     return productChoices.filter(({ product, variant, label }) => normalize(`${product.ma_san_pham} ${product.ten_san_pham} ${variant?.ma_sku ?? ""} ${Object.values(variant?.thuoc_tinh ?? {}).join(" ")} ${label}`).includes(query)).slice(0, 50);
   }, [productSearch, productChoices]);

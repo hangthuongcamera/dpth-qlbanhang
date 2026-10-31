@@ -16,5 +16,9 @@ export default async function ChinhSuaNhomKhachHangPage({ params }: { params: Pr
   } catch {
     notFound();
   }
-  return <NhomKhachHangForm group={group} currentCustomers={customers} availableCustomers={availableCustomers} />;
+  return (
+    <div className="app-page">
+      <NhomKhachHangForm group={group} currentCustomers={customers} availableCustomers={availableCustomers} />
+    </div>
+  );
 }

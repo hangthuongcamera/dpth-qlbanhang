@@ -2,6 +2,7 @@ import { ShoppingCart, CreditCard, Wallet, TrendingUp, Package } from "lucide-re
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUserProfile } from "@/lib/supabase/user-profile";
+import { LoginSuccessToast } from "@/components/auth/login-success-toast";
 import { formatCurrency } from "@/types/don-hang";
 
 type Order = { id: string; ma_don_hang: string; khach_hang_id: string | null; ngay_dat: string; tong_tien: number | string };
@@ -105,6 +106,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="space-y-4 md:space-y-6 app-page">
+      <LoginSuccessToast />
       <section aria-label="Chỉ số kinh doanh" className="grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {cards.map(({ label, value, Icon, style }) => <article key={label} className="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><div className="flex justify-between gap-3"><div className="text-sm font-medium text-slate-500">{label}</div><span className={"rounded-lg p-2 " + style}><Icon aria-hidden="true" className="h-5 w-5" /></span></div><div className="mt-4 text-2xl font-semibold text-slate-900">{value}</div></article>)}
       </section>

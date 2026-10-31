@@ -29,6 +29,11 @@ export default function LoginPage() {
       try {
         const result = await dangNhap({ ten_dang_nhap: credential, mat_khau: password });
         if (result.error) { setError(result.error); return; }
+        try {
+          window.sessionStorage.setItem("login-success-notification", "1");
+        } catch {
+          // Điều hướng vẫn tiếp tục nếu trình duyệt không cho dùng sessionStorage.
+        }
         window.location.href = "/dashboard";
       } catch {
         setError("Không thể đăng nhập. Vui lòng kiểm tra kết nối và thử lại.");
