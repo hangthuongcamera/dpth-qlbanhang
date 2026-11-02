@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Eye, FileDown, Pencil, Plus, Printer, RotateCcw, Search, Trash2, X } from "lucide-react";
+import { CalendarDays, Check, ChevronDown, Eye, FileDown, Filter, Pencil, Plus, Printer, RotateCcw, Search, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -58,6 +58,9 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
   const [toDate, setToDate] = useState(initialToDate);
   const [statusFilter, setStatusFilter] = useState(initialStatus);
   const [methodFilter, setMethodFilter] = useState(initialMethod);
+  const [dateMenuOpen, setDateMenuOpen] = useState(false);
+  const [showCustomDateInputs, setShowCustomDateInputs] = useState(false);
+  const [otherFiltersOpen, setOtherFiltersOpen] = useState(false);
   const [page, setPage] = useState(initialPage);
   const [isComposingSearch, setIsComposingSearch] = useState(false);
   const [formReceipt, setFormReceipt] = useState<Receipt | null | undefined>(undefined);
@@ -131,6 +134,50 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
     if (replace) router.replace(url); else router.push(url);
   }, [router, search, fromDate, toDate, statusFilter, methodFilter]);
 
+  const dateDaysAgo = (days: number) => {
+    const value = new Date();
+    value.setDate(value.getDate() - days);
+    return new Date(value.getTime() - value.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  };
+
+  const isCurrentRangeCustom = () => {
+    if (!fromDate && !toDate) return false;
+    const todayValue = today();
+    const weekStart = dateDaysAgo(6);
+    return !(
+      (fromDate === todayValue && toDate === todayValue) ||
+      (fromDate === weekStart && toDate === todayValue)
+    );
+  };
+
+  const applyQuickDate = (preset: "today" | "last7days") => {
+    const to = today();
+    const from = preset === "today" ? to : dateDaysAgo(6);
+    setFromDate(from);
+    setToDate(to);
+    setPage(1);
+    setDateMenuOpen(false);
+    setShowCustomDateInputs(false);
+    navigateList(1, { from, to }, true);
+  };
+
+  const handleResetFilters = () => {
+    setSearch("");
+    setFromDate("");
+    setToDate("");
+    setStatusFilter("all");
+    setMethodFilter("all");
+    setPage(1);
+    setSearchOpen(false);
+    setDateMenuOpen(false);
+    setShowCustomDateInputs(false);
+    setOtherFiltersOpen(false);
+    router.push("/phieu-thu");
+  };
+
+  const hasActiveFilters = Boolean(search.trim() || fromDate || toDate || statusFilter !== "all" || methodFilter !== "all");
+  const activeOtherFilterCount = methodFilter !== "all" ? 1 : 0;
+
   useEffect(() => {
     if (isComposingSearch || search === initialSearch) return;
     const timeoutId = setTimeout(() => navigateList(1, { search }, true), 400);
@@ -166,10 +213,10 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
     </div>
     {formReceipt !== undefined && <ReceiptForm initial={formReceipt} customers={customers} orders={orders} onClose={() => setFormReceipt(undefined)} onSaved={() => { setFormReceipt(undefined); router.refresh(); }} />}
 
-    <section className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[5fr_3.75fr_3.75fr_3.75fr_3.75fr] md:items-end">
-        <div className="relative grid gap-1.5 text-sm font-medium text-slate-700">
-        <label htmlFor="receipt-search">Tìm phiếu thu</label>
-        <div className="relative">
+    <section className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_180px_190px_auto] md:items-center md:gap-3">
+      <div className="relative col-span-2 min-w-0 md:col-span-1">
+        <label htmlFor="receipt-search" className="sr-only">Tìm phiếu thu</label>
+        <div className="relative min-w-0">
           <Search className="app-search-icon" />
           <Input
             id="receipt-search"
@@ -213,10 +260,34 @@ export function PhieuThuManager({ receipts, customers, orders, totalCount, page:
           </div>}
         </div>
       </div>
-      <label className="grid gap-1.5 text-sm font-medium text-slate-700">Từ ngày<Input className="h-10" type="date" value={fromDate} onChange={(event) => { setFromDate(event.target.value); setPage(1); navigateList(1, { from: event.target.value }, true); }} /></label>
-      <label className="grid gap-1.5 text-sm font-medium text-slate-700">Đến ngày<Input className="h-10" type="date" value={toDate} onChange={(event) => { setToDate(event.target.value); setPage(1); navigateList(1, { to: event.target.value }, true); }} /></label>
-        <label className="grid gap-1.5 text-sm font-medium text-slate-700">Trạng thái<select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); navigateList(1, { status: event.target.value }, true); }} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 font-normal"><option value="all">Tất cả</option><option value="nhap">Nháp</option><option value="da_xac_nhan">Đã xác nhận</option><option value="da_huy">Đã hủy</option></select></label>
-        <label className="grid gap-1.5 text-sm font-medium text-slate-700">Phương thức<select value={methodFilter} onChange={(event) => { setMethodFilter(event.target.value); setPage(1); navigateList(1, { method: event.target.value }, true); }} className="h-10 w-full rounded-md border border-slate-200 bg-white px-2 text-sm font-normal"><option value="all">Tất cả</option>{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+      <div className="relative min-w-0">
+        <Button type="button" variant="outline" aria-expanded={dateMenuOpen} aria-controls="receipt-date-filter-menu" onClick={() => { const nextOpen = !dateMenuOpen; setDateMenuOpen(nextOpen); setShowCustomDateInputs(nextOpen && isCurrentRangeCustom()); if (nextOpen) setOtherFiltersOpen(false); }} className="w-full justify-between px-3 font-normal text-slate-700">
+          <span className="flex min-w-0 items-center gap-2"><CalendarDays className="h-4 w-4 shrink-0 text-slate-500" /><span className="truncate">Ngày thu</span></span><ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
+        </Button>
+        {dateMenuOpen && <div id="receipt-date-filter-menu" className="absolute left-0 top-full z-40 mt-1 w-[min(21rem,calc(100vw-2rem))] rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
+          <div className="grid gap-1">
+            <button type="button" onClick={() => applyQuickDate("today")} className="rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">Hôm nay</button>
+            <button type="button" onClick={() => applyQuickDate("last7days")} className="rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">7 ngày gần nhất</button>
+            <button type="button" onClick={() => setShowCustomDateInputs(true)} className={`rounded-md px-3 py-2 text-left text-sm hover:bg-slate-50 ${showCustomDateInputs ? "font-medium text-primary" : "text-slate-700"}`}>Tùy chỉnh</button>
+          </div>
+          {showCustomDateInputs && <div className="mt-2 grid gap-3 border-t border-slate-100 pt-3 sm:grid-cols-2">
+            <label className="grid gap-1.5 text-xs font-medium text-slate-600">Từ ngày<Input className="h-9 w-full px-2 text-sm" type="date" value={fromDate} onChange={(event) => { setFromDate(event.target.value); setPage(1); navigateList(1, { from: event.target.value }, true); }} /></label>
+            <label className="grid gap-1.5 text-xs font-medium text-slate-600">Đến ngày<Input className="h-9 w-full px-2 text-sm" type="date" value={toDate} onChange={(event) => { setToDate(event.target.value); setPage(1); navigateList(1, { to: event.target.value }, true); }} /></label>
+          </div>}
+        </div>}
+      </div>
+      <div className="min-w-0">
+        <select aria-label="Lọc theo trạng thái phiếu thu" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); navigateList(1, { status: event.target.value }, true); }} className="h-10 w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 text-sm font-normal text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"><option value="all">Tất cả trạng thái</option><option value="nhap">Nháp</option><option value="da_xac_nhan">Đã xác nhận</option><option value="da_huy">Đã hủy</option></select>
+      </div>
+      <div className="relative col-span-2 min-w-0 md:col-span-1">
+        <Button type="button" variant="outline" aria-expanded={otherFiltersOpen} aria-controls="receipt-more-filters" onClick={() => { setOtherFiltersOpen((open) => !open); setDateMenuOpen(false); }} className="w-full justify-between px-3 font-normal text-slate-700">
+          <span className="flex min-w-0 items-center gap-2"><Filter className="h-4 w-4 shrink-0 text-slate-500" /><span>Bộ lọc khác</span>{activeOtherFilterCount > 0 && <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1 text-xs font-medium text-primary">{activeOtherFilterCount}</span>}</span><ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
+        </Button>
+        {otherFiltersOpen && <div id="receipt-more-filters" className="absolute right-0 top-full z-40 mt-1 grid w-[min(21rem,calc(100vw-2rem))] gap-3 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+          <label className="grid gap-1.5 text-sm font-medium text-slate-700">Phương thức thanh toán<select value={methodFilter} onChange={(event) => { setMethodFilter(event.target.value); setPage(1); navigateList(1, { method: event.target.value }, true); }} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm font-normal text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"><option value="all">Tất cả phương thức</option>{Object.entries(paymentLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+          {hasActiveFilters && <Button type="button" variant="ghost" size="md" onClick={handleResetFilters} className="justify-start px-2 text-slate-600 hover:text-slate-900"><RotateCcw className="h-4 w-4" />Đặt lại bộ lọc</Button>}
+        </div>}
+      </div>
     </section>
 
     <section className="app-data-table-shell overflow-hidden rounded-xl border border-slate-200 bg-white">

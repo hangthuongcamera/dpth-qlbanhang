@@ -121,13 +121,7 @@ const activeCount = products.filter((product) => product.trang_thai).length;
         </div>
       )}
     <div className="min-w-0 space-y-4">
-      <div className="app-list-actions">
-        <Button onClick={() => router.push("/danh-sach-san-pham/them")} className="shrink-0">
-          <Plus className="mr-2 h-4 w-4" /> Thêm sản phẩm
-        </Button>
-      </div>
-
-      <div className="grid min-w-0 gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_200px_190px] md:items-end">
+      <div className="grid min-w-0 gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_200px_190px_auto] md:items-end">
         <label className="grid min-w-0 gap-1.5 text-sm font-medium text-slate-700">
           Tìm sản phẩm
           <span className="relative block">
@@ -161,6 +155,9 @@ const activeCount = products.filter((product) => product.trang_thai).length;
             <option value="inactive">Ngừng kinh doanh</option>
           </select>
         </label>
+        <Button onClick={() => router.push("/danh-sach-san-pham/them")} className="h-10 shrink-0">
+          <Plus className="mr-2 h-4 w-4" /> Thêm sản phẩm
+        </Button>
       </div>
 
       <div className="space-y-3 md:hidden">

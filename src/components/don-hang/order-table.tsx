@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
+  CalendarDays,
+  ChevronDown,
   Eye,
+  Filter,
   LoaderCircle,
   RotateCcw,
   Search,
@@ -88,6 +91,9 @@ export function OrderTable({
   }
 
   const [isComposing, setIsComposing] = useState(false);
+  const [dateMenuOpen, setDateMenuOpen] = useState(false);
+  const [showCustomDateInputs, setShowCustomDateInputs] = useState(false);
+  const [otherFiltersOpen, setOtherFiltersOpen] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<OrderListItem | null>(null);
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -158,6 +164,38 @@ export function OrderTable({
     toDate
   );
 
+  const getLocalDateValue = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const applyQuickDate = (preset: "today" | "last7days") => {
+    const today = new Date();
+    const to = getLocalDateValue(today);
+    const start = new Date(today);
+    if (preset === "last7days") start.setDate(start.getDate() - 6);
+    setDateMenuOpen(false);
+    setShowCustomDateInputs(false);
+    navigateWithParams(buildParams({ page: 1, fromDate: getLocalDateValue(start), toDate: to }));
+  };
+
+  const isCurrentRangeCustom = () => {
+    if (!fromDate && !toDate) return false;
+    const today = new Date();
+    const todayValue = getLocalDateValue(today);
+    const weekStart = new Date(today);
+    weekStart.setDate(weekStart.getDate() - 6);
+    const weekStartValue = getLocalDateValue(weekStart);
+    return !(
+      (fromDate === todayValue && toDate === todayValue) ||
+      (fromDate === weekStartValue && toDate === todayValue)
+    );
+  };
+
+  const activeOtherFilterCount = [orderType !== "all", paymentStatus !== "all"].filter(Boolean).length;
+
   const openDeleteModal = (order: OrderListItem) => {
     setDeleteError("");
     setOrderToDelete(order);
@@ -208,9 +246,8 @@ export function OrderTable({
 
       {/* Filters Card */}
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
-          {/* Search box */}
-          <div className="relative md:col-span-2 lg:col-span-2">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-[minmax(0,1fr)_180px_190px_auto] md:items-center md:gap-3">
+          <div className="relative col-span-2 min-w-0 md:col-span-1">
             <Search className="app-search-icon" />
             <Input
               type="text"
@@ -236,31 +273,55 @@ export function OrderTable({
             )}
           </div>
 
-          {/* Filter Loại đơn */}
-          <div>
-            <select
-              value={orderType}
-              onChange={(e) => {
-                const params = buildParams({ page: 1, orderType: e.target.value });
-                navigateWithParams(params);
+          <div className="relative min-w-0">
+            <Button
+              type="button"
+              variant="outline"
+              aria-expanded={dateMenuOpen}
+              aria-controls="order-date-filter-menu"
+              onClick={() => {
+                const nextOpen = !dateMenuOpen;
+                setDateMenuOpen(nextOpen);
+                setShowCustomDateInputs(nextOpen && isCurrentRangeCustom());
+                if (nextOpen) setOtherFiltersOpen(false);
               }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+              className="w-full justify-between px-3 font-normal text-slate-700"
             >
-              <option value="all">Tất cả loại đơn</option>
-              <option value="dat_hang">Đơn đặt hàng</option>
-              <option value="ban_nhanh">Bán nhanh</option>
-            </select>
+              <span className="flex min-w-0 items-center gap-2"><CalendarDays className="h-4 w-4 shrink-0 text-slate-500" /><span className="truncate">Ngày đặt</span></span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
+            </Button>
+            {dateMenuOpen && (
+              <div id="order-date-filter-menu" className="absolute left-0 top-full z-40 mt-1 w-[min(21rem,calc(100vw-2rem))] rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
+                <div className="grid gap-1">
+                  <button type="button" onClick={() => applyQuickDate("today")} className="rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">Hôm nay</button>
+                  <button type="button" onClick={() => applyQuickDate("last7days")} className="rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">7 ngày gần nhất</button>
+                  <button type="button" onClick={() => setShowCustomDateInputs(true)} className={`rounded-md px-3 py-2 text-left text-sm hover:bg-slate-50 ${showCustomDateInputs ? "font-medium text-primary" : "text-slate-700"}`}>Tùy chỉnh</button>
+                </div>
+                {showCustomDateInputs && (
+                  <div className="mt-2 grid gap-3 border-t border-slate-100 pt-3 sm:grid-cols-2">
+                    <label className="grid gap-1.5 text-xs font-medium text-slate-600">
+                      Từ ngày
+                      <Input type="date" value={fromDate} onChange={(e) => navigateWithParams(buildParams({ page: 1, fromDate: e.target.value }))} className="h-9 w-full px-2 text-sm" />
+                    </label>
+                    <label className="grid gap-1.5 text-xs font-medium text-slate-600">
+                      Đến ngày
+                      <Input type="date" value={toDate} onChange={(e) => navigateWithParams(buildParams({ page: 1, toDate: e.target.value }))} className="h-9 w-full px-2 text-sm" />
+                    </label>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Filter Trạng thái đơn */}
-          <div>
+          <div className="min-w-0">
             <select
               value={status}
               onChange={(e) => {
                 const params = buildParams({ page: 1, status: e.target.value });
                 navigateWithParams(params);
               }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+              aria-label="Lọc theo trạng thái đơn hàng"
+              className="h-10 w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
             >
               <option value="all">Tất cả trạng thái</option>
               <option value="xac_nhan">Đã xác nhận</option>
@@ -270,65 +331,47 @@ export function OrderTable({
             </select>
           </div>
 
-          {/* Filter Thanh toán */}
-          <div>
-            <select
-              value={paymentStatus}
-              onChange={(e) => {
-                const params = buildParams({ page: 1, paymentStatus: e.target.value });
-                navigateWithParams(params);
-              }}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-            >
-              <option value="all">Tất cả thanh toán</option>
-              <option value="con_no">Còn nợ / Chưa thanh toán</option>
-              <option value="da_thanh_toan">Đã thanh toán đủ</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Date Filters Row */}
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
-            <span className="font-medium text-slate-700">Ngày đặt:</span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-slate-400">Từ</span>
-              <Input
-                type="date"
-                value={fromDate}
-                onChange={(e) => {
-                  const params = buildParams({ page: 1, fromDate: e.target.value });
-                  navigateWithParams(params);
-                }}
-                className="h-9 w-36 px-2 text-xs"
-              />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-slate-400">Đến</span>
-              <Input
-                type="date"
-                value={toDate}
-                onChange={(e) => {
-                  const params = buildParams({ page: 1, toDate: e.target.value });
-                  navigateWithParams(params);
-                }}
-                className="h-9 w-36 px-2 text-xs"
-              />
-            </div>
-          </div>
-
-          {hasActiveFilters && (
+          <div className="relative col-span-2 min-w-0 md:col-span-1">
             <Button
               type="button"
-              variant="ghost"
-              size="md"
-              onClick={handleResetFilters}
-              className="text-xs text-slate-600 hover:text-slate-900"
+              variant="outline"
+              aria-expanded={otherFiltersOpen}
+              aria-controls="order-more-filters"
+              onClick={() => {
+                setOtherFiltersOpen((open) => !open);
+                setDateMenuOpen(false);
+              }}
+              className="w-full justify-between px-3 font-normal text-slate-700"
             >
-              <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-              Đặt lại bộ lọc
+              <span className="flex min-w-0 items-center gap-2"><Filter className="h-4 w-4 shrink-0 text-slate-500" /><span>Bộ lọc khác</span>{activeOtherFilterCount > 0 && <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1 text-xs font-medium text-primary">{activeOtherFilterCount}</span>}</span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
             </Button>
-          )}
+            {otherFiltersOpen && (
+              <div id="order-more-filters" className="absolute right-0 top-full z-40 mt-1 grid w-[min(21rem,calc(100vw-2rem))] gap-3 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+                <label className="grid gap-1.5 text-sm font-medium text-slate-700">
+                  Loại đơn
+                  <select value={orderType} onChange={(e) => navigateWithParams(buildParams({ page: 1, orderType: e.target.value }))} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm font-normal text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30">
+                    <option value="all">Tất cả loại đơn</option>
+                    <option value="dat_hang">Đơn đặt hàng</option>
+                    <option value="ban_nhanh">Bán nhanh</option>
+                  </select>
+                </label>
+                <label className="grid gap-1.5 text-sm font-medium text-slate-700">
+                  Trạng thái thanh toán
+                  <select value={paymentStatus} onChange={(e) => navigateWithParams(buildParams({ page: 1, paymentStatus: e.target.value }))} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm font-normal text-slate-700 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30">
+                    <option value="all">Tất cả thanh toán</option>
+                    <option value="con_no">Còn nợ / Chưa thanh toán</option>
+                    <option value="da_thanh_toan">Đã thanh toán đủ</option>
+                  </select>
+                </label>
+                {hasActiveFilters && (
+                  <Button type="button" variant="ghost" size="md" onClick={() => { handleResetFilters(); setOtherFiltersOpen(false); }} className="justify-start px-2 text-slate-600 hover:text-slate-900">
+                    <RotateCcw className="h-4 w-4" />Đặt lại bộ lọc
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

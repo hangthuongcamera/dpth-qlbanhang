@@ -187,27 +187,27 @@ export function CategoryManager({
         </div>
       )}
 
-      <div className="app-list-actions">
-        <Button type="button" onClick={openCreateDialog}>
+      <div className="grid min-w-0 gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <label className="relative block min-w-0">
+          <span className="sr-only">Tìm theo mã hoặc tên danh mục</span>
+          <Search aria-hidden="true" className="app-search-icon" />
+          <Input
+            type="search"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={(event) => {
+              setSearchInput(event.currentTarget.value);
+              setIsComposing(false);
+            }}
+            placeholder="Tìm theo mã hoặc tên danh mục"
+            aria-label="Tìm theo mã hoặc tên danh mục"
+            className="app-search-input"
+          />
+        </label>
+        <Button type="button" onClick={openCreateDialog} className="w-full md:w-auto">
           <Plus className="mr-2 h-4 w-4" />Thêm danh mục
         </Button>
-      </div>
-
-      <div className="relative max-w-lg">
-        <Search aria-hidden="true" className="app-search-icon" />
-        <Input
-          type="search"
-          value={searchInput}
-          onChange={(event) => setSearchInput(event.target.value)}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={(event) => {
-            setSearchInput(event.currentTarget.value);
-            setIsComposing(false);
-          }}
-          placeholder="Tìm theo mã hoặc tên danh mục"
-          aria-label="Tìm theo mã hoặc tên danh mục"
-          className="app-search-input"
-        />
       </div>
 
       <div className="space-y-3 md:hidden">
